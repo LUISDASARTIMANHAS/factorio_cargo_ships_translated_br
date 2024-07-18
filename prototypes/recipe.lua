@@ -10,7 +10,7 @@ data:extend({
       {"iron-gear-wheel", 15},
       {"electronic-circuit", 6}
     },
-    result = "boat"
+    results = {{type="item", name="boat", amount=1}},
   },
   {
     type = "recipe",
@@ -23,7 +23,7 @@ data:extend({
       {"iron-gear-wheel", 60},
       {"electronic-circuit", 20}
     },
-    result = "cargo_ship"
+    results = {{type="item", name="cargo_ship", amount=1}},
   },
   {
     type = "recipe",
@@ -37,7 +37,7 @@ data:extend({
       {"electronic-circuit", 20},
       {"storage-tank", 6}
     },
-    result = "oil_tanker"
+    results = {{type="item", name="oil_tanker", amount=1}},
   },
   {
     type = "recipe",
@@ -49,8 +49,7 @@ data:extend({
       {"iron-plate", 10},
       {"steel-plate", 5}
     },
-    result = "port",
-    result_count = 1
+    results = {{type="item", name="port", amount=1}},
   },
   {
     type = "recipe",
@@ -62,8 +61,7 @@ data:extend({
       {"big-electric-pole", 1},
       {"iron-plate", 5}
     },
-    result = "floating-electric-pole",
-    result_count = 1
+    results = {{type="item", name="floating-electric-pole", amount=1}},
   },
   {
     type = "recipe",
@@ -75,8 +73,7 @@ data:extend({
       {"electronic-circuit", 2},
       {"iron-plate", 5}
     },
-    result = "buoy",
-    result_count = 1
+    results = {{type="item", name="buoy", amount=1}},
   },
   {
     type = "recipe",
@@ -88,8 +85,7 @@ data:extend({
       {"electronic-circuit", 2},
       {"iron-plate", 5}
     },
-    result = "chain_buoy",
-    result_count = 1
+    results = {{type="item", name="chain_buoy", amount=1}},
   },
   {
     type = "recipe",
@@ -102,8 +98,7 @@ data:extend({
       {"iron-gear-wheel", 30},
       {"rail", 10},
     },
-    result = "bridge_base",
-    result_count = 1
+    results = {{type="item", name="bridge_base", amount=1}},
   },
 
 })
@@ -123,8 +118,7 @@ if settings.startup["deep_oil"].value then
         {"electronic-circuit", 75},
         {"pipe", 75}
       },
-      result = "oil_rig",
-      result_count = 1
+      results = {{type="item", name="oil_rig", amount=1}},
     },
   }
 end
