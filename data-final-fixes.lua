@@ -23,10 +23,10 @@ for _, tile in pairs(data.raw.tile) do
     tile.collision_mask.layers["waterway"] = true
   end
 end
-data.raw["straight-rail"]["straight-water-way"].collision_mask.layers["waterway"] = true
-data.raw["curved-rail"]["curved-water-way"].collision_mask.layers["waterway"] = true
-data.raw["straight-rail"]["invisible_rail"].collision_mask.layers["waterway"] = true
-data.raw["straight-rail"]["bridge_crossing"].collision_mask.layers["waterway"] = true
+data.raw["legacy-straight-rail"]["straight-water-way"].collision_mask.layers["waterway"] = true
+data.raw["legacy-curved-rail"]["curved-water-way"].collision_mask.layers["waterway"] = true
+data.raw["legacy-straight-rail"]["invisible_rail"].collision_mask.layers["waterway"] = true
+data.raw["legacy-straight-rail"]["bridge_crossing"].collision_mask.layers["waterway"] = true
 
 data.raw["rail-signal"]["buoy"].collision_mask.layers["waterway"] = true
 data.raw["rail-chain-signal"]["chain_buoy"].collision_mask.layers["waterway"] = true
