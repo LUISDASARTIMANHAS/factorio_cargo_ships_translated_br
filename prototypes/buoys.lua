@@ -4,7 +4,7 @@ floating_pole.icon = GRAPHICSPATH .. "icons/floating_pole.png"
 floating_pole.icon_size = 64
 floating_pole.icon_mipmaps = 0
 floating_pole.minable = {mining_time = 0.5, result = "floating-electric-pole"}
-floating_pole.collision_mask = {layers = {ground = true, object = true}}
+floating_pole.collision_mask = {layers = {ground_tile = true, object = true}}
 floating_pole.maximum_wire_distance = 48
 floating_pole.supply_area_distance = 0
 floating_pole.fast_replaceable_group = nil

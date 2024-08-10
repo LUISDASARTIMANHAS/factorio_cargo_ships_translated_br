@@ -19,7 +19,7 @@ data:extend{
 
 -- Prevent waterways being placed on land, but without colliding with ground-tile directly, so that ships don't collide
 for _, tile in pairs(data.raw.tile) do
-  if tile.collision_mask.layers["ground"] then
+  if tile.collision_mask.layers["ground_tile"] then
     tile.collision_mask.layers["waterway"] = true
   end
 end

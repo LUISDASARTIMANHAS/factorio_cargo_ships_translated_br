@@ -310,7 +310,7 @@ local indep_boat_power = 300 + (speed_modifier -1) * 150
 local indep_boat = table.deepcopy(data.raw["car"]["car"])
 indep_boat.name = "indep-boat"
 --indep_boat.order = "no-aai" -- This prevents AAI Programmable Vehicles from copying the Boat
-indep_boat.collision_mask = {layers = {ground = true, train = true}}
+indep_boat.collision_mask = {layers = {ground_tile = true, train = true}}
 indep_boat.collision_box = {{-1.2, -3}, {1.2, 3}}
 indep_boat.selection_box = {{-1.2, -3}, {1.2, 3}}
 indep_boat.selection_priority = 51
