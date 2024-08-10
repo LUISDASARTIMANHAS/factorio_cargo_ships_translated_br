@@ -180,14 +180,16 @@ else
 end
 
 oil_rig.output_fluid_box = {
-  base_area = 10,
-  base_level = 10,
-  height = 2*oil_rig_capacity,
+  volume = 1000 * oil_rig_capacity,
   pipe_covers = pipecoverspictures(),
   pipe_connections =
   {
-    { position = {0, -4}}
-  },
+    {
+      direction = defines.direction.north,
+      position = {0, -3.1},  -- TODO 2.0 check oil rig output
+      flow_direction = "output",
+    },
+  }
 }
 oil_rig.graphics_set = {
   idle_animation = {
