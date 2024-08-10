@@ -110,8 +110,10 @@ data:extend{
     order = "a[water-system]-a[water-way]",
     place_result = "straight-water-way",
     stack_size = 100,
-    straight_rail = "straight-water-way",
-    curved_rail = "curved-water-way"
+    rails = {
+      "straight-water-way",
+      "curved-water-way",
+    }
   },
   {
     type = "item",
