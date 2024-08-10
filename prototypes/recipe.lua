@@ -57,7 +57,7 @@ data:extend({
     enabled = false,
     energy_required = 2,
     ingredients = {
-      {type="item", name="empty-barrel", amount=4},
+      {type="item", name="barrel", amount=4},
       {type="item", name="big-electric-pole", amount=1},
       {type="item", name="iron-plate", amount=5}
     },
@@ -69,7 +69,7 @@ data:extend({
     enabled = false,
     energy_required = 1,
     ingredients = {
-      {type="item", name="empty-barrel", amount=2},
+      {type="item", name="barrel", amount=2},
       {type="item", name="electronic-circuit", amount=2},
       {type="item", name="iron-plate", amount=5}
     },
@@ -81,7 +81,7 @@ data:extend({
     enabled = false,
     energy_required = 1,
     ingredients = {
-      {type="item", name="empty-barrel", amount=2},
+      {type="item", name="barrel", amount=2},
       {type="item", name="electronic-circuit", amount=2},
       {type="item", name="iron-plate", amount=5}
     },
