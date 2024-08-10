@@ -310,7 +310,7 @@ if external_power == "disabled" then
 else
   or_pole.maximum_wire_distance = 20
 end
-or_pole.pictures = emptypic
+or_pole.pictures = nil
 or_pole.supply_area_distance = 4.5
 or_pole.water_reflection = nil
 or_pole.connection_points = {
@@ -337,7 +337,7 @@ or_radar.collision_box = nil
 or_radar.selection_box = nil
 or_radar.fast_replaceable_group = nil
 or_radar.next_upgrade = nil
-or_radar.pictures = emptypic
+or_radar.pictures = nil
 or_radar.max_distance_of_sector_revealed = 0
 or_radar.energy_usage = "30kW"
 or_radar.energy_source = {

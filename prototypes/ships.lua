@@ -137,98 +137,104 @@ local indep_boat_animation = {
 }
 
 local boat_pictures = {
-  layers = {
-    {
-      slice = 4,
-      priority = "low",
-      width = 750,
-      height = 750,
-      direction_count = 256,
-      allow_low_quality_rotation = true,
-      filenames = imageloop(GRAPHICSPATH .. "entity/boat/railed/boat_", 4),
-      line_length = 8,
-      lines_per_file = 8,
-      scale = 0.5, --1.5,
-      shift = util.by_pixel(0, -28),
-    },
-    {
-      slice = 4,
-      priority = "low",
-      width = 750,
-      height = 750,
-      direction_count = 256,
-      allow_low_quality_rotation = true,
-      filenames = imageloop(GRAPHICSPATH .. "entity/boat/railed/boat_shadow_", 4),
-      line_length = 8,
-      lines_per_file = 8,
-      scale = 0.5, --1.5,
-      shift = util.by_pixel(0, -28),
-      draw_as_shadow = true,
+  rotated = {
+    layers = {
+      {
+        slice = 4,
+        priority = "low",
+        width = 750,
+        height = 750,
+        direction_count = 256,
+        allow_low_quality_rotation = true,
+        filenames = imageloop(GRAPHICSPATH .. "entity/boat/railed/boat_", 4),
+        line_length = 8,
+        lines_per_file = 8,
+        scale = 0.5, --1.5,
+        shift = util.by_pixel(0, -28),
+      },
+      {
+        slice = 4,
+        priority = "low",
+        width = 750,
+        height = 750,
+        direction_count = 256,
+        allow_low_quality_rotation = true,
+        filenames = imageloop(GRAPHICSPATH .. "entity/boat/railed/boat_shadow_", 4),
+        line_length = 8,
+        lines_per_file = 8,
+        scale = 0.5, --1.5,
+        shift = util.by_pixel(0, -28),
+        draw_as_shadow = true,
+      }
     }
   }
 }
 
 local cargo_ship_pictures = {
-  layers = {
-    {
-      slice = 4,
-      priority = "low",
-      width = 1000,
-      height = 1000,
-      direction_count = 256,
-      allow_low_quality_rotation = true,
-      filenames = imageloop(GRAPHICSPATH .. "entity/cargo_ship/cs_", 16),
-      line_length = 4,
-      lines_per_file = 4,
-      scale = 0.85,--3,
-      shift = util.by_pixel(0, -54.5),
-    },
-    {
-      slice = 4,
-      priority = "low",
-      width = 1000,
-      height = 1000,
-      direction_count = 256,
-      allow_low_quality_rotation = true,
-      filenames = imageloop(GRAPHICSPATH .. "entity/cargo_ship/cs_shadow_", 16),
-      line_length = 4,
-      lines_per_file = 4,
-      scale = 0.85,--3,
-      shift = util.by_pixel(0, -54.5),
-      draw_as_shadow = true,
+  rotated = {
+    layers = {
+      {
+        slice = 4,
+        priority = "low",
+        width = 1000,
+        height = 1000,
+        direction_count = 256,
+        allow_low_quality_rotation = true,
+        filenames = imageloop(GRAPHICSPATH .. "entity/cargo_ship/cs_", 16),
+        line_length = 4,
+        lines_per_file = 4,
+        scale = 0.85,--3,
+        shift = util.by_pixel(0, -54.5),
+      },
+      {
+        slice = 4,
+        priority = "low",
+        width = 1000,
+        height = 1000,
+        direction_count = 256,
+        allow_low_quality_rotation = true,
+        filenames = imageloop(GRAPHICSPATH .. "entity/cargo_ship/cs_shadow_", 16),
+        line_length = 4,
+        lines_per_file = 4,
+        scale = 0.85,--3,
+        shift = util.by_pixel(0, -54.5),
+        draw_as_shadow = true,
+      }
     }
   }
 }
 
 local oil_tanker_pictures = {
-  layers = {
-    {
-      slice = 4,
-      priority = "low",
-      width = 890,
-      height = 912,
-      direction_count = 256,
-      allow_low_quality_rotation = true,
-      filenames = imageloop(GRAPHICSPATH .. "entity/tanker/tanker_unit_", 16),
-      line_length = 4,
-      lines_per_file = 4,
-      scale = 0.85,
-      shift = util.by_pixel(0, -22.5),
-    },
-    {
-      slice = 4,
-      priority = "low",
-      width = 1000,
-      height = 1000,
-      direction_count = 256,
-      allow_low_quality_rotation = true,
-      filenames = imageloop(GRAPHICSPATH .. "entity/tanker/tanker_shadow_", 16),
-      line_length = 4,
-      lines_per_file = 4,
-      scale = 0.85,
-      shift = util.by_pixel(0, -22.5),
-      draw_as_shadow = true,
-    },
+  rotated = {
+    layers = {
+      {
+        slice = 4,
+        priority = "low",
+        width = 890,
+        height = 912,
+        direction_count = 256,
+        allow_low_quality_rotation = true,
+        filenames = imageloop(GRAPHICSPATH .. "entity/tanker/tanker_unit_", 16),
+        line_length = 4,
+        lines_per_file = 4,
+        scale = 0.85,
+        shift = util.by_pixel(0, -22.5),
+      },
+      {
+        slice = 4,
+        priority = "low",
+        width = 1000,
+        height = 1000,
+        direction_count = 256,
+        allow_low_quality_rotation = true,
+        filenames = imageloop(GRAPHICSPATH .. "entity/tanker/tanker_shadow_", 16),
+        line_length = 4,
+        lines_per_file = 4,
+        scale = 0.85,
+        shift = util.by_pixel(0, -22.5),
+        draw_as_shadow = true,
+      },
+    }
   }
 }
 
@@ -493,7 +499,7 @@ boat_engine.burner = {
     }
   }
 }
-boat_engine.pictures = emptypic
+boat_engine.pictures = nil
 boat_engine.water_reflection = nil
 boat_engine.wheels = nil
 boat_engine.working_sound = car_sounds
@@ -644,7 +650,8 @@ cargo_ship_engine.selection_box = {{-1.3, -1.2}, {1.3, 1.2}}
 cargo_ship_engine.selection_priority = 51
 cargo_ship_engine.connection_distance = 3
 cargo_ship_engine.joint_distance = 1.7
-cargo_ship_engine.burner = {
+cargo_ship_engine.energy_source = {
+  type = "burner",
   fuel_category = "chemical",
   effectivity = 1,
   fuel_inventory_size = 5 * fuel_modifier,
@@ -700,7 +707,7 @@ cargo_ship_engine.burner = {
 
   }
 }
-cargo_ship_engine.pictures = emptypic
+cargo_ship_engine.pictures = nil
 cargo_ship_engine.minimap_representation = nil
 cargo_ship_engine.selected_minimap_representation = nil
 cargo_ship_engine.water_reflection = nil
