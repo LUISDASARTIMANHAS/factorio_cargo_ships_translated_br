@@ -169,12 +169,12 @@ oil_rig.module_slots = 3
 if external_power == "disabled" then
   oil_rig.energy_source = {
     type = "void",
-    emissions_per_minute = 25,
+    emissions_per_minute = {pollution = 25},
   }
 else
   oil_rig.energy_source = {
     type = "electric",
-    emissions_per_minute = 25,
+    emissions_per_minute = {pollution = 25},
     usage_priority = "secondary-input",
   }
 end
@@ -340,7 +340,6 @@ or_radar.max_distance_of_sector_revealed = 0
 or_radar.energy_usage = "30kW"
 or_radar.energy_source = {
   type = "void",
-  emissions_per_minute = 0,
 }
 or_radar.water_reflection = nil
 or_radar.working_sound = nil
