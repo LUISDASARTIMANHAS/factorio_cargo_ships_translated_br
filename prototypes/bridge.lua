@@ -297,7 +297,8 @@ invisible_chain_signal.icon = GRAPHICSPATH .. "icons/chain_buoy.png"
 invisible_chain_signal.icon_size = 64
 invisible_chain_signal.selection_box = nil
 invisible_chain_signal.resistances = invincible
-invisible_chain_signal.flags = {"not-blueprintable", "not-deconstructable", "placeable-neutral", "player-creation", "hidden"}
+invisible_chain_signal.flags = {"not-blueprintable", "not-deconstructable", "placeable-neutral", "player-creation"}
+invisible_chain_signal.hidden = true
 invisible_chain_signal.selectable_in_game = false
 invisible_chain_signal.collision_mask = {layers = {object = true, rail = true}}  -- waterway added in data-final-fixes
 invisible_chain_signal.allow_copy_paste = false
