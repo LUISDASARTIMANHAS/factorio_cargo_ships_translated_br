@@ -165,7 +165,7 @@ oil_rig.selection_box = {{-3.5, -3.5}, {3.5, 3.5}}
 oil_rig.drawing_box = {{-3.3, -3.3}, {3.3, 3.3}}
 oil_rig.fast_replaceable_group  = nil
 oil_rig.next_upgrade = nil
-oil_rig.module_specification.module_slots = 3
+oil_rig.module_slots = 3
 if external_power == "disabled" then
   oil_rig.energy_source = {
     type = "void",
