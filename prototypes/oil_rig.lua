@@ -300,7 +300,7 @@ or_pole.minable = nil
 or_pole.collision_box = nil
 or_pole.selection_box = {{-0.5, -0.5}, {0.5, 0.5}}
 or_pole.selection_priority = 56
-or_pole.collision_mask = {}
+or_pole.collision_mask = {layers = {}}
 or_pole.fast_replaceable_group = nil
 or_pole.next_upgrade = nil
 if external_power == "disabled" then
@@ -330,7 +330,7 @@ or_radar.icon_size = oil_rig.icon_size
 or_radar.flags = {"not-blueprintable", "not-deconstructable", "placeable-off-grid"}
 or_radar.selectable_in_game = false
 or_radar.allow_copy_paste = false
-or_radar.collision_mask = {}
+or_radar.collision_mask = {layers = {}}
 or_radar.collision_box = nil
 or_radar.selection_box = nil
 or_radar.fast_replaceable_group = nil

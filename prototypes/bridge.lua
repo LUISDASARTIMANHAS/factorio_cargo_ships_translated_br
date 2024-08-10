@@ -203,7 +203,7 @@ bridge_north.resistances = invincible
 bridge_north.selection_box = nil
 bridge_north.fast_replaceable_group  = nil
 bridge_north.collision_box = {{-1,-1},{1,1}}
-bridge_north.collision_mask = {}
+bridge_north.collision_mask = {layers = {}}
 bridge_north.next_upgrade = nil
 bridge_north.flags = {"not-blueprintable", "not-deconstructable", "placeable-neutral", "player-creation"}
 bridge_north.selectable_in_game = false
@@ -221,7 +221,7 @@ bridge_north_closed.fast_replaceable_group  = nil
 bridge_north_closed.next_upgrade = nil
 bridge_north_closed.selection_box = nil
 bridge_north_closed.collision_box = {{-4,-2}, {6,2}}
-bridge_north_closed.collision_mask = {} --collision with boats
+bridge_north_closed.collision_mask = {layers = {}} --collision with boats
 bridge_north_closed.flags = {"not-blueprintable", "not-deconstructable", "placeable-neutral", "player-creation"}
 bridge_north_closed.selectable_in_game = false
 bridge_north_closed.allow_copy_paste = false

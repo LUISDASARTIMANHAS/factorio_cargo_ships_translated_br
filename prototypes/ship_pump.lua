@@ -32,7 +32,7 @@ pump_marker.selectable_in_game = false
 pump_marker.allow_copy_paste = false
 pump_marker.render_layer = "selection-box"
 pump_marker.minable = nil
-pump_marker.collision_mask = {}
+pump_marker.collision_mask = {layers = {}}
 pump_marker.picture = {
   filename = GRAPHICSPATH .. "green_selection_box.png",
   width = 128,
