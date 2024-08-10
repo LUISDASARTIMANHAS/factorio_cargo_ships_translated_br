@@ -25,7 +25,7 @@ data:extend{
     --style = "blue",
     icon = GRAPHICSPATH .. "icons/waterway-shortcut.png",
     icon_size = 32,
-    disabled_icon = GRAPHICSPATH .. "icons/waterway-shortcut-white.png",
-    disabled_icon_size = 32,
+    small_icon = GRAPHICSPATH .. "icons/waterway-shortcut.png",
+    small_icon_size = 32,
   }
 }
