@@ -138,7 +138,7 @@ end
 ----------------------------------------------------------------
 local oil_rig_capacity = settings.startup["oil_rig_capacity"].value
 
-circuit_connector_definitions["oil_rig"] = circuit_connector_definitions.create
+circuit_connector_definitions["oil_rig"] = circuit_connector_definitions.create_vector
 (
   universal_connector_template,
   {

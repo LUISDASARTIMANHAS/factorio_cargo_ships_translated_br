@@ -469,7 +469,7 @@ port.working_sound = nil
 -- build a new 4 way definition for port
 -- show_shadow=false prevents floating circuit box shadows, but wire shadows end nowhere
 -- once port shadows are done set show_shadow=true and tweak shadow_offset, should be around (-30, 10) from  main_offset
-circuit_connector_definitions["cargo-ships-port"] = circuit_connector_definitions.create(
+circuit_connector_definitions["cargo-ships-port"] = circuit_connector_definitions.create_vector(
   universal_connector_template,
   {
     { variation = 18, main_offset = util.by_pixel(37, -61), shadow_offset = util.by_pixel(37, -61), show_shadow = false },
