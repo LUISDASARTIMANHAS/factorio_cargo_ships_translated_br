@@ -153,7 +153,7 @@ local oil_rig = table.deepcopy(data.raw["mining-drill"]["pumpjack"])
 oil_rig.name = "oil_rig"
 oil_rig.icon = GRAPHICSPATH .. "icons/oil_rig.png"
 oil_rig.icon_size = 64
-oil_rig.collision_mask = {'object-layer', "train-layer"}
+oil_rig.collision_mask = {layers = {object = true, train = true}}
 oil_rig.minable = {mining_time = 3, result = "oil_rig"}
 oil_rig.dying_explosion = "big-explosion"
 oil_rig.max_health = 1000

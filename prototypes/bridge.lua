@@ -299,7 +299,7 @@ invisible_chain_signal.selection_box = nil
 invisible_chain_signal.resistances = invincible
 invisible_chain_signal.flags = {"not-blueprintable", "not-deconstructable", "placeable-neutral", "player-creation", "hidden"}
 invisible_chain_signal.selectable_in_game = false
-invisible_chain_signal.collision_mask = {"object-layer", "rail-layer"}  -- waterway_layer added in data-final-fixes
+invisible_chain_signal.collision_mask = {layers = {object = true, rail = true}}  -- waterway added in data-final-fixes
 invisible_chain_signal.allow_copy_paste = false
 invisible_chain_signal.minable = nil
 invisible_chain_signal.animation = {
@@ -332,7 +332,7 @@ bridge_north_clickable.minable = {mining_time = 1, result = "bridge_base"}
 bridge_north_clickable.placeable_by = {item = "bridge_base", count = 1}  -- For pipette (Q)
 bridge_north_clickable.selection_box = {{-5,-WID}, {7,WID}}
 bridge_north_clickable.collision_box = {{-5,-WID}, {7,WID}}
-bridge_north_clickable.collision_mask = {"object-layer", "layer-14"}
+bridge_north_clickable.collision_mask = {layers = {object = true}}  -- TODO 2.0 check what "layer-14" was doing here
 bridge_north_clickable.max_health = 1000
 bridge_north_clickable.picture = emptypic
 --bridge_north_clickable.created_smoke = nil

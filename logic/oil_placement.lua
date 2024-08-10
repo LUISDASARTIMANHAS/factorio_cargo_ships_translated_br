@@ -6,7 +6,7 @@ function placeDeepOil(e)
   local count = 0
 
   -- Check if there is any water at all in this chunk, or if we should delete oil from land
-  if (global.no_oil_on_land or surface.count_tiles_filtered{area=area, collision_mask = "water-tile"} > 0) then
+  if (global.no_oil_on_land or surface.count_tiles_filtered{area=area, collision_mask = "water_tile"} > 0) then
 
     -- Find all the crude oil generated on land or sea
     local vanilla_deposits = surface.find_entities_filtered{area=area, name="crude-oil"}
@@ -47,7 +47,7 @@ function placeDeepOil(e)
         -- Otherwise, delete all crude-oil deposits that are on water
         for _, deposit in pairs(vanilla_deposits) do
           if ( global.no_oil_on_land or
-               surface.count_tiles_filtered{position=deposit.position, radius=deposit.get_radius(), collision_mask="water-tile"} > 0 ) then
+               surface.count_tiles_filtered{position=deposit.position, radius=deposit.get_radius(), collision_mask="water_tile"} > 0 ) then
             deposit.destroy()
             count = count + 1
           end

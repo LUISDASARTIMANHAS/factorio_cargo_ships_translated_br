@@ -143,7 +143,7 @@ data:extend({
     corpse = nil,
     collision_box = {{-1.01, -0.95}, {1.01, 0.95}},
     selection_box = {{-1.7, -0.8}, {1.7, 0.8}},
-    collision_mask = {"object-layer"},  -- waterway_layer added in data-final-fixes
+    collision_mask = {layers = {object = true}},  -- waterway_layer added in data-final-fixes
     pictures = railpictures(),
     placeable_by = {item = "waterway", count = 1},
     localised_description = {"item-description.waterway"},
@@ -163,7 +163,7 @@ data:extend({
     corpse = nil,
     collision_box = {{-1, -2}, {1, 3.1}},
     selection_box = {{-1.7, -0.8}, {1.7, 0.8}},
-    collision_mask = {"object-layer"},  -- waterway_layer added in data-final-fixes
+    collision_mask = {layers = {object = true}},  -- waterway_layer added in data-final-fixes
     pictures = railpictures(),
     placeable_by = {item = "waterway", count = 1},
     localised_description = {"item-description.waterway"},
@@ -185,7 +185,7 @@ invisible_rail.minable = nil
 invisible_rail.resistances = invincible
 invisible_rail.selection_box = nil
 invisible_rail.selectable_in_game = false
-invisible_rail.collision_mask = {"object-layer"}  -- waterway_layer added in data-final-fixes
+invisible_rail.collision_mask = {layers = {object = true}}  -- waterway_layer added in data-final-fixes
 invisible_rail.allow_copy_paste = false
 invisible_rail.map_color = mapcolor
 invisible_rail.friendly_map_color = mapcolor
@@ -197,7 +197,7 @@ bridge_crossing.icon_size = 64
 bridge_crossing.flags = {"not-blueprintable", "not-deconstructable", "placeable-neutral", "player-creation", "building-direction-8-way"}
 bridge_crossing.minable = nil
 bridge_crossing.resistances = invincible
-bridge_crossing.collision_mask = {"object-layer"}  -- waterway_layer added in data-final-fixes
+bridge_crossing.collision_mask = {layers = {object = true}}  -- waterway_layer added in data-final-fixes
 bridge_crossing.collision_box = {{-0.6, -0.95}, {0.6, 0.95}}
 bridge_crossing.selection_box = nil
 bridge_crossing.selectable_in_game = false

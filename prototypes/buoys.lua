@@ -4,7 +4,7 @@ floating_pole.icon = GRAPHICSPATH .. "icons/floating_pole.png"
 floating_pole.icon_size = 64
 floating_pole.icon_mipmaps = 0
 floating_pole.minable = {mining_time = 0.5, result = "floating-electric-pole"}
-floating_pole.collision_mask = {'ground-tile', 'object-layer'}
+floating_pole.collision_mask = {layers = {ground = true, object = true}}
 floating_pole.maximum_wire_distance = 48
 floating_pole.supply_area_distance = 0
 floating_pole.fast_replaceable_group = nil
@@ -160,7 +160,7 @@ buoy.name = "buoy"
 buoy.icon = GRAPHICSPATH .. "icons/buoy.png"
 buoy.icon_size = 64
 buoy.icon_mipmaps = 0
-buoy.collision_mask = {"object-layer", "rail-layer"}  -- waterway_layer added in data-final-fixes
+buoy.collision_mask = {layers = {object = true, rail = true}}  -- waterway_layer added in data-final-fixes
 buoy.selection_box = {{-1.6, -0.8}, {0.01, 0.8}}
 buoy.fast_replaceable_group = "buoy"
 buoy.minable = {mining_time = 0.5, result = "buoy"}
@@ -251,7 +251,7 @@ chain_buoy.name = "chain_buoy"
 chain_buoy.icon = GRAPHICSPATH .. "icons/chain_buoy.png"
 chain_buoy.icon_size = 64
 chain_buoy.icon_mipmaps = 0
-chain_buoy.collision_mask = {"object-layer", "rail-layer"}  -- waterway_layer added in data-final-fixes
+chain_buoy.collision_mask = {layers = {object = true, rail = true}}  -- waterway_layer added in data-final-fixes
 chain_buoy.selection_box = {{-1.6, -0.8}, {0.01, 0.8}}
 chain_buoy.fast_replaceable_group = "buoy"
 chain_buoy.minable = {mining_time = 0.5, result = "chain_buoy"}
@@ -324,7 +324,7 @@ port.icon_size = 64
 port.icon_mipmaps = 0
 port.minable = {mining_time = 1, result = "port"}
 port.rail_overlay_animations = nil
-port.collision_mask = {"object-layer"}
+port.collision_mask = {layers = {object = true}}
 port.collision_box = {{-0.01, -0.9}, {1.9, 0.9}}
 port.selection_box = {{-0.01, -0.9}, {1.9, 0.9}}
 
