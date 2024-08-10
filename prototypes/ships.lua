@@ -270,7 +270,7 @@ wave.animation = {
 --wave.start_scale = 1.3
 wave.start_scale = 0.65
 wave.color = { r = 1, g = 1, b = 1 }
-wave.render_layer = "water-tile"
+wave.render_layer = "above-tiles"
 
 data:extend({wave})
 
@@ -291,7 +291,7 @@ wave_circle.animation = {
 wave_circle.start_scale = 0.01
 wave_circle.end_scale = 0.8
 wave_circle.color = { r = 1, g = 1, b = 1 }
-wave_circle.render_layer = "water-tile"
+wave_circle.render_layer = "above-tiles"
 wave_circle.duration = 500
 wave_circle.fade_away_duration = 500
 wave_circle.movement_slow_down_factor = 0
