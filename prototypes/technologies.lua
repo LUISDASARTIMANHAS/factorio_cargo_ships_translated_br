@@ -130,7 +130,7 @@ data:extend ({
   effects = {
     unlock("bridge_base"),
   },
-  prerequisites = {"water_transport_signals", "rail-signals", "advanced-electronics"},
+  prerequisites = {"water_transport_signals", "advanced-circuit"},
   unit = {
     count = 200,
     ingredients = {
@@ -167,7 +167,7 @@ if settings.startup["deep_oil"].value then
       order = "c-g-b",
     },
   }
-  
+
   -- Change technology requirement if oil is not available on land
   if settings.startup["no_oil_on_land"].value or settings.startup["no_oil_for_oil_rig"].value then
     data.raw.technology["deep_sea_oil_extraction"].unit = {
