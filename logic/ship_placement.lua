@@ -149,13 +149,13 @@ function checkPlacement()
             cancelPlacement(entity, player, robot)
             cancelPlacement(engine, player)
           -- check if on rails
-          elseif entity.train.front_rail then
-            if entity.train.front_rail.name ~= "straight-water-way" and entity.train.front_rail.name ~= "curved-water-way" then
+          elseif entity.train.front_end then
+            if entity.train.front_end.rail.name ~= "straight-water-way" and entity.train.front_end.rail.name ~= "curved-water-way" then
               cancelPlacement(entity, player, robot)
               cancelPlacement(engine, player)
             end
-          elseif entity.train.back_rail then
-            if entity.train.back_rail.name ~= "straight-water-way" and entity.train.back_rail.name ~= "curved-water-way" then
+          elseif entity.train.back_end then
+            if entity.train.back_end.rail.name ~= "straight-water-way" and entity.train.back_end.rail.name ~= "curved-water-way" then
               cancelPlacement(entity, player, robot)
               cancelPlacement(engine, player)
             end
@@ -171,12 +171,12 @@ function checkPlacement()
       -- else: trains
       elseif entity.train then
         -- check if on waterways
-        if entity.train.front_rail then
-          if entity.train.front_rail.name == "straight-water-way" or entity.train.front_rail.name == "curved-water-way" then
+        if entity.train.front_end then
+          if entity.train.front_end.rail.name == "straight-water-way" or entity.train.front_end.rail.name == "curved-water-way" then
             cancelPlacement(entity, player, robot)
           end
-        elseif entity.train.back_rail then
-          if entity.train.back_rail.name == "straight-water-way" or entity.train.back_rail.name == "curved-water-way" then
+        elseif entity.train.back_end.rail then
+          if entity.train.back_end.rail.name == "straight-water-way" or entity.train.back_end.rail.name == "curved-water-way" then
             cancelPlacement(entity, player, robot)
           end
         end
