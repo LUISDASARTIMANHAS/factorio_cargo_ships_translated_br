@@ -1,21 +1,39 @@
-local invincible = {
-  {
-    type = "physical",
-    percent = 100
-  },
-  {
-    type = "explosion",
-    percent = 100
-  },
-  {
-    type = "acid",
-    percent = 100
-  },
-  {
-    type = "fire",
-    percent = 100
+require "waterway-pictures"
+
+local waterway_8shifts_vector = function(dx, dy)
+  return
+    {
+      {  dx,  dy },
+      { -dx,  dy },
+      { -dy,  dx },
+      { -dy, -dx },
+      { -dx, -dy },
+      {  dx, -dy },
+      {  dy, -dx },
+      {  dy,  dx }
+    }
+end
+
+local function invincible()
+  return {
+    {
+      type = "physical",
+      percent = 100
+    },
+    {
+      type = "explosion",
+      percent = 100
+    },
+    {
+      type = "acid",
+      percent = 100
+    },
+    {
+      type = "fire",
+      percent = 100
+    }
   }
-}
+end
 
 local ground_rail_render_layers =
 {
@@ -37,81 +55,6 @@ local rail_segment_visualisation_endings =
   direction_count = 16,
   frame_count = 6,
 }
-
-
-local function make_legacy_rail_pictures(elems, rail_type)
-  local keys
-  if rail_type == "legacy_straight_rail" then
-    keys =
-    {
-      {"north",     "vertical", 128, 64, 0, 0, true},
-      {"northeast", "diagonal-right-top", 96, 96, -0.5, 0.5, true},
-      {"east",      "horizontal", 64, 128, 0, 0, true},
-      {"southeast", "diagonal-right-bottom", 96, 96, -0.5, -0.5, true},
-      {"south",     "vertical", 128, 64, 0, 0, true}, -- Not used due to direction minimization
-      {"southwest", "diagonal-left-bottom", 96, 96, 0.5, -0.5, true},
-      {"west",      "horizontal", 64, 128, 0, 0, true}, -- Not used due to direction minimization
-      {"northwest", "diagonal-left-top", 96, 96, 0.5, 0.5, true}
-    }
-  elseif rail_type == "legacy_curved_rail" then
-    keys =
-    {
-      {"north",     "vertical-left-bottom", 192, 288, 0.5, -0.5},
-      {"northeast", "vertical-right-bottom", 192, 288, -0.5, -0.5},
-      {"east",      "horizontal-left-top", 288, 192, 0.5, 0.5},
-      {"southeast", "horizontal-left-bottom", 288, 192, 0.5, -0.5},
-      {"south",     "vertical-right-top", 192, 288, -0.5, 0.5},
-      {"southwest", "vertical-left-top", 192, 288, 0.5, 0.5},
-      {"west",      "horizontal-right-bottom", 288, 192, -0.5, -0.5},
-      {"northwest", "horizontal-right-top", 288, 192, -0.5, 0.5}
-    }
-  end
-  local res = {}
-  for _ , key in ipairs(keys) do
-    local part = {}
-    dashkey = rail_type:gsub("_", "-")
-    for _ , elem in ipairs(elems) do
-      local variation_count = (key[7] and elem.variations) or 1
-      if (elem[1] == "segment_visualisation_middle") then
-        variation_count = nil
-      end
-      part[elem[1]] =
-      {
-        filename = string.format("__base__/graphics/entity/%s/%s-%s-%s.png", dashkey, dashkey, key[2], elem[2]),
-        priority = elem.priority or "extra-high",
-        flags = elem.mipmap and { "trilinear-filtering" } or { "low-object" },
-        width = key[3]*2,
-        height = key[4]*2,
-        shift = {key[5], key[6]},
-        scale = 0.5,
-        variation_count = variation_count
-      }
-    end
-    res[key[1]] = part
-  end
-  res["rail_endings"] =
-  {
-    sheets =
-    {
-      -- TODO
-    }
-  }
-  res["render_layers"] = ground_rail_render_layers
-  res["segment_visualisation_endings"] = rail_segment_visualisation_endings
-  return res
-end
-
-function legacy_rail_pictures(rail_type)
-  return make_legacy_rail_pictures
-  ({
-    {"metals", "metals", mipmap = true},
-    {"backplates", "backplates", mipmap = true},
-    {"ties", "ties", variations = 3},
-    {"stone_path", "stone-path", variations = 3},
-    {"stone_path_background", "stone-path-background", variations = 3},
-    {"segment_visualisation_middle", "segment-visualisation-middle"},
-  }, rail_type)
-end
 
 
 railpictures = function(invisible)
@@ -225,20 +168,16 @@ railpicturesinternal = function(elems, invisible)
   return res
 end
 
---[[
-2.0 rails
 
-]]
-
-local mapcolor = {0.56, 0.64, 0.65, 1} --doesn't work yet on rails for some reason
+-- mapcolor doesn't work yet on rails for some reason
 data:extend({
-  {
+  --[[{
     type = "legacy-straight-rail",
-    name = "straight-water-way",
+    name = "straight-waterway",
     icon = GRAPHICSPATH .. "icons/water_rail.png",
     icon_size = 64,
     flags = {"placeable-neutral", "player-creation", "building-direction-8-way"},
-    resistances = invincible,
+    resistances = invincible(),
     minable = {mining_time = 0.2},
     max_health = 100,
     corpse = nil,
@@ -251,26 +190,100 @@ data:extend({
     map_color = mapcolor,
     friendly_map_color = mapcolor,
     enemy_map_color = mapcolor,
-  },
+  },]]
   {
     type = "legacy-curved-rail",
-    name = "curved-water-way",
+    name = "legacy-curved-waterway",
     icon = GRAPHICSPATH .. "icons/water_rail.png",
     icon_size = 64,
     flags = {"placeable-neutral", "player-creation", "building-direction-8-way"},
-    resistances = invincible,
+    resistances = invincible(),
     minable = {mining_time = 0.2},
     max_health = 200,
     corpse = nil,
     collision_box = {{-1, -2}, {1, 3.1}},
     selection_box = {{-1.7, -0.8}, {1.7, 0.8}},
     collision_mask = {layers = {object = true}},  -- waterway_layer added in data-final-fixes
-    pictures = legacy_rail_pictures("legacy_curved_rail"),
+    pictures = legacy_waterway_pictures("legacy_curved_rail"),
     placeable_by = {item = "waterway", count = 1},
     localised_description = {"item-description.waterway"},
-    map_color = mapcolor,
-    friendly_map_color = mapcolor,
-    enemy_map_color = mapcolor,
+  },
+  {
+    type = "straight-rail",
+    name = "straight-waterway",
+    order = "a[ground-rail]-a[straight-rail]",
+    icon = GRAPHICSPATH .. "icons/water_rail.png",
+    collision_box = {{-1, -1}, {1, 1}}, -- has custommly generated box, but the prototype needs something that is used to generate building smokes
+    collision_mask = {layers = {object = true}},  -- waterway_layer added in data-final-fixes
+    flags = {"placeable-neutral", "player-creation", "building-direction-8-way"},
+    resistances = invincible(),
+    minable = {mining_time = 0.2},
+    max_health = 200,
+    corpse = nil,
+    -- collision box is hardcoded for rails as to avoid unexpected changes in the way rail blocks are merged
+    selection_box = {{-1.7, -0.8}, {1.7, 0.8}},
+    pictures = new_waterway_pictures("straight"),
+    placeable_by = {item = "waterway", count = 1},
+    extra_planner_goal_penalty = -4,
+    factoriopedia_alternative = "straight-waterway"
+  },
+  {
+    type = "half-diagonal-rail",
+    name = "half-diagonal-waterway",
+    order = "a[ground-rail]-b[half-diagonal-rail]",
+    deconstruction_alternative = "straight-waterway",
+    icon = GRAPHICSPATH .. "icons/water_rail.png",
+    collision_box = {{-0.75, -2.236}, {0.75, 2.236}}, -- has custommly generated box, but the prototype needs something that is used to generate building smokes
+    collision_mask = {layers = {object = true}},  -- waterway_layer added in data-final-fixes
+    tile_height = 2,
+    extra_planner_goal_penalty = -4,
+    flags = {"placeable-neutral", "player-creation", "building-direction-8-way"},
+    resistances = invincible(),
+    minable = {mining_time = 0.2},
+    max_health = 200,
+    selection_box = {{-1.7, -0.8}, {1.7, 0.8}},
+    pictures = new_waterway_pictures("half-diagonal"),
+    placeable_by = {item = "waterway", count = 1},
+    extra_planner_penalty = 0,
+    factoriopedia_alternative = "straight-waterway"
+  },
+  {
+    type = "curved-rail-a",
+    name = "curved-waterway-a",
+    order = "a[ground-rail]-c[curved-rail-a]",
+    deconstruction_alternative = "straight-waterway",
+    icon = GRAPHICSPATH .. "icons/water_rail.png",
+    collision_box = {{-0.75, -2.516}, {0.75, 2.516}}, -- has custommly generated box, but the prototype needs something that is used to generate building smokes
+    collision_mask = {layers = {object = true}},  -- waterway_layer added in data-final-fixes
+    flags = {"placeable-neutral", "player-creation", "building-direction-8-way"},
+    resistances = invincible(),
+    minable = {mining_time = 0.2},
+    max_health = 200,
+    selection_box = {{-1.7, -0.8}, {1.7, 0.8}},
+    pictures = new_waterway_pictures("curved-a"),
+    placeable_by = {item = "waterway", count = 2},
+    extra_planner_penalty = 0.5,
+    deconstruction_marker_positions = waterway_8shifts_vector(-0.248, -0.533),
+    factoriopedia_alternative = "straight-waterway"
+  },
+  {
+    type = "curved-rail-b",
+    name = "curved-waterway-b",
+    order = "a[ground-rail]-d[curved-rail-b]",
+    deconstruction_alternative = "straight-waterway",
+    icon = GRAPHICSPATH .. "icons/water_rail.png",
+    collision_box = {{-0.75, -2.441}, {0.75, 2.441}}, -- has custommly generated box, but the prototype needs something that is used to generate building smokes
+    collision_mask = {layers = {object = true}},  -- waterway_layer added in data-final-fixes
+    flags = {"placeable-neutral", "player-creation", "building-direction-8-way"},
+    resistances = invincible(),
+    minable = {mining_time = 0.2},
+    max_health = 200,
+    selection_box = {{-1.7, -0.8}, {1.7, 0.8}},
+    pictures = new_waterway_pictures("curved-b"),
+    placeable_by = {item = "waterway", count = 2},
+    extra_planner_penalty = 0.5,
+    deconstruction_marker_positions = waterway_8shifts_vector(-0.309, -0.155),
+    factoriopedia_alternative = "straight-waterway"
   },
 })
 
@@ -283,7 +296,7 @@ invisible_rail.icon_size = 64
 invisible_rail.flags = {"not-blueprintable", "not-deconstructable", "placeable-neutral", "player-creation", "building-direction-8-way"}
 --invisible_rail.pictures = railpictures(true)
 invisible_rail.minable = nil
-invisible_rail.resistances = invincible
+invisible_rail.resistances = invincible()
 invisible_rail.selection_box = nil
 invisible_rail.selectable_in_game = false
 invisible_rail.collision_mask = {layers = {object = true}}  -- waterway_layer added in data-final-fixes
@@ -291,13 +304,13 @@ invisible_rail.allow_copy_paste = false
 invisible_rail.map_color = mapcolor
 invisible_rail.friendly_map_color = mapcolor
 
-local bridge_crossing = table.deepcopy(data.raw["legacy-straight-rail"]["straight-water-way"])
+local bridge_crossing = table.deepcopy(data.raw["straight-rail"]["straight-waterway"])
 bridge_crossing.name = "bridge_crossing"
 bridge_crossing.icon = GRAPHICSPATH .. "icons/bridge.png"
 bridge_crossing.icon_size = 64
 bridge_crossing.flags = {"not-blueprintable", "not-deconstructable", "placeable-neutral", "player-creation", "building-direction-8-way"}
 bridge_crossing.minable = nil
-bridge_crossing.resistances = invincible
+bridge_crossing.resistances = invincible()
 bridge_crossing.collision_mask = {layers = {object = true}}  -- waterway_layer added in data-final-fixes
 bridge_crossing.collision_box = {{-0.6, -0.95}, {0.6, 0.95}}
 bridge_crossing.selection_box = nil

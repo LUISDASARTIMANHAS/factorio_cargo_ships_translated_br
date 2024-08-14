@@ -107,12 +107,14 @@ data:extend{
     localised_name = {"item-name.waterway"},
     flags = {"only-in-cursor"},
     subgroup = subgroup_shipequip,
-    order = "a[water-system]-a[water-way]",
-    place_result = "straight-water-way",
+    order = "a[water-system]-a[waterway]",
+    place_result = "straight-waterway",
     stack_size = 100,
     rails = {
-      "straight-water-way",
-      "curved-water-way",
+      "straight-waterway",
+      "half-diagonal-waterway",
+      "curved-waterway-a",
+      "curved-waterway-b",
     }
   },
   {

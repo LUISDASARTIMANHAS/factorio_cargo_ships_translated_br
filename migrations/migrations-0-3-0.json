@@ -1,0 +1,7 @@
+{
+  "entity":
+  [
+    ["straight-water-way", "straight-waterway"],
+    ["curved-water-way", "legacy-curved-waterway"]
+  ]
+}

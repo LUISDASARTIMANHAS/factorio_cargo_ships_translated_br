@@ -12,6 +12,14 @@ require("__cargo-ships__/gui/oil_rig_gui")
 --require("__cargo-ships__/logic/crane_logic")
 --require("__cargo-ships__/logic/rolling_stock_logic")
 
+is_waterway = {
+  ["straight-waterway"] = true,
+  ["half-diagonal-waterway"] = true,
+  ["curved-waterway-a"] = true,
+  ["curved-waterway-b"] = true,
+  ["legacy-curved-waterway"] = true,
+}
+
 -- spawn additional invisible entities
 local function onEntityBuild(e)
   --disable rolling stock logic for 1 tick
@@ -29,7 +37,8 @@ local function onEntityBuild(e)
     if entity.ghost_name == "bridge_base" then
       -- Not allowed to make ghost bridges yet
       entity.destroy()
-    elseif entity.ghost_name == "straight-water-way" or entity.ghost_name == "curved-water-way" then
+      
+    elseif is_waterway[entity.ghost_name] then
       entity.silent_revive{raise_revive = true}
     end
 
@@ -99,7 +108,7 @@ end
 
 local function onMarkedForDeconstruction(e)
   local entity = e.entity
-  if entity.name == "straight-water-way" or entity.name == "curved-water-way" then
+  if is_waterway[entity.name] then
     entity.destroy()
   end
 end
@@ -189,11 +198,11 @@ local function OnMined(e)
         end
         if ( engine and global.ship_engines[engine.name].recover_fuel and
              engine.get_fuel_inventory() and not engine.get_fuel_inventory().is_empty() ) then
-          local fuel = engine.get_fuel_inventory()
+          local fuel_inventory = engine.get_fuel_inventory()
           if player and player.character then
-            for f_type,f_amount in pairs(fuel.get_contents()) do
-              player.insert{name=f_type, count=f_amount}
-              fuel.remove{name=f_type, count=f_amount}
+            for _, fuel in pairs(fuel_inventory.get_contents()) do
+              player.insert{name=fuel.name, count=fuel.count}  -- TODO quality
+              fuel_inventory.remove{name=fuel.name, count=fuel.count}
             end
           elseif robot then
             local robotInventory = robot.get_inventory(defines.inventory.robot_cargo)
@@ -255,8 +264,11 @@ function init_events()
   -- entity created, check placement and create invisible elements
   local entity_filters = {
       {filter="ghost", ghost_name="bridge_base"},
-      {filter="ghost", ghost_name="straight-water-way"},
-      {filter="ghost", ghost_name="curved-water-way"},
+      {filter="ghost", ghost_name="straight-waterway"},
+      {filter="ghost", ghost_name="half-diagonal-waterway"},
+      {filter="ghost", ghost_name="curved-waterway-a"},
+      {filter="ghost", ghost_name="curved-waterway-b"},
+      {filter="ghost", ghost_name="legacy-curved-waterway"},
       {filter="type", type="cargo-wagon"},
       {filter="type", type="fluid-wagon"},
       {filter="type", type="locomotive"},
@@ -320,8 +332,11 @@ function init_events()
   script.on_event(defines.events.on_robot_pre_mined, OnMined, mined_filters)
 
   local deconstructed_filters = {
-    {filter="name", name="straight-water-way"},
-    {filter="name", name="curved-water-way"},
+    {filter="name", name="straight-waterway"},
+    {filter="name", name="half-diagonal-waterway"},
+    {filter="name", name="curved-waterway-a"},
+    {filter="name", name="curved-waterway-b"},
+    {filter="name", name="legacy-curved-waterway"},
   }
   script.on_event(defines.events.on_marked_for_deconstruction, onMarkedForDeconstruction, deconstructed_filters)
 

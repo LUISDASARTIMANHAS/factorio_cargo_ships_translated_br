@@ -1,8 +1,3 @@
-local waterway_rail_types = {
-  ["straight-water-way"] = true,
-  ["curved-water-way"] = true,
-}
-
 function FixPipette(e)
   -- Pipetting engine, rail boat, or waterway doesn't work
   local item = e.item
@@ -50,7 +45,7 @@ function FixPipette(e)
         cursor.clear()
       end
 
-    elseif selected and waterway_rail_types[selected.name] then
+    elseif selected and is_waterway[selected.name] then
       -- When the setting "Pick Ghost if no items are available" is not enabled then
       -- it's never possible to pipette a waterway. There's no way to check if this
       -- setting already put the correct item in the cursor though
