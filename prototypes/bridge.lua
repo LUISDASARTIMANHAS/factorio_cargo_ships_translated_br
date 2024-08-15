@@ -36,56 +36,30 @@ local function build_bridge_anim(ori, shiftx, shifty, picture)
     return {
       layers = {
         {
-          filename = GRAPHICSPATH .. "entity/bridge/bridge-" .. ori .. "-shadow.png",
+          filename = GRAPHICSPATH .. "entity/bridge/hr-bridge-" .. ori .. "-shadow.png",
           line_length = line_length,
           animation_speed = anim_speed,
-          width = width/2,
-          height = height/2,
+          width = width,
+          height = height,
           frame_count = 21,
           frame_sequence = {1, 1, 1, 4, 5, 6, 7, 8,9,10,11,12,13,14,15,16,17,18,19,20,21},
           axially_symmetrical = false,
           direction_count = 1,
           draw_as_shadow = true,
           shift = util.by_pixel(shiftx, shifty),
-          scale = 1,
-          hr_version = {
-            filename = GRAPHICSPATH .. "entity/bridge/hr-bridge-" .. ori .. "-shadow.png",
-            line_length = line_length,
-            animation_speed = anim_speed,
-            width = width,
-            height = height,
-            frame_count = 21,
-            frame_sequence = {1, 1, 1, 4, 5, 6, 7, 8,9,10,11,12,13,14,15,16,17,18,19,20,21},
-            axially_symmetrical = false,
-            direction_count = 1,
-            draw_as_shadow = true,
-            shift = util.by_pixel(shiftx, shifty),
-            scale = 0.5,
-          }
+          scale = 0.5,
         },
         {
-          filename = GRAPHICSPATH .. "entity/bridge/bridge-" .. ori .. ".png",
+          filename = GRAPHICSPATH .. "entity/bridge/hr-bridge-" .. ori .. ".png",
           line_length = line_length,
           animation_speed = anim_speed,
-          width = width/2,
-          height = height/2,
+          width = width,
+          height = height,
           frame_count = 21,
           axially_symmetrical = false,
           direction_count = 1,
           shift = util.by_pixel(shiftx, shifty),
-          scale = 1,
-          hr_version = {
-            filename = GRAPHICSPATH .. "entity/bridge/hr-bridge-" .. ori .. ".png",
-            line_length = line_length,
-            animation_speed = anim_speed,
-            width = width,
-            height = height,
-            frame_count = 21,
-            axially_symmetrical = false,
-            direction_count = 1,
-            shift = util.by_pixel(shiftx, shifty),
-            scale = 0.5,
-          }
+          scale = 0.5,
         },
 
       }
@@ -94,40 +68,22 @@ local function build_bridge_anim(ori, shiftx, shifty, picture)
     return {
       layers = {
         {
-          filename = GRAPHICSPATH .. "entity/bridge/bridge-" .. ori .. "-shadow.png",
-          width = width/2,
-          height = height/2,
-          x = width/2,
+          filename = GRAPHICSPATH .. "entity/bridge/hr-bridge-" .. ori .. "-shadow.png",
+          width = width,
+          height = height,
+          x = width,
           shift = util.by_pixel(shiftx, shifty),
-          scale = 1,
+          scale = 0.5,
           --draw_as_shadow = true,
-          tint = {0,0,0,0.5}, --because else shadow gets over entity with render layer lower than "object"
-          hr_version = {
-            filename = GRAPHICSPATH .. "entity/bridge/hr-bridge-" .. ori .. "-shadow.png",
-            width = width,
-            height = height,
-            x = width,
-            shift = util.by_pixel(shiftx, shifty),
-            scale = 0.5,
-            --draw_as_shadow = true,
-            tint = {0,0,0,0.5},
-          }
+          tint = {0,0,0,0.5},
         },
         {
-          filename = GRAPHICSPATH .. "entity/bridge/bridge-" .. ori .. ".png",
-          width = width/2,
-          height = height/2,
-          x = width/2,
+          filename = GRAPHICSPATH .. "entity/bridge/hr-bridge-" .. ori .. ".png",
+          width = width,
+          height = height,
+          x = width,
           shift = util.by_pixel(shiftx, shifty),
-          scale = 1,
-          hr_version = {
-            filename = GRAPHICSPATH .. "entity/bridge/hr-bridge-" .. ori .. ".png",
-            width = width,
-            height = height,
-            x = width,
-            shift = util.by_pixel(shiftx, shifty),
-            scale = 0.5,
-          }
+          scale = 0.5,
         },
       }
     }

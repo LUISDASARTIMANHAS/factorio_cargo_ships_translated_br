@@ -12,42 +12,23 @@ floating_pole.next_upgrade = nil
 floating_pole.pictures = {
   layers = {
     {
-      filename = GRAPHICSPATH .. "entity/floating_electric_pole/floating-electric-pole.png",
+      filename = GRAPHICSPATH .. "entity/floating_electric_pole/hr-floating-electric-pole.png",
       priority = "high",
-      width = 168,
-      height = 165,
-      scale = 1,
+      width = 336,
+      height = 330,
+      scale = 0.5,
       direction_count = 4,
       shift = util.by_pixel(51, -58),
-      hr_version = {
-        filename = GRAPHICSPATH .. "entity/floating_electric_pole/hr-floating-electric-pole.png",
-        priority = "high",
-        width = 336,
-        height = 330,
-        scale = 0.5,
-        direction_count = 4,
-        shift = util.by_pixel(51, -58),
-      }
     },
     {
-      filename = GRAPHICSPATH .. "entity/floating_electric_pole/floating-electric-pole-shadows.png",
+      filename = GRAPHICSPATH .. "entity/floating_electric_pole/hr-floating-electric-pole-shadows.png",
       priority = "high",
-      width = 168,
-      height = 165,
-      scale = 1,
+      width = 336,
+      height = 330,
+      scale = 0.5,
       direction_count = 4,
       shift = util.by_pixel(51, -58),
       draw_as_shadow = true,
-      hr_version = {
-        filename = GRAPHICSPATH .. "entity/floating_electric_pole/hr-floating-electric-pole-shadows.png",
-        priority = "high",
-        width = 336,
-        height = 330,
-        scale = 0.5,
-        direction_count = 4,
-        shift = util.by_pixel(51, -58),
-        draw_as_shadow = true,
-      }
     },
   }
 }
@@ -164,67 +145,39 @@ buoy.collision_mask = {layers = {object = true, rail = true}}  -- waterway_layer
 buoy.selection_box = {{-1.6, -0.8}, {0.01, 0.8}}
 buoy.fast_replaceable_group = "buoy"
 buoy.minable = {mining_time = 0.5, result = "buoy"}
-buoy.green_light = nil
+buoy.green_light = nil  -- TODO 2.0
 buoy.orange_light = nil
 buoy.red_light = nil
-buoy.animation = {
+buoy.animation = {  -- TODO 2.0
   layers = {
     {
-      filename = GRAPHICSPATH .. "entity/buoy/buoy-base.png",
-      width = 115,
-      height = 115,
+      filename = GRAPHICSPATH .. "entity/buoy/hr-buoy-base.png",
+      width = 230,
+      height = 230,
       frame_count = 1,
       repeat_count = 3,
       direction_count = 8,
-      hr_version = {
-        filename = GRAPHICSPATH .. "entity/buoy/hr-buoy-base.png",
-        width = 230,
-        height = 230,
-        frame_count = 1,
-        repeat_count = 3,
-        direction_count = 8,
-        scale = 0.5
-      }
+      scale = 0.5
     },
     {
-      filename = GRAPHICSPATH .. "entity/buoy/buoy-shadow.png",
+      filename = GRAPHICSPATH .. "entity/buoy/hr-buoy-shadow.png",
       draw_as_shadow = true,
-      width = 115,
-      height = 115,
+      width = 230,
+      height = 230,
       frame_count = 1,
       repeat_count = 3,
       direction_count = 8,
-      hr_version =
-      {
-        filename = GRAPHICSPATH .. "entity/buoy/hr-buoy-shadow.png",
-        draw_as_shadow = true,
-        width = 230,
-        height = 230,
-        frame_count = 1,
-        repeat_count = 3,
-        direction_count = 8,
-        scale = 0.5
-      }
+      scale = 0.5
     },
     {
-      filename = GRAPHICSPATH .. "entity/buoy/buoy-lights.png",
+      filename = GRAPHICSPATH .. "entity/buoy/hr-buoy-lights.png",
       blend_mode = "additive",
       draw_as_glow = true,
-      width = 115,
-      height = 115,
+      width = 230,
+      height = 230,
       frame_count = 3,
       direction_count = 8,
-      hr_version =
-      {
-        filename = GRAPHICSPATH .. "entity/buoy/hr-buoy-lights.png",
-        blend_mode = "additive",
-        draw_as_glow = true,
-        width = 230,
-        height = 230,
-        frame_count = 3,
-        direction_count = 8,
-        scale = 0.5
-      }
+      scale = 0.5
     },
   }
 }
@@ -258,48 +211,28 @@ chain_buoy.minable = {mining_time = 0.5, result = "chain_buoy"}
 chain_buoy.animation = {
   layers = {
     {
-      filename = GRAPHICSPATH .. "entity/chain_buoy/chain-buoys-base.png",
-      width = 261,
-      height = 205,
+      filename = GRAPHICSPATH .. "entity/chain_buoy/hr-chain-buoys-base.png",
+      width = 522,
+      height = 410,
       frame_count = 1,
       repeat_count = 5,
       axially_symmetrical = false,
       direction_count = 8,
-      hr_version =
-      {
-        filename = GRAPHICSPATH .. "entity/chain_buoy/hr-chain-buoys-base.png",
-        width = 522,
-        height = 410,
-        frame_count = 1,
-        repeat_count = 5,
-        axially_symmetrical = false,
-        direction_count = 8,
-        scale = 0.5
-      }
+      scale = 0.5
     },
     {
-      filename = GRAPHICSPATH .. "entity/chain_buoy/chain-buoys-lights.png",
+      filename = GRAPHICSPATH .. "entity/chain_buoy/hr-chain-buoys-lights.png",
       draw_as_glow = true,
       line_length = 5,
-      width = 261,
-      height = 205,
+      width = 522,
+      height = 410,
       frame_count = 5,
       direction_count = 8,
-      hr_version =
-      {
-        filename = GRAPHICSPATH .. "entity/chain_buoy/hr-chain-buoys-lights.png",
-        draw_as_glow = true,
-        line_length = 5,
-        width = 522,
-        height = 410,
-        frame_count = 5,
-        direction_count = 8,
-        scale = 0.5
-      }
+      scale = 0.5
     }
   }
 }
-chain_buoy.selection_box_offsets = {
+chain_buoy.selection_box_offsets = {  -- TODO 2.0
   {-0.15, 0},
   {-0.25, -1},
   {0.8, -1.1},
@@ -332,34 +265,19 @@ local function maker_layer_port(xshift, yshift)
   return {
     layers = {
       {
-        filename = GRAPHICSPATH .. "entity/port/port.png",
-        width = 40,
-        height = 150,
+        filename = GRAPHICSPATH .. "entity/port/hr-port.png",
+        width = 80,
+        height = 300,
         shift = util.by_pixel(xshift, yshift),
-        scale = 1,
-        hr_version = {
-          filename = GRAPHICSPATH .. "entity/port/hr-port.png",
-          width = 80,
-          height = 300,
-          shift = util.by_pixel(xshift, yshift),
-          scale = 0.5,
-        }
+        scale = 0.5,
       },
       {
-        filename = GRAPHICSPATH .. "entity/port/port-shadow.png",
-        width = 150,
-        height = 40,
+        filename = GRAPHICSPATH .. "entity/port/hr-port-shadow.png",
+        width = 300,
+        height = 80,
         shift = util.by_pixel(xshift, yshift),
-        scale = 1,
+        scale = 0.5,
         draw_as_shadow = true,
-        hr_version = {
-          filename = GRAPHICSPATH .. "entity/port/hr-port-shadow.png",
-          width = 300,
-          height = 80,
-          shift = util.by_pixel(xshift, yshift),
-          scale = 0.5,
-          draw_as_shadow = true,
-        }
       },
     }
   }

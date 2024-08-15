@@ -9,80 +9,42 @@ local function oilrig_layer(orientation, animated)
   local returned_value = {
     layers = {
       {
-        filename = GRAPHICSPATH .. "entity/oil_rig/oil-rig-pipe-" .. orientation .. ".png",
-        width = 352,
-        height = 448,
-        scale = 1,
+        filename = GRAPHICSPATH .. "entity/oil_rig/hr-oil-rig-pipe-" .. orientation .. ".png",
+        width = 704,
+        height = 896,
+        scale = 0.5,
         frame_count = 1,
         repeat_count = 20,
         animation_speed = 0.25,
-        hr_version = {
-          filename = GRAPHICSPATH .. "entity/oil_rig/hr-oil-rig-pipe-" .. orientation .. ".png",
-          width = 704,
-          height = 896,
-          scale = 0.5,
-          frame_count = 1,
-          repeat_count = 20,
-        animation_speed = 0.25,
-        }
       },
       {
-        filename = GRAPHICSPATH .. "entity/oil_rig/oil-rig-base.png",
-        width = 352,
-        height = 448,
-        scale = 1,
+        filename = GRAPHICSPATH .. "entity/oil_rig/hr-oil-rig-base.png",
+        width = 704,
+        height = 896,
+        scale = 0.5,
         frame_count = 1,
         repeat_count = 20,
         animation_speed = 0.25,
-        hr_version = {
-          filename = GRAPHICSPATH .. "entity/oil_rig/hr-oil-rig-base.png",
-          width = 704,
-          height = 896,
-          scale = 0.5,
-          frame_count = 1,
-          repeat_count = 20,
-          animation_speed = 0.25,
-        }
       },
       {
-        filename = GRAPHICSPATH .. "entity/oil_rig/oil-rig-base-shadow.png",
-        width = 352,
-        height = 448,
-        scale = 1,
+        filename = GRAPHICSPATH .. "entity/oil_rig/hr-oil-rig-base-shadow.png",
+        width = 704,
+        height = 896,
+        scale = 0.5,
         draw_as_shadow = true,
         frame_count = 1,
         repeat_count = 20,
         animation_speed = 0.25,
-        hr_version = {
-          filename = GRAPHICSPATH .. "entity/oil_rig/hr-oil-rig-base-shadow.png",
-          width = 704,
-          height = 896,
-          scale = 0.5,
-          draw_as_shadow = true,
-          frame_count = 1,
-          repeat_count = 20,
-          animation_speed = 0.25,
-        }
       },
       {
-        filename = GRAPHICSPATH .. "entity/oil_rig/oil-rig-base-light.png",
-        width = 352,
-        height = 448,
-        scale = 1,
+        filename = GRAPHICSPATH .. "entity/oil_rig/hr-oil-rig-base-light.png",
+        width = 704,
+        height = 896,
+        scale = 0.5,
         draw_as_light = true,
         frame_count = 1,
         repeat_count = 20,
         animation_speed = 0.25,
-        hr_version = {
-          filename = GRAPHICSPATH .. "entity/oil_rig/hr-oil-rig-base-light.png",
-          width = 704,
-          height = 896,
-          scale = 0.5,
-          draw_as_light = true,
-          frame_count = 1,
-          repeat_count = 20,
-          animation_speed = 0.25,
-        }
       },
 
     }
@@ -90,43 +52,24 @@ local function oilrig_layer(orientation, animated)
 
   if animated then
     table.insert(returned_value.layers, {
-      filename = GRAPHICSPATH .. "entity/oil_rig/oil-rig-anim.png",
-      width = 179,
-      height = 243,
-      scale = 1,
+      filename = GRAPHICSPATH .. "entity/oil_rig/hr-oil-rig-anim.png",
+      width = 358,
+      height = 486,
+      scale = 0.5,
       line_length = 5,
       frame_count = 20,
       animation_speed = 0.25,
-      hr_version = {
-        filename = GRAPHICSPATH .. "entity/oil_rig/hr-oil-rig-anim.png",
-        width = 358,
-        height = 486,
-        scale = 0.5,
-        line_length = 5,
-        frame_count = 20,
-        animation_speed = 0.25,
-      }
     })
   else
     table.insert(returned_value.layers, {
-      filename = GRAPHICSPATH .. "entity/oil_rig/oil-rig-anim.png",
-      width = 179,
-      height = 243,
-      scale = 1,
+      filename = GRAPHICSPATH .. "entity/oil_rig/hr-oil-rig-anim.png",
+      width = 358,
+      height = 486,
+      scale = 0.5,
       line_length = 1,
       frame_count = 1,
       repeat_count = 20,
       animation_speed = 0.25,
-      hr_version = {
-        filename = GRAPHICSPATH .. "entity/oil_rig/hr-oil-rig-anim.png",
-        width = 358,
-        height = 486,
-        scale = 0.5,
-        line_length = 1,
-        frame_count = 1,
-        repeat_count = 20,
-        animation_speed = 0.25,
-      }
     })
   end
 
@@ -138,7 +81,7 @@ end
 ----------------------------------------------------------------
 local oil_rig_capacity = settings.startup["oil_rig_capacity"].value
 
-circuit_connector_definitions["oil_rig"] = circuit_connector_definitions.create_vector
+circuit_connector_definitions["oil_rig"] = circuit_connector_definitions.create_vector  -- TODO 2.0
 (
   universal_connector_template,
   {
@@ -162,7 +105,6 @@ oil_rig.mining_speed = 2
 oil_rig.resource_searching_radius = 1.49
 oil_rig.collision_box = {{-3.2, -3.2}, {3.2, 3.2}}
 oil_rig.selection_box = {{-3.5, -3.5}, {3.5, 3.5}}
-oil_rig.drawing_box = {{-3.3, -3.3}, {3.3, 3.3}}
 oil_rig.fast_replaceable_group  = nil
 oil_rig.next_upgrade = nil
 oil_rig.module_slots = 3

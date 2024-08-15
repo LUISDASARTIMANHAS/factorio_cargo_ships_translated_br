@@ -28,25 +28,14 @@ deep_oil.resource_patch_search_radius = 32
 deep_oil.protected_from_tile_building = false
 deep_oil.stages = {
   sheet = {
-    filename = GRAPHICSPATH .. "entity/crude-oil/water-crude-oil.png",
+    filename = GRAPHICSPATH .. "entity/crude-oil/hr-water-crude-oil.png",
     priority = "extra-high",
-    width = 74,
-    height = 60,
+    width = 148,
+    height = 120,
     frame_count = 4,
     variation_count = 1,
     shift = util.by_pixel(0, -2),
-    scale = 1.4,
-    hr_version =
-    {
-      filename = GRAPHICSPATH .. "entity/crude-oil/hr-water-crude-oil.png",
-      priority = "extra-high",
-      width = 148,
-      height = 120,
-      frame_count = 4,
-      variation_count = 1,
-      shift = util.by_pixel(0, -2),
-      scale = 0.7
-    }
+    scale = 0.7
   }
 }
 deep_oil.water_reflection = nil
