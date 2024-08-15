@@ -171,26 +171,23 @@ end
 
 -- mapcolor doesn't work yet on rails for some reason
 data:extend({
-  --[[{
+  {
     type = "legacy-straight-rail",
-    name = "straight-waterway",
+    name = "legacy-straight-waterway",
     icon = GRAPHICSPATH .. "icons/water_rail.png",
     icon_size = 64,
     flags = {"placeable-neutral", "player-creation", "building-direction-8-way"},
     resistances = invincible(),
     minable = {mining_time = 0.2},
-    max_health = 100,
+    max_health = 200,
     corpse = nil,
     collision_box = {{-1.01, -0.95}, {1.01, 0.95}},
     selection_box = {{-1.7, -0.8}, {1.7, 0.8}},
     collision_mask = {layers = {object = true}},  -- waterway_layer added in data-final-fixes
-    pictures = legacy_rail_pictures("legacy_straight_rail"),
+    pictures = legacy_waterway_pictures("straight_rail"),
     placeable_by = {item = "waterway", count = 1},
     localised_description = {"item-description.waterway"},
-    map_color = mapcolor,
-    friendly_map_color = mapcolor,
-    enemy_map_color = mapcolor,
-  },]]
+  },
   {
     type = "legacy-curved-rail",
     name = "legacy-curved-waterway",
@@ -204,7 +201,7 @@ data:extend({
     collision_box = {{-1, -2}, {1, 3.1}},
     selection_box = {{-1.7, -0.8}, {1.7, 0.8}},
     collision_mask = {layers = {object = true}},  -- waterway_layer added in data-final-fixes
-    pictures = legacy_waterway_pictures("legacy_curved_rail"),
+    pictures = legacy_waterway_pictures("curved_rail"),
     placeable_by = {item = "waterway", count = 1},
     localised_description = {"item-description.waterway"},
   },

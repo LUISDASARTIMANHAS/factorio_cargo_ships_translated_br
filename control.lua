@@ -17,6 +17,7 @@ is_waterway = {
   ["half-diagonal-waterway"] = true,
   ["curved-waterway-a"] = true,
   ["curved-waterway-b"] = true,
+  ["legacy-straight-waterway"] = true,
   ["legacy-curved-waterway"] = true,
 }
 
@@ -268,6 +269,7 @@ function init_events()
       {filter="ghost", ghost_name="half-diagonal-waterway"},
       {filter="ghost", ghost_name="curved-waterway-a"},
       {filter="ghost", ghost_name="curved-waterway-b"},
+      {filter="ghost", ghost_name="legacy-straight-waterway"},
       {filter="ghost", ghost_name="legacy-curved-waterway"},
       {filter="type", type="cargo-wagon"},
       {filter="type", type="fluid-wagon"},
@@ -336,6 +338,7 @@ function init_events()
     {filter="name", name="half-diagonal-waterway"},
     {filter="name", name="curved-waterway-a"},
     {filter="name", name="curved-waterway-b"},
+    {filter="name", name="legacy-straight-waterway"},
     {filter="name", name="legacy-curved-waterway"},
   }
   script.on_event(defines.events.on_marked_for_deconstruction, onMarkedForDeconstruction, deconstructed_filters)

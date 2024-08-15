@@ -9,7 +9,7 @@ if mods["omnimatter"] or mods["SeaBlock"] then
   data.raw["int-setting"]["oil_rig_capacity"].hidden=true
   data.raw["bool-setting"]["no_oil_on_land"].hidden=true
   data.raw["bool-setting"]["no_shallow_oil"].hidden=true
-end 
+end
 
 -- Force oil in shallow water if CTG or Alien Biomes is installed
 if mods["ctg"] or mods["alien-biomes"] then

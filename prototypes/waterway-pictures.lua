@@ -25,29 +25,29 @@ local rail_segment_visualisation_endings =
 
 local function make_legacy_rail_pictures(elems, rail_type)
   local keys
-  if rail_type == "legacy_straight_rail" then
+  if rail_type == "straight_rail" then
     keys =
     {
-      {"north",     "vertical", 128, 64, 0, 0, true},
-      {"northeast", "diagonal-right-top", 96, 96, -0.5, 0.5, true},
-      {"east",      "horizontal", 64, 128, 0, 0, true},
-      {"southeast", "diagonal-right-bottom", 96, 96, -0.5, -0.5, true},
-      {"south",     "vertical", 128, 64, 0, 0, true}, -- Not used due to direction minimization
-      {"southwest", "diagonal-left-bottom", 96, 96, 0.5, -0.5, true},
-      {"west",      "horizontal", 64, 128, 0, 0, true}, -- Not used due to direction minimization
-      {"northwest", "diagonal-left-top", 96, 96, 0.5, 0.5, true}
+      {"north",     "vertical", 64, 64, 0, 0, true},
+      {"northeast", "diagonal-right-top", 64, 64, 0, 0, true},
+      {"east",      "horizontal", 64, 64, 0, 0, true},
+      {"southeast", "diagonal-right-bottom", 64, 64, 0, 0, true},
+      {"south",     "vertical", 64, 64, 0, 0, true}, -- Not used due to direction minimization
+      {"southwest", "diagonal-left-bottom", 64, 64, 0, 0, true},
+      {"west",      "horizontal", 64, 64, 0, 0, true}, -- Not used due to direction minimization
+      {"northwest", "diagonal-left-top", 64, 64, 0, 0, true}
     }
-  elseif rail_type == "legacy_curved_rail" then
+  elseif rail_type == "curved_rail" then
     keys =
     {
-      {"north",     "vertical-left-bottom", 192, 288, 0.5, -0.5},
-      {"northeast", "vertical-right-bottom", 192, 288, -0.5, -0.5},
-      {"east",      "horizontal-left-top", 288, 192, 0.5, 0.5},
-      {"southeast", "horizontal-left-bottom", 288, 192, 0.5, -0.5},
-      {"south",     "vertical-right-top", 192, 288, -0.5, 0.5},
-      {"southwest", "vertical-left-top", 192, 288, 0.5, 0.5},
-      {"west",      "horizontal-right-bottom", 288, 192, -0.5, -0.5},
-      {"northwest", "horizontal-right-top", 288, 192, -0.5, 0.5}
+      {"north",     "vertical-left-bottom", 128, 256, 0, 0},  -- 192, 288
+      {"northeast", "vertical-right-bottom", 128, 256, 0, 0},
+      {"east",      "horizontal-left-top", 256, 128, 0, 0},
+      {"southeast", "horizontal-left-bottom", 256, 128, 0, 0},
+      {"south",     "vertical-right-top", 128, 256, 0, 0},
+      {"southwest", "vertical-left-top", 128, 256, 0, 0},
+      {"west",      "horizontal-right-bottom", 256, 128, 0, 0},
+      {"northwest", "horizontal-right-top", 256, 128, 0, 0}
     }
   end
   local res = {}
@@ -61,7 +61,7 @@ local function make_legacy_rail_pictures(elems, rail_type)
       end
       part[elem[1]] =
       {
-        filename = string.format("__base__/graphics/entity/%s/%s-%s-%s.png", dashkey, dashkey, key[2], elem[2]),
+        filename = string.format("__cargo-ships-graphics__/graphics/entity/legacy-%s/%s-%s-%s.png", dashkey, dashkey, key[2], elem[2]),
         priority = elem.priority or "extra-high",
         flags = elem.mipmap and { "trilinear-filtering" } or { "low-object" },
         width = key[3]*2,
@@ -89,10 +89,10 @@ function legacy_waterway_pictures(rail_type)
   return make_legacy_rail_pictures
   ({
     {"metals", "metals", mipmap = true},
-    {"backplates", "backplates", mipmap = true},
-    {"ties", "ties", variations = 3},
-    {"stone_path", "stone-path", variations = 3},
-    {"stone_path_background", "stone-path-background", variations = 3},
+    --{"backplates", "backplates", mipmap = true},
+    --{"ties", "ties", variations = 3},
+    --{"stone_path", "stone-path", variations = 3},
+    --{"stone_path_background", "stone-path-background", variations = 3},
     {"segment_visualisation_middle", "segment-visualisation-middle"},
   }, rail_type)
 end
@@ -208,15 +208,15 @@ function new_waterway_pictures(rail_type)
   local elems =
   {
     { "metals",                       "__base__/graphics/entity/rails/rail/rail-metals.png",             mipmap = true },
-    { "backplates",                   "__base__/graphics/entity/rails/rail/rail-backplates.png",         mipmap = true },
-    { "ties",                         "__base__/graphics/entity/rails/rail/rail-ties.png"                              },
-    { "stone_path",                   "__base__/graphics/entity/rails/rail/rail-stone-path-inside.png"                 },
-    { "stone_path_background",        "__base__/graphics/entity/rails/rail/rail-stone-path.png"                        },
+    --{ "backplates",                   "__base__/graphics/entity/rails/rail/rail-backplates.png",         mipmap = true },
+    --{ "ties",                         "__base__/graphics/entity/rails/rail/rail-ties.png"                              },
+    --{ "stone_path",                   "__base__/graphics/entity/rails/rail/rail-stone-path-inside.png"                 },
+    --{ "stone_path_background",        "__base__/graphics/entity/rails/rail/rail-stone-path.png"                        },
     { "segment_visualisation_middle", "__base__/graphics/entity/rails/rail/rail-segment-visualisations-middle.png"     },
   }
 
   local res = make_new_rail_pictures(keys, elems)
-  res["rail_endings"] =
+  --[[res["rail_endings"] =
   {
     sheets =
     {
@@ -237,7 +237,7 @@ function new_waterway_pictures(rail_type)
         scale = 0.5
       }
     }
-  }
+  }]]
   res["render_layers"] = ground_rail_render_layers
   res["segment_visualisation_endings"] = rail_segment_visualisation_endings
   return res

@@ -31,6 +31,7 @@ data.raw["straight-rail"]["straight-waterway"].collision_mask.layers["waterway"]
 data.raw["half-diagonal-rail"]["half-diagonal-waterway"].collision_mask.layers["waterway"] = true
 data.raw["curved-rail-a"]["curved-waterway-a"].collision_mask.layers["waterway"] = true
 data.raw["curved-rail-b"]["curved-waterway-b"].collision_mask.layers["waterway"] = true
+data.raw["legacy-straight-rail"]["legacy-straight-waterway"].collision_mask.layers["waterway"] = true
 data.raw["legacy-curved-rail"]["legacy-curved-waterway"].collision_mask.layers["waterway"] = true
 
 
