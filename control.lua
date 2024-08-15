@@ -201,20 +201,20 @@ local function OnMined(e)
           local fuel_inventory = engine.get_fuel_inventory()
           if player and player.character then
             for _, fuel in pairs(fuel_inventory.get_contents()) do
-              player.insert{name=fuel.name, count=fuel.count}  -- TODO quality
+              player.insert{name=fuel.name, count=fuel.count}  -- TODO 2.0 quality
               fuel_inventory.remove{name=fuel.name, count=fuel.count}
             end
           elseif robot then
             local robotInventory = robot.get_inventory(defines.inventory.robot_cargo)
             local robotSize = 1 + robot.force.worker_robots_storage_bonus
             local robotEmpty = robotInventory.is_empty()
-            if robotEmpty and fuel then
-              for index=1,#fuel do
-                local stack = fuel[index]
+            if robotEmpty and fuel_inventory then
+              for index=1, #fuel_inventory do
+                local stack = fuel_inventory[index]
                 if stack.valid_for_read then
                   --game.print("Giving robot cargo stack: "..stack.name.." : "..stack.count)
                   local inserted = robotInventory.insert{name=stack.name, count=math.min(stack.count, robotSize)}
-                  fuel.remove{name=stack.name, count=inserted}
+                  fuel_inventory.remove{name=stack.name, count=inserted}
                   if not robotInventory.is_empty() then
                     robotEmpty = false
                     break
