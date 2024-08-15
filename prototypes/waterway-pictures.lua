@@ -50,6 +50,11 @@ local function make_legacy_rail_pictures(elems, rail_type)
       {"northwest", "horizontal-right-top", 256, 128, 0, 0}
     }
   end
+  local blend_mode = "additive"
+  if settings.startup["use_dark_blue_waterways"].value then
+    blend_mode = "normal"
+  end
+
   local res = {}
   for _ , key in ipairs(keys) do
     local part = {}
@@ -67,6 +72,7 @@ local function make_legacy_rail_pictures(elems, rail_type)
         width = key[3]*2,
         height = key[4]*2,
         shift = {key[5], key[6]},
+        blend_mode = blend_mode,
         scale = 0.5,
         variation_count = variation_count
       }
