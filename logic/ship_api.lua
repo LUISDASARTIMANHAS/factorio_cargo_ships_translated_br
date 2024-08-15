@@ -2,23 +2,39 @@
 
 local default_offset = {    -- Relative position to place engine for each straight rail direction
       [0] = {x = 0, y = 9.5},   -- North-facing
-      [1] = {x = -7, y = 7},    -- Northeast-facing
-      [2] = {x = -9.5, y = 0},  -- East-facing
-      [3] = {x = -7, y = -7},   -- Southeast-facing
-      [4] = {x = 0, y = -9.5},  -- South-facing
-      [5] = {x = 7, y = -7},    -- Southwest-facing
-      [6] = {x = 9.5, y = 0},   -- West-facing
-      [7] = {x = 7, y = 7}      -- Northwest-facing
+      [1] = {x = -4.4, y = 8.4},   -- NNE-facing
+      [2] = {x = -7, y = 7},    -- Northeast-facing
+      [3] = {x = -8.4, y = 4.4},   -- ENE-facing
+      [4] = {x = -9.5, y = 0},  -- East-facing
+      [5] = {x = -8.4, y = -4.4},   -- ESE-facing
+      [6] = {x = -7, y = -7},   -- Southeast-facing
+      [7] = {x = -4.4, y = -8.8},   -- SSE-facing
+      [8] = {x = 0, y = -9.5},  -- South-facing
+      [9] = {x = 4.4, y = -8.8},   -- SSW-facing
+      [10] = {x = 7, y = -7},    -- Southwest-facing
+      [11] = {x = 8.8, y = -4.4},   -- WSW-facing
+      [12] = {x = 9.5, y = 0},   -- West-facing
+      [13] = {x = 8.8, y = 4.4},   -- WNW-facing
+      [14] = {x = 7, y = 7},      -- Northwest-facing
+      [15] = {x = 4.4, y = 8.8},   -- NNW-facing
     }
 local default_orientation = {
       [0] = 0,
-      [1] = 5,  -- NE is weird for some reason
-      [2] = 2,
+      [1] = 1,
+      [2] = 10,  -- NE is weird for some reason
       [3] = 3,
       [4] = 4,
-      [5] = 1,  -- SW is weird for some reason
+      [5] = 5,
       [6] = 6,
-      [7] = 7
+      [7] = 7,
+      [8] = 8,
+      [9] = 9,
+      [10] = 2,  -- SW is weird for some reason
+      [11] = 11,
+      [12] = 12,
+      [13] = 13,
+      [14] = 14,
+      [15] = 15,
     }
 
 function create_globals()
@@ -48,7 +64,7 @@ end
       name (string, mandatory): Name of the ship body entity
       placing_item (string, optional): Name of item that places this ship, if different from prototype data.
       engine (string, optional): Name of engine entity
-      engine_offset (table of Position, optional): Table of relative positions to place the engine. [0]=N, [1]=NE, etc.
+      engine_offset (table of Position, optional): Table of relative positions to place the engine. [0]=N, [1]=NNE, etc.
       engine_scale (float, optional): Ignored if engine_offset is present. Defaults to 1 if not specified. Scales the standard cargo ship offset table.
       engine_at_front (boolean, optional): Ignored if engine_offset is present. If true, the engine is placed in front of the ship body rather than behind. Applies negative sign to engine_scale.
       engine_orientation (table of Integer, optional): Lookup table for engine direction, if different from default. Usually don't need to specify this.
@@ -58,7 +74,7 @@ function add_ship(params)
   local ship_data = {}
   log("Adding ship '"..tostring(params.name).."':")
   create_globals()
-  
+
   -- Check ship name
   if not (params.name and game.entity_prototypes[params.name]) then
     log("Error adding ship data: Cannot find entity named '"..tostring(params.name).."'")
@@ -86,9 +102,9 @@ function add_ship(params)
     ship_data.engine = params.engine
     if params.engine_offset then
       -- Engine offset coordinates specified explicitly
-      for i=0,7 do
+      for i=0,15 do
         if not (params.engine_offset[i] and params.engine_offset[i].x and params.engine_offset[i].y) then
-          log("Error adding ship data: engine_offset must have array indicies 0 through 7")
+          log("Error adding ship data: engine_offset must have array indicies 0 through 15")
           return
         end
       end
@@ -117,7 +133,7 @@ function add_ship(params)
       end
       -- Apply scaling to default offset table
       ship_data.engine_offset = table.deepcopy(default_offset)
-      for i=0,7 do
+      for i=0,15 do
         ship_data.engine_offset[i].x = ship_data.engine_offset[i].x * offset_scale
         ship_data.engine_offset[i].y = ship_data.engine_offset[i].y * offset_scale
       end
@@ -125,9 +141,9 @@ function add_ship(params)
 
     if params.engine_orientation then
       -- Engine orientation specified in a custom table
-      for i=0,7 do
-        if not (params.engine_orientation[i] and type(params.engine_orientation[i]) == "number" and params.engine_orientation[i] >= 0 and params.engine_orientation[i] <= 7) then
-          log("Error adding ship data: engine_orientation must have array indices 0 through 7 and contain integers valued 0 through 7")
+      for i=0,15 do
+        if not (params.engine_orientation[i] and type(params.engine_orientation[i]) == "number" and params.engine_orientation[i] >= 0 and params.engine_orientation[i] <= 15) then
+          log("Error adding ship data: engine_orientation must have array indices 0 through 15 and contain integers valued 0 through 15")
           return
         end
       end
@@ -280,16 +296,16 @@ end
 
 
 remote.add_interface("cargo-ships", {
-    
+
     add_ship = function(params)
       add_ship(params)
       init_events()
     end,
-    
+
     add_boat = function(params)
       add_boat(params)
       init_events()
     end,
-    
+
   }
 )

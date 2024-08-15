@@ -1,6 +1,6 @@
 
 function localize_engine(ent, ship_name)
-  local dir = (math.floor((ent.orientation*8)+0.5))%8
+  local dir = (math.floor((ent.orientation*16)+0.5))%16
   local ship_data = global.ship_bodies[ship_name or ent.name]
   local pos = {x = ent.position.x + ship_data.engine_offset[dir].x,
                y = ent.position.y + ship_data.engine_offset[dir].y}

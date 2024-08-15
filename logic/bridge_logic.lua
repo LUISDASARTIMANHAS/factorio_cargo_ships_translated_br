@@ -1,19 +1,19 @@
 
 local spor = {}
 spor[0] = {{x=-4,y=-1.5},{x=-4,y=1.5},{x=6,y=-1.5},{x=6,y=1.5}}
-spor[4] = {{x=4,y=1.5},{x=4,y=-1.5},{x=-6,y=1.5},{x=-6,y=-1.5}}
-spor[2] = {{x=1.5,y=-4.5},{x=-1.5,y=-4.5},{x=1.5,y=6},{x=-1.5,y=6}}
-spor[6] = {{x=-1.5,y=4},{x=1.5,y=4},{x=-1.5,y=-6},{x=1.5,y=-6}}
+spor[8] = {{x=4,y=1.5},{x=4,y=-1.5},{x=-6,y=1.5},{x=-6,y=-1.5}}
+spor[4] = {{x=1.5,y=-4.5},{x=-1.5,y=-4.5},{x=1.5,y=6},{x=-1.5,y=6}}
+spor[12] = {{x=-1.5,y=4},{x=1.5,y=4},{x=-1.5,y=-6},{x=1.5,y=-6}}
 
 local spow = {}
 spow[0] = {{x=-0.5,y=-2.5},{x=-3.5,y=2.5},{x=-3.5,y=-2.5},{x=-0.5,y=2.5}}
-spow[4] = {{x=0.5,y=2.5},{x=3.5,y=-2.5},{x=3.5,y=2.5},{x=0.5,y=-2.5}}
-spow[2] = {{x=-2.5,y=-1},{x=2.5,y=-3.5},{x=-2.5,y=-3.5},{x=2.5,y=-1}}
-spow[6] = {{x=2.5,y=0.5},{x=-2.5,y=3.5},{x=2.5,y=3.5},{x=-2.5,y=0.5}}
+spow[8] = {{x=0.5,y=2.5},{x=3.5,y=-2.5},{x=3.5,y=2.5},{x=0.5,y=-2.5}}
+spow[4] = {{x=-2.5,y=-1},{x=2.5,y=-3.5},{x=-2.5,y=-3.5},{x=2.5,y=-1}}
+spow[12] = {{x=2.5,y=0.5},{x=-2.5,y=3.5},{x=2.5,y=3.5},{x=-2.5,y=0.5}}
 
 function CreateBridge(ent, player_index)
   local pos = ent.position
-  local dir = ent.direction
+  local direction = ent.direction
   local f = ent.force
   local bridge
   local closed_bridge
@@ -21,7 +21,7 @@ function CreateBridge(ent, player_index)
   local surface = ent.surface
   ent.destroy()
 
-  if dir == defines.direction.north then
+  if direction == defines.direction.north then
     if checkBridgePlacement(pos, -4.5, -3, 6.5, 3, player_index, surface) then
       bridge = surface.create_entity {name="bridge_north", position = pos, force = f, create_build_effect_smoke = false}
       closed_bridge = surface.create_entity {name="bridge_north_closed", position = pos, force = f, create_build_effect_smoke = false}
@@ -29,7 +29,7 @@ function CreateBridge(ent, player_index)
       ver = 1
       hor = 0
     end
-  elseif dir == defines.direction.east then
+  elseif direction == defines.direction.east then
     if checkBridgePlacement(pos, -3, -4.5, 3, 6.5, player_index, surface) then
       bridge = surface.create_entity {name="bridge_east", position = pos, force = f, create_build_effect_smoke = false}
       closed_bridge = surface.create_entity {name="bridge_east_closed", position = pos, force = f, create_build_effect_smoke = false}
@@ -37,7 +37,7 @@ function CreateBridge(ent, player_index)
       ver = 0
       hor = 1
     end
-  elseif dir == defines.direction.south then
+  elseif direction == defines.direction.south then
     if checkBridgePlacement(pos, -6.5, -3, 4.5, 3, player_index, surface) then
       bridge = surface.create_entity {name="bridge_south", position = pos, force = f, create_build_effect_smoke = false}
       closed_bridge = surface.create_entity {name="bridge_south_closed", position = pos, force = f, create_build_effect_smoke = false}
@@ -45,7 +45,7 @@ function CreateBridge(ent, player_index)
       ver = -1
       hor = 0
     end
-  elseif dir == defines.direction.west then
+  elseif direction == defines.direction.west then
     if checkBridgePlacement(pos, -3, -6.5, 3, 4.5, player_index, surface) then
       bridge = surface.create_entity {name="bridge_west", position = pos, force = f, create_build_effect_smoke = false}
       closed_bridge = surface.create_entity {name="bridge_west_closed", position = pos, force = f, create_build_effect_smoke = false}
@@ -55,11 +55,11 @@ function CreateBridge(ent, player_index)
     end
   end
 
-  if(bridge and closed_bridge) then
+  if bridge and closed_bridge then
     bridge.destructible = false
     closed_bridge.destructible = false
     local s1,s2,s3,s4, s5, s6
-    s1, s2, s3, s4, s5, s6 = createSlaves(surface, pos, dir, hor, ver, f)
+    s1, s2, s3, s4, s5, s6 = createSlaves(surface, pos, direction, hor, ver, f)
     table.insert(global.bridges, {bridge, closed_bridge, nil, s1, s2, s3, s4, s5, s6, 0})
   end
 end
@@ -71,7 +71,7 @@ function checkBridgePlacement(pos, x1, y1, x2, y2, player_index, surface)
   for _, ent in pairs(entities) do
     if (not (ent.name == "fish" or ent.name == "bridge_base")) then
       counter = counter+1
-      if (ent.name ~= "straight-water-way" or counter > 3) then
+      if (ent.name ~= "straight-waterway" and ent.name ~= "legacy-straight-waterway") or counter > 3 then
         valid = false
         break
       end
@@ -92,7 +92,7 @@ function checkBridgePlacement(pos, x1, y1, x2, y2, player_index, surface)
   return valid
 end
 
-function createSlaves(surface, pos, dir, hor, ver, f)
+function createSlaves(surface, pos, direction, hor, ver, f)
   local tmp, p, x, y, s1, s2, s3, s4, s5, s6, shift_x, shift_y
   shift_y = 0
   shift_x = 0
@@ -101,39 +101,39 @@ function createSlaves(surface, pos, dir, hor, ver, f)
     x=s*hor - 2*ver
     y=s*ver - 2*hor
     p = {pos.x+x, pos.y+y}
-    addEntity(surface, p, dir, "bridge_crossing", f)
+    addEntity(surface, p, direction, "bridge_crossing", f)
   end
   -- spawn rail part of bridge, including signals
   for l=-4,6,2 do
     x = l*ver
     y = l*hor
     p = {pos.x+x, pos.y+y}
-    addEntity(surface, p, (dir+2)%4, "invisible_rail", f)
+    addEntity(surface, p, (direction+4)%8, "invisible_rail", f)
   end
 
-  p = calcPos(pos, spow[dir][1])
-  s1 = addEntity(surface, p, (dir+4)%8, "invisible_chain_signal", f)
-  p = calcPos(pos, spow[dir][2])
-  s2 = addEntity(surface, p, dir, "invisible_chain_signal", f)
-  p = calcPos(pos, spow[dir][3])
-  s5 = addEntity(surface, p, dir, "invisible_chain_signal", f)
-  p = calcPos(pos, spow[dir][4])
-  s6 = addEntity(surface, p, (dir+4)%8, "invisible_chain_signal", f)
+  p = calcPos(pos, spow[direction][1])
+  s1 = addEntity(surface, p, (direction+8)%16, "invisible_chain_signal", f)
+  p = calcPos(pos, spow[direction][2])
+  s2 = addEntity(surface, p, direction, "invisible_chain_signal", f)
+  p = calcPos(pos, spow[direction][3])
+  s5 = addEntity(surface, p, direction, "invisible_chain_signal", f)
+  p = calcPos(pos, spow[direction][4])
+  s6 = addEntity(surface, p, (direction+8)%16, "invisible_chain_signal", f)
 
-  p = calcPos(pos, spor[dir][1])
-  s3 = addEntity(surface, p, (dir+2)%8, "invisible_chain_signal", f)
-  p = calcPos(pos, spor[dir][2])
-  addEntity(surface, p, (dir-2)%8, "invisible_chain_signal", f)
-  p = calcPos(pos, spor[dir][3])
-  addEntity(surface, p, (dir+2)%8, "invisible_chain_signal", f)
-  p = calcPos(pos, spor[dir][4])
-  s4 = addEntity(surface, p, (dir-2)%8, "invisible_chain_signal", f)
+  p = calcPos(pos, spor[direction][1])
+  s3 = addEntity(surface, p, (direction+4)%16, "invisible_chain_signal", f)
+  p = calcPos(pos, spor[direction][2])
+  addEntity(surface, p, (direction-4)%16, "invisible_chain_signal", f)
+  p = calcPos(pos, spor[direction][3])
+  addEntity(surface, p, (direction+4)%16, "invisible_chain_signal", f)
+  p = calcPos(pos, spor[direction][4])
+  s4 = addEntity(surface, p, (direction-4)%16, "invisible_chain_signal", f)
 
 --[[
-  game.players[1].print(dir .. " s1: { x=" .. pos.x - s1.position.x .. ", " .. pos.y - s1.position.y .. "}")
-  game.players[1].print(dir .. " s2: { x=" .. pos.x - s2.position.x .. ", " ..pos.y - s2.position.y .. "}")
-  game.players[1].print(dir .. " s5: { x=" .. pos.x - s5.position.x .. ", " .. pos.y - s5.position.y .. "}")
-  game.players[1].print(dir .. " s6: { x=" .. pos.x - s6.position.x .. ", " .. pos.y - s6.position.y .. "}")
+  game.players[1].print(direction .. " s1: { x=" .. pos.x - s1.position.x .. ", " .. pos.y - s1.position.y .. "}")
+  game.players[1].print(direction .. " s2: { x=" .. pos.x - s2.position.x .. ", " ..pos.y - s2.position.y .. "}")
+  game.players[1].print(direction .. " s5: { x=" .. pos.x - s5.position.x .. ", " .. pos.y - s5.position.y .. "}")
+  game.players[1].print(direction .. " s6: { x=" .. pos.x - s6.position.x .. ", " .. pos.y - s6.position.y .. "}")
 --]]
   return s1,s2,s3,s4,s5,s6
 end
@@ -142,13 +142,13 @@ function calcPos(pos1, pos2)
   return {pos1.x+pos2.x, pos1.y+pos2.y}
 end
 
-function addEntity(surface, pos, dir, n, f)
-  local tokill = surface.find_entities_filtered{position = pos, name ={"straight-water-way","curved-water-way", "straight-rail", "curved-rail"}}
+function addEntity(surface, pos, direction, n, f)
+  local tokill = surface.find_entities_filtered{position = pos, name ={"straight-waterway", "half-diagonal-waterway", "curved-waterway-a", "curved-waterway-b", "legacy-straight-waterway", "legacy-curved-waterway", "straight-rail", "half-diagonal-rail", "curved-rail-a", "curved-rail-b", "legacy-straight-rail", "legacy-curved-rail"}}
   for _, k in pairs(tokill) do
     k.destroy()
   end
 
-  local slave = surface.create_entity{name=n , position = pos, direction = dir, force = f, create_build_effect_smoke = false}
+  local slave = surface.create_entity{name=n , position = pos, direction = direction, force = f, create_build_effect_smoke = false}
   if slave then
     --slave.destructible = false
     slave.minable = false
@@ -210,7 +210,7 @@ function deleteSlaves(surface, pos, x1, y1, x2, y2, dirname)
       local d = ent.direction
       local f = ent.force
       ent.destroy()
-      surface.create_entity{name = "straight-water-way", direction = d, position = p, force = f, create_build_effect_smoke = false}
+      surface.create_entity{name = "straight-waterway", direction = d, position = p, force = f, create_build_effect_smoke = false}
     end
   end
 end
