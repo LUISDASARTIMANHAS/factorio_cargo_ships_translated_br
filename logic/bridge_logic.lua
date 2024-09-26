@@ -60,7 +60,7 @@ function CreateBridge(ent, player_index)
     closed_bridge.destructible = false
     local s1,s2,s3,s4, s5, s6
     s1, s2, s3, s4, s5, s6 = createSlaves(surface, pos, direction, hor, ver, f)
-    table.insert(global.bridges, {bridge, closed_bridge, nil, s1, s2, s3, s4, s5, s6, 0})
+    table.insert(storage.bridges, {bridge, closed_bridge, nil, s1, s2, s3, s4, s5, s6, 0})
   end
 end
 
@@ -219,10 +219,10 @@ local animation_time = 7
 
 function ManageBridges(e)
   if e.tick % 6 == 0 then
-    for i=#global.bridges, 1, -1 do
-      local entry = global.bridges[i]
+    for i=#storage.bridges, 1, -1 do
+      local entry = storage.bridges[i]
       if not entry[1].valid then
-        table.remove(global.bridges, i)
+        table.remove(storage.bridges, i)
       else
         ----------------------------------------------
         -------------process slow change

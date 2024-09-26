@@ -9,7 +9,7 @@ local enter_vehicle_radius = 10
 -- If the default behaviour undoes the chosen effect, then set it back again.
 
 function is_ship(name)
-  for _, ship_name in pairs(global.enter_ship_entities) do
+  for _, ship_name in pairs(storage.enter_ship_entities) do
     if ship_name == name then
       return true
     end
@@ -47,16 +47,16 @@ function on_enter_vehicle_keypress (event)
   local character = player.character
   if not character then return end
 
-  global.disable_this_tick = global.disable_this_tick or {}
-  if global.disable_this_tick[player.index] and global.disable_this_tick[player.index] == event.tick then
+  storage.disable_this_tick = storage.disable_this_tick or {}
+  if storage.disable_this_tick[player.index] and storage.disable_this_tick[player.index] == event.tick then
     return
   end
 
-  global.driving_state_locks = global.driving_state_locks or {}
+  storage.driving_state_locks = storage.driving_state_locks or {}
   if character.vehicle and is_ship(character.vehicle.name) then
     local position = character.surface.find_non_colliding_position(character.name, character.position, enter_vehicle_radius, 0.5, true)
     if position then
-      global.driving_state_locks[player.index] = {valid_time = game.tick + 1, position = position }
+      storage.driving_state_locks[player.index] = {valid_time = game.tick + 1, position = position }
       vehicle_exit(player, position)
     end
   else
@@ -72,7 +72,7 @@ function on_enter_vehicle_keypress (event)
       end
     end
     if ships[1] then
-      global.driving_state_locks[player.index] = {valid_time = game.tick + 1, vehicle = ships[1] }
+      storage.driving_state_locks[player.index] = {valid_time = game.tick + 1, vehicle = ships[1] }
       vehicle_enter(player, ships[1])
     end
   end
@@ -84,18 +84,18 @@ function on_player_driving_changed_state (event)
   local character = player.character
   if not character then return end
 
-  global.disable_this_tick = global.disable_this_tick or {}
-  if global.disable_this_tick[player.index] and global.disable_this_tick[player.index] == event.tick then
+  storage.disable_this_tick = storage.disable_this_tick or {}
+  if storage.disable_this_tick[player.index] and storage.disable_this_tick[player.index] == event.tick then
     return
   end
 
-  global.driving_state_locks = global.driving_state_locks or {}
-  if global.driving_state_locks[player.index] then
-    if global.driving_state_locks[player.index].valid_time >= game.tick then
-      local lock = global.driving_state_locks[player.index]
+  storage.driving_state_locks = storage.driving_state_locks or {}
+  if storage.driving_state_locks[player.index] then
+    if storage.driving_state_locks[player.index].valid_time >= game.tick then
+      local lock = storage.driving_state_locks[player.index]
       if lock.vehicle then
         if not lock.vehicle.valid then
-          global.driving_state_locks[player.index] = nil
+          storage.driving_state_locks[player.index] = nil
         else
           if not character.vehicle then
             vehicle_enter(player, lock.vehicle)
@@ -114,15 +114,15 @@ function on_player_driving_changed_state (event)
         end
       end
     else
-      global.driving_state_locks[player.index] = nil
+      storage.driving_state_locks[player.index] = nil
     end
   end
 end
 script.on_event(defines.events.on_player_driving_changed_state, on_player_driving_changed_state)
 
 function disable_this_tick(player_index)
-  global.disable_this_tick = global.disable_this_tick or {}
-  global.disable_this_tick[player_index] = game.tick
+  storage.disable_this_tick = storage.disable_this_tick or {}
+  storage.disable_this_tick[player_index] = game.tick
 end
 
 remote.add_interface(

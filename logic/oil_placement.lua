@@ -6,7 +6,7 @@ function placeDeepOil(e)
   local count = 0
 
   -- Check if there is any water at all in this chunk, or if we should delete oil from land
-  if (global.no_oil_on_land or surface.count_tiles_filtered{area=area, collision_mask = "water_tile"} > 0) then
+  if (storage.no_oil_on_land or surface.count_tiles_filtered{area=area, collision_mask = "water_tile"} > 0) then
 
     -- Find all the crude oil generated on land or sea
     local vanilla_deposits = surface.find_entities_filtered{area=area, name="crude-oil"}
@@ -15,7 +15,7 @@ function placeDeepOil(e)
     if num_deposits > 0 then
       -- Check if this chunk is entirely ocean
       local deep_tiles = 0
-      if global.no_shallow_oil then
+      if storage.no_shallow_oil then
         deep_tiles = surface.count_tiles_filtered{area=area, name="deepwater","deepwater-green"}
       else
         deep_tiles = surface.count_tiles_filtered{area=area, name={"water","water-green","deepwater","deepwater-green"}}
@@ -36,7 +36,7 @@ function placeDeepOil(e)
         end
         x = x / num_deposits
         y = y / num_deposits
-        a = a * global.oil_bonus
+        a = a * storage.oil_bonus
         local pos = {x=x, y=y}
         surface.create_entity{name="deep_oil", amount=a, position=pos}
         log(surface.name..": Consolidated "..tostring(num_deposits).." crude-oil into deep_oil amount="..tostring(a).." in WATER chunk "..util.positiontostr(pos))
@@ -46,7 +46,7 @@ function placeDeepOil(e)
         -- If land deposits are disabled, delete all crude-oil deposits.
         -- Otherwise, delete all crude-oil deposits that are on water
         for _, deposit in pairs(vanilla_deposits) do
-          if ( global.no_oil_on_land or
+          if ( storage.no_oil_on_land or
                surface.count_tiles_filtered{position=deposit.position, radius=deposit.get_radius(), collision_mask="water_tile"} > 0 ) then
             deposit.destroy()
             count = count + 1
@@ -65,7 +65,7 @@ function regenerateSurface(surface)
   -- For each chunk (to keep lists small):
   -- 1. If deep_oil enabled, delete existing deep_oil
   local destroyed = 0
-  if global.deep_oil_enabled then
+  if storage.deep_oil_enabled then
     for chunk in surface.get_chunks() do
       local old_oils = surface.find_entities_filtered{name="deep_oil", area=chunk.area}
       for _, e in pairs(old_oils) do
@@ -80,7 +80,7 @@ function regenerateSurface(surface)
 
   -- 3. If deep_oil enabled, reprocess oil in chunk
   local modified = 0
-  if global.deep_oil_enabled then
+  if storage.deep_oil_enabled then
     for chunk in surface.get_chunks() do
       modified = modified + placeDeepOil{surface=surface, area=chunk.area, position={x=chunk.x, y=chunk.y}}
     end

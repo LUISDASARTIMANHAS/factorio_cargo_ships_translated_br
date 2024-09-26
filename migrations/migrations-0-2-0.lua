@@ -1,5 +1,5 @@
-if global.or_generators ~= nil then
-  for i, generator in pairs(global.or_generators) do
+if storage.or_generators ~= nil then
+  for i, generator in pairs(storage.or_generators) do
     if generator.valid then
       -- Teleport power entities to center of oil rigs since previously they didn't have
       -- placeable-off-grid flag so weren't centered

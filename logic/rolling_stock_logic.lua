@@ -5,7 +5,7 @@ function On_Train_Created(e)
   local parts = e.train.carriages
 
 
-  if   not next(global.check_entity_placement) == nil then
+  if   not next(storage.check_entity_placement) == nil then
     game.players[1].print("full ")
 
     return

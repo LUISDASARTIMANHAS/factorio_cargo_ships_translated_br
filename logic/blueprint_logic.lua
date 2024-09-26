@@ -6,15 +6,15 @@ function FixPipette(e)
     local selected = player.selected
     local cursor = player.cursor_stack
 
-    if global.ship_bodies[item.name] or global.boat_bodies[item.name] or global.ship_engines[item.name] then
+    if storage.ship_bodies[item.name] or storage.boat_bodies[item.name] or storage.ship_engines[item.name] then
       -- Get the placing-item of this ship or boat
-      local new_item = (global.boat_bodies[item.name] and global.boat_bodies[item.name].placing_item) or
-                       (global.ship_bodies[item.name] and global.ship_bodies[item.name].placing_item)
+      local new_item = (storage.boat_bodies[item.name] and storage.boat_bodies[item.name].placing_item) or
+                       (storage.ship_bodies[item.name] and storage.ship_bodies[item.name].placing_item)
       -- See what ship is coupled to this ship_engine
-      if not new_item and selected and global.ship_engines[selected.name] and #selected.train.carriages == 2 then
+      if not new_item and selected and storage.ship_engines[selected.name] and #selected.train.carriages == 2 then
         for i,c in pairs(selected.train.carriages) do
-          if global.ship_bodies[c.name] then
-            new_item = global.ship_bodies[c.name].placing_item
+          if storage.ship_bodies[c.name] then
+            new_item = storage.ship_bodies[c.name].placing_item
             break
           end
         end
@@ -33,7 +33,7 @@ function FixPipette(e)
           if not cursor.valid_for_read then
             if player.cheat_mode==true then
               -- If none in inventory and cheat mode enabled, give stack of correct items
-              cursor.set_stack{name=new_item, count=game.item_prototypes[new_item].stack_size}
+              cursor.set_stack{name=new_item, count=prototypes.item[new_item].stack_size}
             end
           else
             -- Found items in inventory. Remove it from inventory now that it is in the cursor.

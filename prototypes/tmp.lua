@@ -1,15 +1,15 @@
 --[[
 
-		for i=#global.new_cranes, 1, -1 do
-			if global.new_cranes[i][4] > 0 then
-				global.new_cranes[i][4] = global.new_cranes[i][4] -1
+		for i=#storage.new_cranes, 1, -1 do
+			if storage.new_cranes[i][4] > 0 then
+				storage.new_cranes[i][4] = storage.new_cranes[i][4] -1
 			else
-				game.players[1].print("insertin: " .. #global.cranes .. "cranes")
-				table.insert(global.cranes, global.new_cranes[i])
-				table.remove(global.new_cranes, i)
+				game.players[1].print("insertin: " .. #storage.cranes .. "cranes")
+				table.insert(storage.cranes, storage.new_cranes[i])
+				table.remove(storage.new_cranes, i)
 			end
 		end
-		--game.players[1].print("managing " .. #global.cranes .. "cranes")
+		--game.players[1].print("managing " .. #storage.cranes .. "cranes")
 				--game.players[1].print("state is: " .. state)
 				if state == 1 then
 					if not AtPosition(ent.held_stack_position, ent.pickup_position, 0.2) then
@@ -50,9 +50,9 @@
 				end
 
 				-- writing state back
-				global.cranes[i][2] = state
-				global.cranes[i][3] = id
-				global.cranes[i][4] = tracker
+				storage.cranes[i][2] = state
+				storage.cranes[i][3] = id
+				storage.cranes[i][4] = tracker
 			end
 		]]
 

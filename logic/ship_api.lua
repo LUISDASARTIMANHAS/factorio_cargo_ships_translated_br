@@ -37,11 +37,11 @@ local default_orientation = {
       [15] = 15,
     }
 
-function create_globals()
-  global.boat_bodies = global.boat_bodies or {}
-  global.ship_engines = global.ship_engines or {}
-  global.ship_bodies = global.ship_bodies or {}
-  global.enter_ship_entities = global.enter_ship_entities or {}
+function create_storage()
+  storage.boat_bodies = storage.boat_bodies or {}
+  storage.ship_engines = storage.ship_engines or {}
+  storage.ship_bodies = storage.ship_bodies or {}
+  storage.enter_ship_entities = storage.enter_ship_entities or {}
 end
 
 local function add_to_list(list, name)
@@ -73,32 +73,32 @@ end
 function add_ship(params)
   local ship_data = {}
   log("Adding ship '"..tostring(params.name).."':")
-  create_globals()
+  create_storage()
 
   -- Check ship name
-  if not (params.name and game.entity_prototypes[params.name]) then
+  if not (params.name and prototypes.entity[params.name]) then
     log("Error adding ship data: Cannot find entity named '"..tostring(params.name).."'")
     return
   end
-  if global.ship_bodies[params.name] then
+  if storage.ship_bodies[params.name] then
     log("Warning: Ship '"..params.name.."' already added")
   end
   ship_data.name = params.name
 
   -- Find the item to refund if building fails
   if params.placing_item then
-    if game.item_prototypes[params.placing_item] then
+    if prototypes.item[params.placing_item] then
       ship_data.placing_item = params.placing_item
     else
       log("Error adding ship data: Cannot find item named '"..tostring(params.placing_item).."'")
       return
     end
   else
-    ship_data.placing_item = game.entity_prototypes[params.name].items_to_place_this and game.entity_prototypes[params.name].items_to_place_this[1].name
+    ship_data.placing_item = prototypes.entity[params.name].items_to_place_this and prototypes.entity[params.name].items_to_place_this[1].name
   end
 
   -- Process engine data, if any
-  if params.engine and game.entity_prototypes[params.engine] then
+  if params.engine and prototypes.entity[params.engine] then
     ship_data.engine = params.engine
     if params.engine_offset then
       -- Engine offset coordinates specified explicitly
@@ -154,8 +154,8 @@ function add_ship(params)
     end
 
     -- Add data on this engine
-    if not global.ship_engines[ship_data.engine] then
-      global.ship_engines[ship_data.engine] = {
+    if not storage.ship_engines[ship_data.engine] then
+      storage.ship_engines[ship_data.engine] = {
         name = ship_data.engine,
         coupled_ship = -1 * ship_data.coupled_engine,
         compatible_ships = {ship_data.name},
@@ -163,38 +163,38 @@ function add_ship(params)
 
       -- Check if fuel should be recovered when mining the ship
       if params.engine_recover_fuel ~= nil then
-        global.ship_engines[ship_data.engine].recover_fuel = params.engine_recover_fuel  -- Use specified value
-      elseif ( game.entity_prototypes[ship_data.engine] and game.entity_prototypes[ship_data.engine].burner_prototype and
-               ( game.entity_prototypes[ship_data.engine].burner_prototype.fuel_inventory_size > 0 or
-                 game.entity_prototypes[ship_data.engine].burner_prototype.burnt_inventory_size > 0 ) ) then
-        global.ship_engines[ship_data.engine].recover_fuel = true  -- Engine prototype has burner inventories
+        storage.ship_engines[ship_data.engine].recover_fuel = params.engine_recover_fuel  -- Use specified value
+      elseif ( prototypes.entity[ship_data.engine] and prototypes.entity[ship_data.engine].burner_prototype and
+               ( prototypes.entity[ship_data.engine].burner_prototype.fuel_inventory_size > 0 or
+                 prototypes.entity[ship_data.engine].burner_prototype.burnt_inventory_size > 0 ) ) then
+        storage.ship_engines[ship_data.engine].recover_fuel = true  -- Engine prototype has burner inventories
       else
-        global.ship_engines[ship_data.engine].recover_fuel = false  -- Not specified, and no burner inventories
+        storage.ship_engines[ship_data.engine].recover_fuel = false  -- Not specified, and no burner inventories
       end
 
       -- Add to list of enterable ships
-      if game.entity_prototypes[ship_data.engine].allow_passengers then
-        add_to_list(global.enter_ship_entities, ship_data.engine)
+      if prototypes.entity[ship_data.engine].allow_passengers then
+        add_to_list(storage.enter_ship_entities, ship_data.engine)
       end
 
     else
       -- Engine already exists, make sure things match
-      if global.ship_engines[ship_data.engine].coupled_ship ~= (-1 * ship_data.coupled_engine) then
+      if storage.ship_engines[ship_data.engine].coupled_ship ~= (-1 * ship_data.coupled_engine) then
         log("Error adding ship data: Engine '"..ship_data.engine.."' has already been added by another ship with the wrong coupling direction")
         return
       end
 
       -- Add this ship to list of compatible ships
-      add_to_list(global.ship_engines[ship_data.engine].compatible_ships, ship_data.name)
+      add_to_list(storage.ship_engines[ship_data.engine].compatible_ships, ship_data.name)
     end
 
   end
 
-  global.ship_bodies[ship_data.name] = ship_data
+  storage.ship_bodies[ship_data.name] = ship_data
 
   -- Add to list of enterable ships
-  if game.entity_prototypes[ship_data.name].allow_passengers then
-    add_to_list(global.enter_ship_entities, ship_data.name)
+  if prototypes.entity[ship_data.name].allow_passengers then
+    add_to_list(storage.enter_ship_entities, ship_data.name)
   end
 
   log("Added ship specification:\n"..serpent.block(ship_data))
@@ -212,33 +212,33 @@ end
 function add_boat(params)
   local boat_data = {}
   log("Adding boat '"..tostring(params.name).."':")
-  create_globals()
+  create_storage()
   
   -- Check boat name
-  if not (params.name and game.entity_prototypes[params.name]) then
+  if not (params.name and prototypes.entity[params.name]) then
     log("Error adding boat data: Cannot find entity named '"..tostring(params.name).."'")
     return
   end
-  if global.boat_bodies[params.name] then
+  if storage.boat_bodies[params.name] then
     log("Warning: Boat '"..params.name.."' already added")
   end
   boat_data.name = params.name
 
   -- Find the item to refund if building fails
   if params.placing_item then
-    if game.item_prototypes[params.placing_item] then
+    if prototypes.item[params.placing_item] then
       boat_data.placing_item = params.placing_item
     else
       log("Error adding boat data: Cannot find item named '"..tostring(params.placing_item).."'")
       return
     end
   else
-    boat_data.placing_item = game.entity_prototypes[params.name].items_to_place_this and game.entity_prototypes[params.name].items_to_place_this[1].name
+    boat_data.placing_item = prototypes.entity[params.name].items_to_place_this and prototypes.entity[params.name].items_to_place_this[1].name
   end
 
   -- Add rail-version of this boat, if any
   if params.rail_version then
-    if global.ship_bodies[params.rail_version] then
+    if storage.ship_bodies[params.rail_version] then
       boat_data.rail_version = params.rail_version
     else
       log("Error adding boat data: Cannot find ship defintion named '"..tostring(params.rail_version).."'")
@@ -247,11 +247,11 @@ function add_boat(params)
   end
 
   -- Add to list of enterable ships
-  if game.entity_prototypes[boat_data.name].allow_passengers then
-    add_to_list(global.enter_ship_entities, boat_data.name)
+  if prototypes.entity[boat_data.name].allow_passengers then
+    add_to_list(storage.enter_ship_entities, boat_data.name)
   end
 
-  global.boat_bodies[boat_data.name] = boat_data
+  storage.boat_bodies[boat_data.name] = boat_data
   log("Added boat specification:\n"..serpent.block(boat_data))
 
 end
@@ -287,10 +287,10 @@ function init_ship_globals()
     rail_version = "boat",
   })
 
-  log("Ship Engines Defined:\n"..serpent.block(global.ship_engines))
+  log("Ship Engines Defined:\n"..serpent.block(storage.ship_engines))
 
   -- List of entities to use the "Enter Ship" command with (any of the above that accepts passengers)
-  log("Enterable ships:\n"..serpent.block(global.enter_ship_entities))
+  log("Enterable ships:\n"..serpent.block(storage.enter_ship_entities))
 
 end
 

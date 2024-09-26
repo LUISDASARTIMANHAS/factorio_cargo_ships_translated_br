@@ -33,7 +33,7 @@ local function AddVisuals(player)
     table.insert(ports, ltnport)
   end
   -- initalize marker array if necessarry
-  global.pump_markers[player.index] = global.pump_markers[player.index] or {}
+  storage.pump_markers[player.index] = storage.pump_markers[player.index] or {}
   for _, port in pairs(ports) do
     local dir = port.direction
     if dir == defines.direction.north then
@@ -45,24 +45,24 @@ local function AddVisuals(player)
     elseif dir == defines.direction.west then
       new_markers = PlaceVisuals(port.position, 1, 1, player)
     end
-    table.insert(global.pump_markers[player.index], new_markers)
+    table.insert(storage.pump_markers[player.index], new_markers)
   end
 end
 
 local function RemoveVisuals(player_index)
-  for _, marker_set in pairs(global.pump_markers[player_index]) do
+  for _, marker_set in pairs(storage.pump_markers[player_index]) do
     for _, marker in pairs(marker_set) do
       marker.destroy()
     end
   end
   -- reset gloabl to remove remenant empty marker sets
-  global.pump_markers[player_index] = nil
+  storage.pump_markers[player_index] = nil
 end
 
 function UpdateVisuals(e)
   if e.tick % 120 == 0 then
     for pidx, player in pairs(game.players) do
-      if global.ship_pump_selected[pidx] then
+      if storage.ship_pump_selected[pidx] then
         RemoveVisuals(pidx)
         AddVisuals(player)
       end
@@ -97,14 +97,14 @@ function PumpVisualisation(e)
 
   local holding_pump = is_holding_pump(player)
 
-  if (not global.ship_pump_selected[e.player_index]) and holding_pump then
+  if (not storage.ship_pump_selected[e.player_index]) and holding_pump then
     -- if current is pump and last was not
     AddVisuals(player)
-    global.ship_pump_selected[e.player_index] = true
+    storage.ship_pump_selected[e.player_index] = true
 
-  elseif global.ship_pump_selected[e.player_index] and not holding_pump then
+  elseif storage.ship_pump_selected[e.player_index] and not holding_pump then
     -- if last was pump, current is not
     RemoveVisuals(e.player_index)
-    global.ship_pump_selected[e.player_index] = nil
+    storage.ship_pump_selected[e.player_index] = nil
   end
 end

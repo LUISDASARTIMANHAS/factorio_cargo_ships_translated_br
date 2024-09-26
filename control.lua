@@ -24,7 +24,7 @@ is_waterway = {
 -- spawn additional invisible entities
 local function onEntityBuild(e)
   --disable rolling stock logic for 1 tick
-  --global.rolling_stock_timeout = 1
+  --storage.rolling_stock_timeout = 1
 
 
   local entity = e.created_entity or e.entity or e.destination
@@ -38,20 +38,20 @@ local function onEntityBuild(e)
     if entity.ghost_name == "bridge_base" then
       -- Not allowed to make ghost bridges yet
       entity.destroy()
-      
+
     elseif is_waterway[entity.ghost_name] then
       entity.silent_revive{raise_revive = true}
     end
 
-  elseif global.boat_bodies[entity.name] then
+  elseif storage.boat_bodies[entity.name] then
     CheckBoatPlacement(entity, player)
 
   elseif (entity.type == "cargo-wagon" or entity.type == "fluid-wagon" or
           entity.type == "locomotive" or entity.type == "artillery-wagon") then
     --game.players[1].print(entity.collision_mask)
     local engine = nil
-    if global.ship_bodies[entity.name] then
-      local ship_data = global.ship_bodies[entity.name]
+    if storage.ship_bodies[entity.name] then
+      local ship_data = storage.ship_bodies[entity.name]
       if ship_data.engine then
         local pos
         local dir
@@ -71,7 +71,7 @@ local function onEntityBuild(e)
       end
     end
     -- check placement in next tick
-    table.insert(global.check_entity_placement, {entity, engine, player, e.robot})
+    table.insert(storage.check_entity_placement, {entity, engine, player, e.robot})
 
   -- add oilrig slave entity
   elseif entity.name == "oil_rig" then
@@ -91,7 +91,7 @@ local function onEntityBuild(e)
       surface.create_entity{name = "or_power_electric", position = pos, force = force}
       surface.create_entity{name = "or_pole", position = pos, force = force}
       surface.create_entity{name = "or_radar", position = pos, force = force}
-      global.oil_rigs[entity.unit_number] = entity
+      storage.oil_rigs[entity.unit_number] = entity
     end
 
   -- create bridge
@@ -126,29 +126,29 @@ end
 local function OnDeleted(e)
   if(e.entity and e.entity.valid) then
     local entity = e.entity
-    if global.ship_bodies[entity.name] then
+    if storage.ship_bodies[entity.name] then
       if entity.train then
         if entity.train.back_stock then
-          if global.ship_engines[entity.train.back_stock.name] then
+          if storage.ship_engines[entity.train.back_stock.name] then
             entity.train.back_stock.destroy()
           end
         end
         if entity.train.front_stock then
-          if global.ship_engines[entity.train.front_stock.name] then
+          if storage.ship_engines[entity.train.front_stock.name] then
             entity.train.front_stock.destroy()
           end
         end
       end
 
-    elseif global.ship_engines[entity.name] then
+    elseif storage.ship_engines[entity.name] then
       if entity.train then
         if entity.train.front_stock then
-          if global.ship_bodies[entity.train.front_stock.name] then
+          if storage.ship_bodies[entity.train.front_stock.name] then
             entity.train.front_stock.destroy()
           end
         end
         if entity.train.back_stock then
-          if global.ship_bodies[entity.train.back_stock.name]  then
+          if storage.ship_bodies[entity.train.back_stock.name]  then
             entity.train.back_stock.destroy()
           end
         end
@@ -184,20 +184,20 @@ local function OnMined(e)
   if(e.entity and e.entity.valid) then
     local entity = e.entity
     local okay_to_delete = true
-    if global.ship_bodies[entity.name] then
+    if storage.ship_bodies[entity.name] then
       okay_to_delete = false
       local player = (e.player_index and game.players[e.player_index]) or nil
       local robot = e.robot
       if entity.train then
         local engine
         if entity.train.back_stock and
-          (global.ship_engines[entity.train.back_stock.name]) then
+          (storage.ship_engines[entity.train.back_stock.name]) then
           engine = entity.train.back_stock
         elseif entity.train.front_stock and
-              (global.ship_engines[entity.train.front_stock.name]) then
+              (storage.ship_engines[entity.train.front_stock.name]) then
           engine = entity.train.front_stock
         end
-        if ( engine and global.ship_engines[engine.name].recover_fuel and
+        if ( engine and storage.ship_engines[engine.name].recover_fuel and
              engine.get_fuel_inventory() and not engine.get_fuel_inventory().is_empty() ) then
           local fuel_inventory = engine.get_fuel_inventory()
           if player and player.character then
@@ -232,21 +232,21 @@ end
 
 local function updateSmoke(e)
   -- Called every 0.5s
-  for unit_number, oil_rig in pairs(global.oil_rigs) do
+  for unit_number, oil_rig in pairs(storage.oil_rigs) do
     if oil_rig.valid then
       local rig_status = oil_rig.status
       if not (rig_status == defines.entity_status.no_power or rig_status == defines.entity_status.marked_for_deconstruction) then
         oil_rig.surface.create_entity{name="or-smoke-10", position=oil_rig.position}
       end
     else
-      global.oil_rigs[unit_number] = nil
+      storage.oil_rigs[unit_number] = nil
     end
   end
 end
 
 local function onModSettingsChanged(e)
   if e.setting == "waterway_reach_increase" then
-    global.current_distance_bonus = settings.global["waterway_reach_increase"].value
+    storage.current_distance_bonus = settings.global["waterway_reach_increase"].value
     applyReachChanges()
   end
 end
@@ -280,8 +280,8 @@ function init_events()
       {filter="type", type="straight-rail"},
       {filter="type", type="curved-rail"},
     }
-  if global.boat_bodies then
-    for name,_ in pairs(global.boat_bodies) do
+  if storage.boat_bodies then
+    for name,_ in pairs(storage.boat_bodies) do
       table.insert(entity_filters, {filter="name", name=name})
     end
   end
@@ -308,13 +308,13 @@ function init_events()
       {filter="name", name="bridge_west_closed"},
       {filter="name", name="bridge_west_clickable"}
     }
-  if global.ship_bodies then
-    for name,_ in pairs(global.ship_bodies) do
+  if storage.ship_bodies then
+    for name,_ in pairs(storage.ship_bodies) do
       table.insert(deleted_filters, {filter="name", name=name})
     end
   end
-  if global.ship_engines then
-    for name,_ in pairs(global.ship_engines) do
+  if storage.ship_engines then
+    for name,_ in pairs(storage.ship_engines) do
       table.insert(deleted_filters, {filter="name", name=name})
     end
   end
@@ -325,8 +325,8 @@ function init_events()
 
   -- recover fuel from mined ships
   local mined_filters = {}
-  if global.ship_bodies then
-    for name,_ in pairs(global.ship_bodies) do
+  if storage.ship_bodies then
+    for name,_ in pairs(storage.ship_bodies) do
       table.insert(mined_filters, {filter="name", name=name})
     end
   end
@@ -348,8 +348,8 @@ function init_events()
   remote.add_interface("aai-sci-burner", {
     hauler_types = function(data)
       local types={}
-      if global.boat_bodies then
-        for name,_ in pairs(global.boat_bodies) do
+      if storage.boat_bodies then
+        for name,_ in pairs(storage.boat_bodies) do
           table.insert(types, name)
         end
       end
@@ -366,12 +366,12 @@ local function init_oil_rigs()
       oil_rigs[entity.unit_number] = entity
     end
   end
-  global.oil_rigs = oil_rigs
+  storage.oil_rigs = oil_rigs
 end
 
 local function init()
   -- Cache startup settings
-  global.deep_oil_enabled = settings.startup["deep_oil"].value
+  storage.deep_oil_enabled = settings.startup["deep_oil"].value
   local oil_richness = settings.startup["oil_richness"].value
   local mult = 1
   if oil_richness == "very-poor" then
@@ -383,36 +383,36 @@ local function init()
   elseif oil_richness == "very-good" then
     mult = 10
   end
-  global.oil_bonus = mult
-  global.no_oil_on_land = settings.startup["no_oil_on_land"].value
-  global.oil_rig_capacity = settings.startup["oil_rig_capacity"].value
-  global.no_shallow_oil = settings.startup["no_shallow_oil"].value
+  storage.oil_bonus = mult
+  storage.no_oil_on_land = settings.startup["no_oil_on_land"].value
+  storage.oil_rig_capacity = settings.startup["oil_rig_capacity"].value
+  storage.no_shallow_oil = settings.startup["no_shallow_oil"].value
 
-  -- Init global variables
-  global.check_entity_placement = global.check_entity_placement or {}
-  global.bridges = global.bridges or {}
-  global.bridgesToReplace = global.bridgesToReplace or {}
-  global.ship_pump_selected = global.ship_pump_selected or {}
-  global.pump_markers = global.pump_markers or {}
-  global.cranes = global.cranes or {}
-  global.new_cranes = global.new_cranes or {}
-  global.gui_oilrigs = (global.deep_oil_enabled and global.gui_oilrigs) or {}
-  global.connection_counter = 0
-  global.or_generators = nil  -- Removed
-  if not global.oil_rigs then
-    init_oil_rigs()  -- Creates global.oil_rigs
+  -- Init storage variables
+  storage.check_entity_placement = storage.check_entity_placement or {}
+  storage.bridges = storage.bridges or {}
+  storage.bridgesToReplace = storage.bridgesToReplace or {}
+  storage.ship_pump_selected = storage.ship_pump_selected or {}
+  storage.pump_markers = storage.pump_markers or {}
+  storage.cranes = storage.cranes or {}
+  storage.new_cranes = storage.new_cranes or {}
+  storage.gui_oilrigs = (storage.deep_oil_enabled and storage.gui_oilrigs) or {}
+  storage.connection_counter = 0
+  storage.or_generators = nil  -- Removed
+  if not storage.oil_rigs then
+    init_oil_rigs()  -- Creates storage.oil_rigs
   end
 
   init_ship_globals()  -- Init database of ship parameters
 
   -- Initialize or migrate long reach state
-  global.last_cursor_stack_name =
-    ((type(global.last_cursor_stack_name) == "table") and global.last_cursor_stack_name)
+  storage.last_cursor_stack_name =
+    ((type(storage.last_cursor_stack_name) == "table") and storage.last_cursor_stack_name)
       or {}
-  global.last_distance_bonus =
-    ((type(global.last_distance_bonus) == "number") and global.last_distance_bonus)
+  storage.last_distance_bonus =
+    ((type(storage.last_distance_bonus) == "number") and storage.last_distance_bonus)
       or settings.global["waterway_reach_increase"].value
-  global.current_distance_bonus = settings.global["waterway_reach_increase"].value
+  storage.current_distance_bonus = settings.global["waterway_reach_increase"].value
 
   -- Reapply long reach settings to existing characters
 
@@ -427,7 +427,7 @@ local function onTick(e)
   checkPlacement()
   ManageBridges(e)
   UpdateVisuals(e)
-  if global.deep_oil_enabled then
+  if storage.deep_oil_enabled then
     UpdateOilRigGui(e)
   end
   --ManageCranes(e)
