@@ -53,9 +53,8 @@ local oil_rig = {
     }
   },
   energy_usage = "750kW",
-  mining_speed = 2,
-  --resource_searching_radius = 2.4,
-  resource_searching_radius = 3.5,
+  mining_speed = 1,
+  resource_searching_radius = 1.4,
   vector_to_place_result = {0, 0},  -- Disables the output arrow for fluid miners
   module_slots = 3,
   radius_visualisation_picture =
@@ -166,7 +165,7 @@ local oil_rig = {
     fade_in_ticks = 4,
     fade_out_ticks = 10
   },
-  
+
   circuit_connector = circuit_connector_definitions["oil_rig"],
   circuit_wire_max_distance = default_circuit_wire_max_distance
 }

@@ -56,8 +56,8 @@ data:extend{
     protected_from_tile_building = false,
     --collision_box = {{-2.4, -2.4}, {2.4, 2.4}},
     --selection_box = {{-1.0, -1.0}, {1.0, 1.0}},
-    collision_box = data.raw.resource["crude-oil"].collision_box,
-    selection_box = data.raw.resource["crude-oil"].selection_box,
+    collision_box = table.deepcopy(data.raw.resource["crude-oil"].collision_box),
+    selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
     autoplace = resource_autoplace.resource_autoplace_settings
     {
       name = "offshore-oil",
