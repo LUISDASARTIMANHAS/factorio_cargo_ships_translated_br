@@ -1,4 +1,3 @@
-require("__cargo-ships__/prototypes/bridge_items")
 
 -- Support for  Schallfalke's Schall Transport Group mod
 local subgroup_ship = "water_transport"
@@ -56,9 +55,7 @@ data:extend{
   {
     type = "item-with-entity-data",
     name = "boat_engine",
-    icon = "__base__/graphics/icons/engine-unit.png",
-    icon_size = 64,
-    icon_mipmaps = 4,
+    icons = data.raw["locomotive"]["boat_engine"].icons,
     hidden = true,
     subgroup = subgroup_ship,
     order = "a[water-system]-z[boat_engine]",
@@ -68,9 +65,7 @@ data:extend{
   {
     type = "item-with-entity-data",
     name = "cargo_ship_engine",
-    icon = "__base__/graphics/icons/engine-unit.png",
-    icon_size = 64,
-    icon_mipmaps = 4,
+    icons = data.raw["locomotive"]["cargo_ship_engine"].icons,
     hidden = true,
     subgroup = subgroup_ship,
     order = "a[water-system]-z[cargo_ship_engine]",
@@ -86,7 +81,7 @@ data:extend{
     subgroup = subgroup_ship,
     order = "a[water-system]-f[cargo_ship]",
     place_result = "cargo_ship",
-    stack_size = 5,
+    stack_size = 1,
   },
   {
     type = "item-with-entity-data",
@@ -97,7 +92,7 @@ data:extend{
     subgroup = subgroup_ship,
     order = "a[water-system]-g[oil_tanker]",
     place_result = "oil_tanker",
-    stack_size = 5,
+    stack_size = 1,
   },
   {
     type = "rail-planner",
@@ -166,7 +161,6 @@ data:extend{
     name = "pump_marker",
     icon = "__base__/graphics/icons/crude-oil-resource.png",
     icon_size = 64,
-    icon_mipmaps = 4,
     hidden = true,
     order = "b[fluids]-c[oil_rig]",
     place_result = "pump_marker",
@@ -174,7 +168,7 @@ data:extend{
   },
 }
 
-if settings.startup["deep_oil"].value then
+if settings.startup["offshore_oil_enabled"].value then
   data:extend{
     {
       type = "item",
@@ -185,7 +179,29 @@ if settings.startup["deep_oil"].value then
       subgroup = "extraction-machine",
       order = "b[fluids]-c[oil_rig]",
       place_result = "oil_rig",
+      stack_size = 1,
+    },
+    {
+      type = "item",
+      name = "or_pole",
+      icons = data.raw["electric-pole"].or_pole.icons,
+      flags = {},
+      subgroup = "extraction-machine",
+      order = "b[fluids]-c[oil_rig]",
+      place_result = "or_pole",
       stack_size = 5,
+      hidden = true,
+    },
+    {
+      type = "item",
+      name = "or_tank",
+      icons = data.raw["storage-tank"].or_tank.icons,
+      flags = {},
+      subgroup = "extraction-machine",
+      order = "b[fluids]-c[oil_rig]",
+      place_result = "or_tank",
+      stack_size = 5,
+      hidden = true,
     },
   }
 end

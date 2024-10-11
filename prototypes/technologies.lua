@@ -144,7 +144,7 @@ data:extend ({
 }
 })
 
-if settings.startup["deep_oil"].value then
+if settings.startup["offshore_oil_enabled"].value then
   data:extend{
     {
       type = "technology",
@@ -169,7 +169,7 @@ if settings.startup["deep_oil"].value then
   }
 
   -- Change technology requirement if oil is not available on land
-  if settings.startup["no_oil_on_land"].value or settings.startup["no_oil_for_oil_rig"].value then
+  if settings.startup["no_oil_for_oil_rig"].value then
     data.raw.technology["deep_sea_oil_extraction"].unit = {
       count = 300,
       ingredients = {

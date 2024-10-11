@@ -1,5 +1,5 @@
 require("__cargo-ships__/constants")
-local collision_mask_util = require "__core__/lualib/collision-mask-util"
+local collision_mask_util = require("__core__/lualib/collision-mask-util")
 
 data:extend{
   {
@@ -14,6 +14,10 @@ data:extend{
     type = "collision-layer",
     name = "land_resource",
   },
+  {
+    type = "collision-layer",
+    name = "water_resource",
+  },
 }
 
 
@@ -23,10 +27,6 @@ for _, tile in pairs(data.raw.tile) do
     tile.collision_mask.layers["waterway"] = true
   end
 end
---data.raw["legacy-straight-rail"]["straight-water-way"].collision_mask.layers["waterway"] = true
---data.raw["legacy-curved-rail"]["curved-water-way"].collision_mask.layers["waterway"] = true
---data.raw["legacy-straight-rail"]["invisible_rail"].collision_mask.layers["waterway"] = true
---data.raw["straight-rail"]["bridge_crossing"].collision_mask.layers["waterway"] = true
 data.raw["straight-rail"]["straight-waterway"].collision_mask.layers["waterway"] = true
 data.raw["half-diagonal-rail"]["half-diagonal-waterway"].collision_mask.layers["waterway"] = true
 data.raw["curved-rail-a"]["curved-waterway-a"].collision_mask.layers["waterway"] = true
@@ -37,7 +37,7 @@ data.raw["legacy-curved-rail"]["legacy-curved-waterway"].collision_mask.layers["
 
 data.raw["rail-signal"]["buoy"].collision_mask.layers["waterway"] = true
 data.raw["rail-chain-signal"]["chain_buoy"].collision_mask.layers["waterway"] = true
-data.raw["rail-chain-signal"]["invisible_chain_signal"].collision_mask.layers["waterway"] = true
+data.raw["rail-chain-signal"]["invisible-chain-signal"].collision_mask.layers["waterway"] = true
 
 data.raw.tile["landfill"].check_collision_with_entities = true
 
@@ -64,6 +64,7 @@ if mods["Krastorio2"] and settings.startup['kr-rebalance-vehicles&fuels'].value 
 end
 
 -- Ensure player collides with pump
+
 local pump = data.raw["pump"]["pump"]
 local pump_collision_mask = collision_mask_util.get_mask(pump)
 pump_collision_mask.layers["pump"] = true
@@ -71,7 +72,7 @@ pump.collision_mask = pump_collision_mask
 for _, character in pairs(data.raw.character) do
   local collision_mask = collision_mask_util.get_mask(character)
   if collision_mask.layers["player"] then
-    collision_mask["pump"] = true
+    collision_mask.layers["pump"] = true
     character.collision_mask = collision_mask
   end
 end
@@ -88,7 +89,7 @@ end
 -----------------------------
 
 -- Disable sea oil generation and extraction if Omnimatter or Seablock are installed
-if data.raw.resource.deep_oil then
+if data.raw.resource["offshore-oil"] then
 
   -- If Water_Ores is not installed, make it so that:
   -- 1. Crude Oil can generate on deepwater tiles, and
@@ -98,10 +99,22 @@ if data.raw.resource.deep_oil then
   if not mods["Water_Ores"] then
     -- Replace 'resource' with 'land_resource' in the collision masks of water tiles where oil can go
     if settings.startup["no_shallow_oil"].value then
-      valid_oil_tiles = {"deepwater","deepwater-green"}
+      valid_oil_tiles = {}
+      for _, tile in pairs(data.raw.tile) do
+        if tile.collision_mask.layers["water_tile"] and string.find(tile.name, "deep") then
+          table.insert(valid_oil_tiles, tile.name)
+        end
+      end
     else
-      valid_oil_tiles = {"water","water-green","deepwater","deepwater-green"}
+      valid_oil_tiles = {}
+      for _, tile in pairs(data.raw.tile) do
+        if tile.collision_mask.layers["water_tile"] then
+          table.insert(valid_oil_tiles, tile.name)
+        end
+      end
     end
+    
+    --Add new "land_resource" collision layer to water tiles
     for _, name in pairs(valid_oil_tiles) do
       if data.raw.tile[name] then
         local collision_mask = data.raw.tile[name].collision_mask
@@ -112,27 +125,34 @@ if data.raw.resource.deep_oil then
         end
       end
     end
-
-    -- Add a new "land_resource" collision layer to land resources (If Water_Ores is not installed)
+    
+    -- Add new "water_resource" collision layer to all the tiles that don't have "land_resource"
+    for name, tile in pairs(data.raw.tile) do
+      local collision_mask = tile.collision_mask
+      if not collision_mask.layers["land_resource"] then
+        log("Adding collision layer 'water_resource' on tile '"..name.."'")
+        collision_mask.layers["water_resource"] = true
+      end
+    end
+    
+    -- Add new "land_resource" collision layer to land resources (If Water_Ores is not installed)
     for name, prototype in pairs(data.raw.resource) do
-      if name ~= "crude-oil" and name ~= "deep_oil" then
+      if name ~= "offshore-oil" then
         local collision_mask = collision_mask_util.get_mask(prototype)
         collision_mask.layers["land_resource"] = true
         prototype.collision_mask = collision_mask
-        prototype.selection_priority = math.max((prototype.selection_priority or 50) - 1, 0)
-        log("Adding collision layer 'land_resource' to resource '"..name.."' and demoting to selection_priority="..tostring(prototype.selection_priority))
+        log("Adding collision layer 'land_resource' to resource '"..name) --.."' and demoting to selection_priority="..tostring(prototype.selection_priority))
       end
     end
-
-    -- Fix Alien Biomes tree selection priority
-    for name, _ in pairs(data.raw.tree) do
-      if data.raw.tree[name].selection_priority and data.raw.tree[name].selection_priority == 0 then
-        data.raw.tree[name].selection_priority = 1
-      end
-    end
+    
+    -- Add "water_resource" to the offshore oil deposit
+    data.raw.resource["offshore-oil"].collision_mask.layers["water_resource"] = true
 
   end
 
   -- Make sure the oil rig can mine deep oil:
-  data.raw["mining-drill"]["oil_rig"].resource_categories = {data.raw.resource["deep_oil"].category}
+  data.raw["mining-drill"]["oil_rig"].resource_categories = {data.raw.resource["offshore-oil"].category}
+  -- Make sure the oil rig can burn crude-oil
+  data.raw.fluid["crude-oil"].fuel_value = data.raw.fluid["crude-oil"].fuel_value or "100MJ"
+  
 end

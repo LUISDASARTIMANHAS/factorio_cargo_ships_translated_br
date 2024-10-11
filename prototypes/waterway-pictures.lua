@@ -91,16 +91,17 @@ local function make_legacy_rail_pictures(elems, rail_type)
   return res
 end
 
-function legacy_waterway_pictures(rail_type)
-  return make_legacy_rail_pictures
-  ({
+function legacy_waterway_pictures(rail_type, invisible)
+  local elems = {
     {"metals", "metals", mipmap = true},
     --{"backplates", "backplates", mipmap = true},
     --{"ties", "ties", variations = 3},
     --{"stone_path", "stone-path", variations = 3},
     --{"stone_path_background", "stone-path-background", variations = 3},
-    {"segment_visualisation_middle", "segment-visualisation-middle"},
-  }, rail_type)
+    {"segment_visualisation_middle", "segment-visualisation-middle"}
+  }
+  if invisible then elems = {} end
+  return make_legacy_rail_pictures(elems, rail_type)
 end
 
 local function make_new_rail_pictures(keys, elems, max_variations)
@@ -157,7 +158,7 @@ local function make_new_rail_pictures(keys, elems, max_variations)
   return res
 end
 
-function new_waterway_pictures(rail_type)
+function new_waterway_pictures(rail_type, invisible)
   local keys
   local NOT_USED_POSITION = {0, 0}
   local NOT_USED_SIZE = {1, 1}
@@ -220,6 +221,7 @@ function new_waterway_pictures(rail_type)
     --{ "stone_path_background",        "__base__/graphics/entity/rails/rail/rail-stone-path.png"                        },
     { "segment_visualisation_middle", "__base__/graphics/entity/rails/rail/rail-segment-visualisations-middle.png"     },
   }
+  if invisible then elems = {} end
 
   local res = make_new_rail_pictures(keys, elems)
   --[[res["rail_endings"] =

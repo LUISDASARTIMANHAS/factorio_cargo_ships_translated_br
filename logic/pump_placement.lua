@@ -28,7 +28,7 @@ local function AddVisuals(player)
   local pos = player.position
   local a = {{pos.x-100, pos.y-100}, {pos.x+100, pos.y+100}}
   local ports = player.surface.find_entities_filtered{area=a, name="port"}
-  local ltnports = player.surface.find_entities_filtered{area=a, name="ltn-port"}
+  local ltnports = (prototypes.entity["ltn-port"] and player.surface.find_entities_filtered{area=a, name="ltn-port"}) or {}
   for _, ltnport in pairs(ltnports) do
     table.insert(ports, ltnport)
   end
@@ -72,7 +72,7 @@ end
 
 local function is_holding_pump(player)
   if player.is_cursor_blueprint() then
-    local blueprint_entities = player.get_blueprint_entities()
+    local blueprint_entities = player.cursor_stack.get_blueprint_entities()
     if blueprint_entities then
       for _, bp_entity in pairs(blueprint_entities) do
         if bp_entity.name == "pump" then

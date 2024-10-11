@@ -2,7 +2,6 @@ local floating_pole = table.deepcopy(data.raw["electric-pole"]["big-electric-pol
 floating_pole.name = "floating-electric-pole"
 floating_pole.icon = GRAPHICSPATH .. "icons/floating_pole.png"
 floating_pole.icon_size = 64
-floating_pole.icon_mipmaps = 0
 floating_pole.minable = {mining_time = 0.5, result = "floating-electric-pole"}
 floating_pole.collision_mask = {layers = {ground_tile = true, object = true}}
 floating_pole.maximum_wire_distance = 48
@@ -40,7 +39,6 @@ floating_pole.water_reflection =
         width = 34,
         height = 33,
         shift = util.by_pixel(0, 58),
-        variation_count = 1,
         scale = 5
       },
       {
@@ -49,7 +47,6 @@ floating_pole.water_reflection =
         height = 33,
         x = 34,
         shift = util.by_pixel(0, 58),
-        variation_count = 1,
         scale = 5
       },
       {
@@ -58,7 +55,6 @@ floating_pole.water_reflection =
         height = 33,
         x = 68,
         shift = util.by_pixel(0, 58),
-        variation_count = 1,
         scale = 5
       },
       {
@@ -67,7 +63,6 @@ floating_pole.water_reflection =
         height = 33,
         x = 102,
         shift = util.by_pixel(0, 58),
-        variation_count = 1,
         scale = 5
       },
 
@@ -140,15 +135,11 @@ local buoy = table.deepcopy(data.raw["rail-signal"]["rail-signal"])
 buoy.name = "buoy"
 buoy.icon = GRAPHICSPATH .. "icons/buoy.png"
 buoy.icon_size = 64
-buoy.icon_mipmaps = 0
 buoy.collision_mask = {layers = {object = true, rail = true}}  -- waterway_layer added in data-final-fixes
 buoy.selection_box = {{-1.6, -0.8}, {0.01, 0.8}}
 buoy.fast_replaceable_group = "buoy"
 buoy.minable = {mining_time = 0.5, result = "buoy"}
-buoy.green_light = nil  -- TODO 2.0
-buoy.orange_light = nil
-buoy.red_light = nil
-buoy.animation = {  -- TODO 2.0
+--[[buoy.ground_picture_set.structure = {
   layers = {
     {
       filename = GRAPHICSPATH .. "entity/buoy/hr-buoy-base.png",
@@ -180,6 +171,12 @@ buoy.animation = {  -- TODO 2.0
       scale = 0.5
     },
   }
+}]]
+buoy.ground_picture_set.rail_piece = nil
+buoy.ground_picture_set.lights = {
+  green  = nil,
+  yellow  = nil,
+  red  = nil,
 }
 buoy.water_reflection = {
   pictures =
@@ -195,7 +192,6 @@ buoy.water_reflection = {
   rotate = false,
   orientation_to_variation = true
 }
-buoy.rail_piece = nil
 
 ---------------------------------------------------------------------------------------------------------------
 
@@ -203,7 +199,6 @@ local chain_buoy = table.deepcopy(data.raw["rail-chain-signal"]["rail-chain-sign
 chain_buoy.name = "chain_buoy"
 chain_buoy.icon = GRAPHICSPATH .. "icons/chain_buoy.png"
 chain_buoy.icon_size = 64
-chain_buoy.icon_mipmaps = 0
 chain_buoy.collision_mask = {layers = {object = true, rail = true}}  -- waterway_layer added in data-final-fixes
 chain_buoy.selection_box = {{-1.6, -0.8}, {0.01, 0.8}}
 chain_buoy.fast_replaceable_group = "buoy"
@@ -254,7 +249,6 @@ local port = table.deepcopy(data.raw["train-stop"]["train-stop"])
 port.name = "port"
 port.icon = GRAPHICSPATH .. "icons/port.png"
 port.icon_size = 64
-port.icon_mipmaps = 0
 port.minable = {mining_time = 1, result = "port"}
 port.rail_overlay_animations = nil
 port.collision_mask = {layers = {object = true}}

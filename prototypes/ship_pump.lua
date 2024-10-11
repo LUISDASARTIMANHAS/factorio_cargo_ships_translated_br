@@ -37,8 +37,7 @@ pump_marker.picture = {
   filename = GRAPHICSPATH .. "green_selection_box.png",
   width = 128,
   height = 128,
-  scale = 0.5,
-  frame_count = 1
+  scale = 0.5
 }
 
 data:extend({ pump_marker })

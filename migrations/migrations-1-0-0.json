@@ -1,0 +1,32 @@
+{
+  "entity":
+  [
+    ["port_lb", "port"],
+    ["ship_pump", "pump"],
+    ["straight-water-way", "legacy-straight-waterway"],
+    ["curved-water-way", "legacy-curved-waterway"],
+    ["straight-water-way-placed", "legacy-straight-waterway"],
+    ["curved-water-way-placed", "legacy-curved-waterway"],
+    ["bridge_crossing", "legacy-straight-waterway"],
+    ["invisible_rail", "legacy-invisible-rail"],
+    ["invisible_chain_signal", "invisible-chain-signal"],
+    ["bridge_north_clickable", "bridge_base"],
+    ["bridge_south_clickable", "bridge_base"],
+    ["bridge_east_clickable", "bridge_base"],
+    ["bridge_west_clickable", "bridge_base"],
+    ["deep_oil", "offshore-oil"]
+  ],
+  "item":
+  [
+    ["port_lb", "port"],
+    ["ship_pump", "pump"]
+  ],
+  "recipe":
+  [
+    ["ship_pump", "pump"]
+  ],
+  "setting":
+  [
+    ["deep_oil", "offshore_oil_enabled"]
+  ]
+}

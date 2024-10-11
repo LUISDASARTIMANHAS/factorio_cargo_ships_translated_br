@@ -1,4 +1,4 @@
-data:extend({
+data:extend{
   {
     type = "recipe",
     name = "boat",
@@ -101,9 +101,9 @@ data:extend({
     results = {{type="item", name="bridge_base", amount=1}},
   },
 
-})
+}
 
-if settings.startup["deep_oil"].value then
+if settings.startup["offshore_oil_enabled"].value then
   data:extend{
     {
       type = "recipe",

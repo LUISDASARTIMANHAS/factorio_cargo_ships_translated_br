@@ -5,7 +5,7 @@ data:extend{
     enabled_while_spectating = true,
     order = "a",
     key_sequence = "",
-    linked_game_control = "toggle-driving"
+    linked_game_control = "toggle-driving",
   },
   {
     type = "custom-input",

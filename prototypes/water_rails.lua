@@ -284,34 +284,3 @@ data:extend({
   },
 })
 
-
--- tracks used by bridges
-local invisible_rail = table.deepcopy(data.raw["legacy-straight-rail"]["legacy-straight-rail"])
-invisible_rail.name = "invisible_rail"
-invisible_rail.icon = GRAPHICSPATH .. "icons/water_rail.png"
-invisible_rail.icon_size = 64
-invisible_rail.flags = {"not-blueprintable", "not-deconstructable", "placeable-neutral", "player-creation", "building-direction-8-way"}
---invisible_rail.pictures = railpictures(true)
-invisible_rail.minable = nil
-invisible_rail.resistances = invincible()
-invisible_rail.selection_box = nil
-invisible_rail.selectable_in_game = false
-invisible_rail.collision_mask = {layers = {object = true}}  -- waterway_layer added in data-final-fixes
-invisible_rail.allow_copy_paste = false
-invisible_rail.map_color = mapcolor
-invisible_rail.friendly_map_color = mapcolor
-
-local bridge_crossing = table.deepcopy(data.raw["straight-rail"]["straight-waterway"])
-bridge_crossing.name = "bridge_crossing"
-bridge_crossing.icon = GRAPHICSPATH .. "icons/bridge.png"
-bridge_crossing.icon_size = 64
-bridge_crossing.flags = {"not-blueprintable", "not-deconstructable", "placeable-neutral", "player-creation", "building-direction-8-way"}
-bridge_crossing.minable = nil
-bridge_crossing.resistances = invincible()
-bridge_crossing.collision_mask = {layers = {object = true}}  -- waterway_layer added in data-final-fixes
-bridge_crossing.collision_box = {{-0.6, -0.95}, {0.6, 0.95}}
-bridge_crossing.selection_box = nil
-bridge_crossing.selectable_in_game = false
-bridge_crossing.allow_copy_paste = false
-
-data:extend({invisible_rail, bridge_crossing})

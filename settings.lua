@@ -1,24 +1,10 @@
 data:extend({
-  {
+    {
     type = "bool-setting",
-    name = "deep_oil",
+    name = "offshore_oil_enabled",
     setting_type = "startup",
     default_value = true,
     order = "a-a"
-  },
-  {
-    type = "string-setting",
-    name = "oil_richness",
-    setting_type = "startup",
-    default_value = "regular",
-    allowed_values = {
-      "very-poor",
-      "poor",
-      "regular",
-      "good",
-      "very-good"
-    },
-    order = "a-b"
   },
   {
     type = "int-setting",
@@ -47,13 +33,6 @@ data:extend({
     setting_type = "startup",
     default_value = false,
     order = "a-e"
-  },
-  {
-    type = "bool-setting",
-    name = "no_oil_on_land",
-    setting_type = "startup",
-    default_value = false,
-    order = "a-f"
   },
   {
     type = "bool-setting",
