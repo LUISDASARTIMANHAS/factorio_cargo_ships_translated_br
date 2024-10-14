@@ -28,20 +28,20 @@ function OnCraneCreated(entity)
   end
 
   inserter = entity
-  table.insert(global.cranes, {inserter})
+  table.insert(storage.cranes, {inserter})
 end
 
 function ManageCranes(e)
 
   --if e.tick % 2 == 0 then
-  --game.players[1].print("we manage: " .. #global.cranes .. " cranes")
+  --game.players[1].print("we manage: " .. #storage.cranes .. " cranes")
 
 
-  for i=#global.cranes, 1, -1 do
-    local crane = global.cranes[i]
+  for i=#storage.cranes, 1, -1 do
+    local crane = storage.cranes[i]
     -- remove unvalid
     if not crane[1].valid then
-      table.remove(global.cranes, i)
+      table.remove(storage.cranes, i)
     else
 
       local inserter = crane[1]

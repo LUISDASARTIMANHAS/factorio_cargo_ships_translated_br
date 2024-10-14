@@ -32,7 +32,7 @@ visual_hor.power_on_animation = {
   --shift = {1.66, -0.55},
   scale = 0.852,
 }
-visual_hor.collision_mask = {}
+visual_hor.collision_mask = {layers = {}}
 
 data:extend({
   crane,

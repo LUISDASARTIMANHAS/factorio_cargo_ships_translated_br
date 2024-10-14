@@ -1,8 +1,9 @@
 --[[
   Copied from AAI Vehicles: Ironclad with permission from Earendel
 ]]
+local math2d = require("math2d")
 
-local enter_vehicle_radius = 10
+local enter_ship_radius = 10
 
 -- When the button is pressed decide the action, record it, and perform it.
 -- Apply a short term lock.
@@ -38,33 +39,41 @@ function on_enter_vehicle_keypress (event)
   local character = player.character
   if not character then return end
 
-  storage.disable_this_tick = storage.disable_this_tick or {}
   if storage.disable_this_tick[player.index] and storage.disable_this_tick[player.index] == event.tick then
     return
   end
-
-  storage.driving_state_locks = storage.driving_state_locks or {}
-  if character.vehicle and storage.enter_ship_entities[character.vehicle.name] then
-    local position = character.surface.find_non_colliding_position(character.name, character.position, enter_vehicle_radius, 0.5, true)
+  local non_ship_radius = character.prototype.enter_vehicle_distance
+  --if character.vehicle and storage.enter_ship_entities[character.vehicle.name] then
+  if character.vehicle then
+    local radius = non_ship_radius
+    if storage.enter_ship_entities[character.vehicle.name] then
+      radius = enter_ship_radius
+    end
+    local position = character.surface.find_non_colliding_position(character.name, character.position, radius, 0.5, true)
     if position then
-      storage.driving_state_locks[player.index] = {valid_time = game.tick + 1, position = position }
+      storage.driving_state_locks[player.index] = {valid_time = game.tick + 1, position = position}
       vehicle_exit(player, position)
     end
   else
     local vehicles = character.surface.find_entities_filtered{
-      type = {"car", "locomotive", "cargo-wagon", "fluid-wagon", "artillery-wagon"},
+      type = {"car", "locomotive", "cargo-wagon", "fluid-wagon", "artillery-wagon", "spider-vehicle"},
       position = character.position,
-      radius = enter_vehicle_radius
+      radius = enter_ship_radius
     }
-    local ships = {}
+    local closest_vehicle
+    local closest_distance = 2*enter_ship_radius
     for _, vehicle in pairs(vehicles) do
-      if storage.enter_ship_entities[vehicle.name] then
-        table.insert(ships, vehicle)
+      local distance = math2d.position.distance(vehicle.position, character.position)
+      if distance < closest_distance then
+        if distance < non_ship_radius or storage.enter_ship_entities[vehicle.name] then
+          closest_vehicle = vehicle
+          closest_distance = distance
+        end
       end
     end
-    if ships[1] then
-      storage.driving_state_locks[player.index] = {valid_time = game.tick + 1, vehicle = ships[1] }
-      vehicle_enter(player, ships[1])
+    if closest_vehicle then
+      storage.driving_state_locks[player.index] = {valid_time = game.tick + 1, vehicle = closest_vehicle}
+      vehicle_enter(player, closest_vehicle)
     end
   end
 end
@@ -75,12 +84,10 @@ function on_player_driving_changed_state (event)
   local character = player.character
   if not character then return end
 
-  storage.disable_this_tick = storage.disable_this_tick or {}
   if storage.disable_this_tick[player.index] and storage.disable_this_tick[player.index] == event.tick then
     return
   end
 
-  storage.driving_state_locks = storage.driving_state_locks or {}
   if storage.driving_state_locks[player.index] then
     if storage.driving_state_locks[player.index].valid_time >= game.tick then
       local lock = storage.driving_state_locks[player.index]
@@ -112,7 +119,6 @@ end
 script.on_event(defines.events.on_player_driving_changed_state, on_player_driving_changed_state)
 
 function disable_this_tick(player_index)
-  storage.disable_this_tick = storage.disable_this_tick or {}
   storage.disable_this_tick[player_index] = game.tick
 end
 

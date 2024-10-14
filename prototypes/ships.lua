@@ -53,6 +53,12 @@ local ships_working_sound = {
   },]]
 }
 
+-- Add an overlay in the upper right
+local function get_icons(prototype, default_icon_size)
+  return prototype.icons or {{icon=prototype.icon, icon_size=prototype.icon_size or default_icon_size or 64}}
+end
+local icon_inputs = {tint={0.4,0.4,1}, scale=0.6, shift={7,-7}}
+
 function ship_light(yshift, cutpicture)
   local cut = cutpicture and "-cut" or ""
   return {
@@ -105,7 +111,6 @@ end
 local indep_boat_animation = {
   layers = {
     {
-      slice = 4,
       priority = "low",
       width = 536,
       height = 536,
@@ -118,7 +123,6 @@ local indep_boat_animation = {
       max_advance = 0.2,
     },
     {
-      slice = 4,
       priority = "low",
       width = 536,
       height = 536,
@@ -137,98 +141,98 @@ local indep_boat_animation = {
 }
 
 local boat_pictures = {
-  layers = {
-    {
-      slice = 4,
-      priority = "low",
-      width = 750,
-      height = 750,
-      direction_count = 256,
-      allow_low_quality_rotation = true,
-      filenames = imageloop(GRAPHICSPATH .. "entity/boat/railed/boat_", 4),
-      line_length = 8,
-      lines_per_file = 8,
-      scale = 0.5, --1.5,
-      shift = util.by_pixel(0, -28),
-    },
-    {
-      slice = 4,
-      priority = "low",
-      width = 750,
-      height = 750,
-      direction_count = 256,
-      allow_low_quality_rotation = true,
-      filenames = imageloop(GRAPHICSPATH .. "entity/boat/railed/boat_shadow_", 4),
-      line_length = 8,
-      lines_per_file = 8,
-      scale = 0.5, --1.5,
-      shift = util.by_pixel(0, -28),
-      draw_as_shadow = true,
+  rotated = {
+    layers = {
+      {
+        priority = "low",
+        width = 750,
+        height = 750,
+        direction_count = 256,
+        allow_low_quality_rotation = true,
+        filenames = imageloop(GRAPHICSPATH .. "entity/boat/railed/boat_", 4),
+        line_length = 8,
+        lines_per_file = 8,
+        scale = 0.5, --1.5,
+        shift = util.by_pixel(0, -28),
+      },
+      {
+        priority = "low",
+        width = 750,
+        height = 750,
+        direction_count = 256,
+        allow_low_quality_rotation = true,
+        filenames = imageloop(GRAPHICSPATH .. "entity/boat/railed/boat_shadow_", 4),
+        line_length = 8,
+        lines_per_file = 8,
+        scale = 0.5, --1.5,
+        shift = util.by_pixel(0, -28),
+        draw_as_shadow = true,
+      }
     }
   }
 }
 
 local cargo_ship_pictures = {
-  layers = {
-    {
-      slice = 4,
-      priority = "low",
-      width = 1000,
-      height = 1000,
-      direction_count = 256,
-      allow_low_quality_rotation = true,
-      filenames = imageloop(GRAPHICSPATH .. "entity/cargo_ship/cs_", 16),
-      line_length = 4,
-      lines_per_file = 4,
-      scale = 0.85,--3,
-      shift = util.by_pixel(0, -54.5),
-    },
-    {
-      slice = 4,
-      priority = "low",
-      width = 1000,
-      height = 1000,
-      direction_count = 256,
-      allow_low_quality_rotation = true,
-      filenames = imageloop(GRAPHICSPATH .. "entity/cargo_ship/cs_shadow_", 16),
-      line_length = 4,
-      lines_per_file = 4,
-      scale = 0.85,--3,
-      shift = util.by_pixel(0, -54.5),
-      draw_as_shadow = true,
+  rotated = {
+    layers = {
+      {
+        priority = "low",
+        width = 1000,
+        height = 1000,
+        direction_count = 256,
+        allow_low_quality_rotation = true,
+        filenames = imageloop(GRAPHICSPATH .. "entity/cargo_ship/cs_", 16),
+        line_length = 4,
+        lines_per_file = 4,
+        scale = 0.85,
+        shift = util.by_pixel(0, -54.5),
+      },
+      {
+        priority = "low",
+        width = 1000,
+        height = 1000,
+        direction_count = 256,
+        allow_low_quality_rotation = true,
+        filenames = imageloop(GRAPHICSPATH .. "entity/cargo_ship/cs_shadow_", 16),
+        line_length = 4,
+        lines_per_file = 4,
+        scale = 0.85,
+        shift = util.by_pixel(0, -54.5),
+        draw_as_shadow = true,
+      }
     }
   }
 }
 
 local oil_tanker_pictures = {
-  layers = {
-    {
-      slice = 4,
-      priority = "low",
-      width = 890,
-      height = 912,
-      direction_count = 256,
-      allow_low_quality_rotation = true,
-      filenames = imageloop(GRAPHICSPATH .. "entity/tanker/tanker_unit_", 16),
-      line_length = 4,
-      lines_per_file = 4,
-      scale = 0.85,
-      shift = util.by_pixel(0, -22.5),
-    },
-    {
-      slice = 4,
-      priority = "low",
-      width = 1000,
-      height = 1000,
-      direction_count = 256,
-      allow_low_quality_rotation = true,
-      filenames = imageloop(GRAPHICSPATH .. "entity/tanker/tanker_shadow_", 16),
-      line_length = 4,
-      lines_per_file = 4,
-      scale = 0.85,
-      shift = util.by_pixel(0, -22.5),
-      draw_as_shadow = true,
-    },
+  rotated = {
+    layers = {
+      {
+        priority = "low",
+        width = 890,
+        height = 912,
+        direction_count = 256,
+        allow_low_quality_rotation = true,
+        filenames = imageloop(GRAPHICSPATH .. "entity/tanker/tanker_unit_", 16),
+        line_length = 4,
+        lines_per_file = 4,
+        scale = 0.85,
+        shift = util.by_pixel(0, -22.5),
+      },
+      {
+        priority = "low",
+        width = 1000,
+        height = 1000,
+        direction_count = 256,
+        allow_low_quality_rotation = true,
+        filenames = imageloop(GRAPHICSPATH .. "entity/tanker/tanker_shadow_", 16),
+        line_length = 4,
+        lines_per_file = 4,
+        scale = 0.85,
+        shift = util.by_pixel(0, -22.5),
+        draw_as_shadow = true,
+      },
+    }
   }
 }
 
@@ -264,7 +268,7 @@ wave.animation = {
 --wave.start_scale = 1.3
 wave.start_scale = 0.65
 wave.color = { r = 1, g = 1, b = 1 }
-wave.render_layer = "water-tile"
+wave.render_layer = "above-tiles"
 
 data:extend({wave})
 
@@ -285,7 +289,7 @@ wave_circle.animation = {
 wave_circle.start_scale = 0.01
 wave_circle.end_scale = 0.8
 wave_circle.color = { r = 1, g = 1, b = 1 }
-wave_circle.render_layer = "water-tile"
+wave_circle.render_layer = "above-tiles"
 wave_circle.duration = 500
 wave_circle.fade_away_duration = 500
 wave_circle.movement_slow_down_factor = 0
@@ -304,7 +308,7 @@ local indep_boat_power = 300 + (speed_modifier -1) * 150
 local indep_boat = table.deepcopy(data.raw["car"]["car"])
 indep_boat.name = "indep-boat"
 --indep_boat.order = "no-aai" -- This prevents AAI Programmable Vehicles from copying the Boat
-indep_boat.collision_mask = {"ground-tile", "train-layer"}
+indep_boat.collision_mask = {layers = {ground_tile = true, train = true}}
 indep_boat.collision_box = {{-1.2, -3}, {1.2, 3}}
 indep_boat.selection_box = {{-1.2, -3}, {1.2, 3}}
 indep_boat.selection_priority = 51
@@ -322,8 +326,9 @@ indep_boat.minable = {mining_time = 1, result = "boat"}
 indep_boat.rotation_speed = 0.008
 indep_boat.inventory_size = 80
 indep_boat.localised_description = {'entity-description.boat'}
-indep_boat.burner = {
-  fuel_category = "chemical",
+indep_boat.energy_source = {
+  type = "burner",
+  fuel_categories = {"chemical"},
   effectivity = 1,
   fuel_inventory_size = 3 * fuel_modifier,
   smoke = {
@@ -366,8 +371,6 @@ indep_boat.burner = {
   }
 }
 indep_boat.working_sound = car_sounds
-indep_boat.sound_minimum_speed = 0.1
-indep_boat.sound_scaling_ratio = 0.4
 indep_boat.animation = indep_boat_animation
 indep_boat.water_reflection = water_reflection("boat/boat", 60, 25, true)
 indep_boat.turret_animation = {
@@ -401,8 +404,8 @@ local boat_max_speed = 0.27*speed_modifier
 
 local boat = table.deepcopy(data.raw["cargo-wagon"]["cargo-wagon"])
 boat.name = "boat"
-boat.icon = GRAPHICSPATH .. "icons/boat.png"
-boat.icon_size = 64
+boat.icons = {{icon=GRAPHICSPATH .. "icons/boat.png", icon_size = 64}}
+boat.icon = nil
 boat.flags = {"placeable-neutral", "player-creation", "placeable-off-grid", "not-on-map"}
 boat.allow_copy_paste = true
 boat.minable = {mining_time = 1, result = "boat"}
@@ -436,11 +439,12 @@ local boat_engine_power = 300 + (speed_modifier -1) * 150
 
 local boat_engine = table.deepcopy(data.raw["locomotive"]["locomotive"])
 boat_engine.name = "boat_engine"
-boat_engine.flags = {"not-deconstructable", "placeable-neutral", "player-creation"}
+boat_engine.flags = {"not-deconstructable", "placeable-neutral", "placeable-off-grid", "player-creation"}
 boat_engine.allow_copy_paste = true
 boat_engine.minable = nil
-boat_engine.icon = GRAPHICSPATH .. "icons/boat.png"
-boat_engine.icon_size = 64
+boat_engine.icons = util.combine_icons(boat.icons, get_icons(data.raw["item"]["engine-unit"]), 
+                                  icon_inputs)
+boat_engine.icon = nil
 boat_engine.weight = 5000
 boat_engine.max_speed = boat_max_speed
 boat_engine.max_power = boat_engine_power .. "kW"
@@ -450,8 +454,9 @@ boat_engine.selection_box = {{-1.3, -1.2}, {1.3, 1.2}}
 boat_engine.selection_priority = 51
 boat_engine.connection_distance = 1
 boat_engine.joint_distance = 1.7
-boat_engine.burner = {
-  fuel_category = "chemical",
+boat_engine.energy_source = {
+  type = "burner",
+  fuel_categories = {"chemical"},
   effectivity = 1,
   fuel_inventory_size = 3 * fuel_modifier,
   smoke = {
@@ -459,7 +464,7 @@ boat_engine.burner = {
       name = "light-smoke",
       deviation = {0.3, 0.3},
       frequency = 60,
-      position = {0.5, 2.5},
+      position = {0.5, 2.35},   -- Impossible to get the smoke in the right place on the boat in both vertical and horizontal orientations because the rolling stock connection distance changes
       starting_frame = 0,
       starting_frame_deviation = 60,
       height = 2.5,
@@ -493,7 +498,7 @@ boat_engine.burner = {
     }
   }
 }
-boat_engine.pictures = emptypic
+boat_engine.pictures = nil
 boat_engine.water_reflection = nil
 boat_engine.wheels = nil
 boat_engine.working_sound = car_sounds
@@ -513,8 +518,8 @@ local ship_max_speed = 0.15 * speed_modifier
 
 local cargo_ship = table.deepcopy(data.raw["cargo-wagon"]["cargo-wagon"])
 cargo_ship.name = "cargo_ship"
-cargo_ship.icon = GRAPHICSPATH .. "icons/cargoship_icon.png"
-cargo_ship.icon_size = 64
+cargo_ship.icons = {{icon=GRAPHICSPATH .. "icons/cargoship_icon.png", icon_size = 64}}
+cargo_ship.icon = nil
 cargo_ship.flags = {"placeable-neutral", "player-creation", "placeable-off-grid"}
 cargo_ship.allow_copy_paste = true
 cargo_ship.minable = {mining_time = 1, result = "cargo_ship"}
@@ -522,7 +527,6 @@ cargo_ship.max_health = 5000
 cargo_ship.selection_box = {{-1.5, -8.5}, {1.5, 8.5}}
 cargo_ship.collision_box = {{-1.5, -7.5}, {1.5, 7.5}}
 cargo_ship.selection_priority = 51
-cargo_ship.drawing_box = {{-1, -8}, {1, 8}}
 cargo_ship.connection_distance = 3
 cargo_ship.joint_distance = 12
 cargo_ship.weight = 100000
@@ -593,7 +597,6 @@ oil_tanker.max_health = 5000
 oil_tanker.selection_box = {{-1.5, -8.5}, {1.5, 8.5}}
 oil_tanker.selection_priority = 51
 oil_tanker.collision_box = {{-1.5, -7.5}, {1.5, 7.5}}
-oil_tanker.drawing_box = {{-1, -8}, {1, 8}}
 oil_tanker.connection_distance = 3
 oil_tanker.joint_distance = 12
 oil_tanker.weight = 120000
@@ -630,11 +633,11 @@ local cargo_ship_engine_power = 2000 + (speed_modifier-1)*1200
 local cargo_ship_engine = table.deepcopy(data.raw["locomotive"]["locomotive"])
 cargo_ship_engine.name = "cargo_ship_engine"
 cargo_ship_engine.minable = nil
-cargo_ship_engine.flags =  {"not-deconstructable", "placeable-neutral", "player-creation"}
+cargo_ship_engine.flags =  {"not-deconstructable", "placeable-neutral", "player-creation", "placeable-off-grid"}
 cargo_ship_engine.allow_copy_paste = true
-cargo_ship_engine.icon = "__base__/graphics/icons/engine-unit.png"
-cargo_ship_engine.icon_size = 64
-cargo_ship_engine.icon_mipmaps = 4
+cargo_ship_engine.icons = util.combine_icons(cargo_ship.icons, get_icons(data.raw["item"]["engine-unit"]), 
+                                  icon_inputs)
+cargo_ship_engine.icon = nil
 cargo_ship_engine.weight = 100000
 cargo_ship_engine.max_speed = ship_max_speed
 cargo_ship_engine.max_power = cargo_ship_engine_power.."kW"
@@ -644,8 +647,9 @@ cargo_ship_engine.selection_box = {{-1.3, -1.2}, {1.3, 1.2}}
 cargo_ship_engine.selection_priority = 51
 cargo_ship_engine.connection_distance = 3
 cargo_ship_engine.joint_distance = 1.7
-cargo_ship_engine.burner = {
-  fuel_category = "chemical",
+cargo_ship_engine.energy_source = {
+  type = "burner",
+  fuel_categories = {"chemical"},
   effectivity = 1,
   fuel_inventory_size = 5 * fuel_modifier,
   smoke = {
@@ -700,7 +704,7 @@ cargo_ship_engine.burner = {
 
   }
 }
-cargo_ship_engine.pictures = emptypic
+cargo_ship_engine.pictures = nil
 cargo_ship_engine.minimap_representation = nil
 cargo_ship_engine.selected_minimap_representation = nil
 cargo_ship_engine.water_reflection = nil

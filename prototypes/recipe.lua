@@ -1,16 +1,16 @@
-data:extend({
+data:extend{
   {
     type = "recipe",
     name = "boat",
     enabled = false,
     energy_required = 3,
     ingredients = {
-      {"steel-plate", 40},
-      {"engine-unit", 15},
-      {"iron-gear-wheel", 15},
-      {"electronic-circuit", 6}
+      {type="item", name="steel-plate", amount=40},
+      {type="item", name="engine-unit", amount=15},
+      {type="item", name="iron-gear-wheel", amount=15},
+      {type="item", name="electronic-circuit", amount=6}
     },
-    result = "boat"
+    results = {{type="item", name="boat", amount=1}},
   },
   {
     type = "recipe",
@@ -18,12 +18,12 @@ data:extend({
     enabled = false,
     energy_required = 15,
     ingredients = {
-      {"steel-plate", 220},
-      {"engine-unit", 50},
-      {"iron-gear-wheel", 60},
-      {"electronic-circuit", 20}
+      {type="item", name="steel-plate", amount=220},
+      {type="item", name="engine-unit", amount=50},
+      {type="item", name="iron-gear-wheel", amount=60},
+      {type="item", name="electronic-circuit", amount=20}
     },
-    result = "cargo_ship"
+    results = {{type="item", name="cargo_ship", amount=1}},
   },
   {
     type = "recipe",
@@ -31,13 +31,13 @@ data:extend({
     enabled = false,
     energy_required = 15,
     ingredients = {
-      {"steel-plate", 180},
-      {"engine-unit", 50},
-      {"iron-gear-wheel", 60},
-      {"electronic-circuit", 20},
-      {"storage-tank", 6}
+      {type="item", name="steel-plate", amount=180},
+      {type="item", name="engine-unit", amount=50},
+      {type="item", name="iron-gear-wheel", amount=60},
+      {type="item", name="electronic-circuit", amount=20},
+      {type="item", name="storage-tank", amount=6}
     },
-    result = "oil_tanker"
+    results = {{type="item", name="oil_tanker", amount=1}},
   },
   {
     type = "recipe",
@@ -45,12 +45,11 @@ data:extend({
     enabled = false,
     energy_required = 2,
     ingredients = {
-      {"electronic-circuit", 5},
-      {"iron-plate", 10},
-      {"steel-plate", 5}
+      {type="item", name="electronic-circuit", amount=5},
+      {type="item", name="iron-plate", amount=10},
+      {type="item", name="steel-plate", amount=5}
     },
-    result = "port",
-    result_count = 1
+    results = {{type="item", name="port", amount=1}},
   },
   {
     type = "recipe",
@@ -58,12 +57,11 @@ data:extend({
     enabled = false,
     energy_required = 2,
     ingredients = {
-      {"empty-barrel", 4},
-      {"big-electric-pole", 1},
-      {"iron-plate", 5}
+      {type="item", name="barrel", amount=4},
+      {type="item", name="big-electric-pole", amount=1},
+      {type="item", name="iron-plate", amount=5}
     },
-    result = "floating-electric-pole",
-    result_count = 1
+    results = {{type="item", name="floating-electric-pole", amount=1}},
   },
   {
     type = "recipe",
@@ -71,12 +69,11 @@ data:extend({
     enabled = false,
     energy_required = 1,
     ingredients = {
-      {"empty-barrel", 2},
-      {"electronic-circuit", 2},
-      {"iron-plate", 5}
+      {type="item", name="barrel", amount=2},
+      {type="item", name="electronic-circuit", amount=2},
+      {type="item", name="iron-plate", amount=5}
     },
-    result = "buoy",
-    result_count = 1
+    results = {{type="item", name="buoy", amount=1}},
   },
   {
     type = "recipe",
@@ -84,12 +81,11 @@ data:extend({
     enabled = false,
     energy_required = 1,
     ingredients = {
-      {"empty-barrel", 2},
-      {"electronic-circuit", 2},
-      {"iron-plate", 5}
+      {type="item", name="barrel", amount=2},
+      {type="item", name="electronic-circuit", amount=2},
+      {type="item", name="iron-plate", amount=5}
     },
-    result = "chain_buoy",
-    result_count = 1
+    results = {{type="item", name="chain_buoy", amount=1}},
   },
   {
     type = "recipe",
@@ -97,18 +93,17 @@ data:extend({
     enabled = false,
     energy_required = 15,
     ingredients = {
-      {"advanced-circuit", 15},
-      {"steel-plate", 60},
-      {"iron-gear-wheel", 30},
-      {"rail", 10},
+      {type="item", name="advanced-circuit", amount=15},
+      {type="item", name="steel-plate", amount=60},
+      {type="item", name="iron-gear-wheel", amount=30},
+      {type="item", name="rail", amount=10},
     },
-    result = "bridge_base",
-    result_count = 1
+    results = {{type="item", name="bridge_base", amount=1}},
   },
 
-})
+}
 
-if settings.startup["deep_oil"].value then
+if settings.startup["offshore_oil_enabled"].value then
   data:extend{
     {
       type = "recipe",
@@ -116,15 +111,14 @@ if settings.startup["deep_oil"].value then
       enabled = false,
       energy_required = 30,
       ingredients = {
-        {"pumpjack", 5},
-        {"boiler", 1},
-        {"steam-engine", 1},
-        {"steel-plate", 150},
-        {"electronic-circuit", 75},
-        {"pipe", 75}
+        {type="item", name="pumpjack", amount=5},
+        {type="item", name="boiler", amount=1},
+        {type="item", name="steam-engine", amount=1},
+        {type="item", name="steel-plate", amount=150},
+        {type="item", name="electronic-circuit", amount=75},
+        {type="item", name="pipe", amount=75}
       },
-      result = "oil_rig",
-      result_count = 1
+      results = {{type="item", name="oil_rig", amount=1}},
     },
   }
 end

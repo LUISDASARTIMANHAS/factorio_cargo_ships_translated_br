@@ -15,13 +15,13 @@ local OILRIG_FRAME = "oilStorageFrame"
 -- Update the display in this GUI
 local function updateProgress(frame, oilrig)
   local amount = (oilrig.fluidbox[1] and oilrig.fluidbox[1]["amount"]) or 0
-  frame.oily_progress.value = amount / (global.oil_rig_capacity*1000)
+  frame.oily_progress.value = amount / (storage.oil_rig_capacity*1000)
   if amount >= 10000 then
     amount = string.format("%.0f", amount/1000)
   else
     amount = string.format("%.1f", amount/1000)
   end
-  frame.oily_caption.caption = {"cargo-ship-gui.oil-rig-progress", amount, global.oil_rig_capacity}
+  frame.oily_caption.caption = {"cargo-ship-gui.oil-rig-progress", amount, storage.oil_rig_capacity}
 end
 
 -- Creates a relative GUI that automatically appears when oil_rig entity GUI is opened.
@@ -53,7 +53,7 @@ end
 -- create GUIS for all players if not already there, or delete them if not needed
 function createGuiAllPlayers()
   for _, player in pairs(game.players) do
-    if global.deep_oil_enabled then
+    if storage.deep_oil_enabled then
       createGuiForPlayer(player)
     elseif player.gui.relative[OILRIG_FRAME] then
       player.gui.relative[OILRIG_FRAME].destroy()
@@ -65,35 +65,35 @@ function createGuiAllPlayers()
   end
 end
 
--- Adds this player and oilrig to the global update list
+-- Adds this player and oilrig to the storage update list
 function onOilrigGuiOpened(e)
   -- GUI opens automatically if it's an oil rig
   -- Just need to update it
   if e.entity and e.entity.name == "oil_rig" then
     local player = game.players[e.player_index]
-    if game.entity_prototypes["oil_rig"].fluid_capacity > 0 then
+    if prototypes.entity["oil_rig"].fluid_capacity > 0 then
       updateProgress(player.gui.relative[OILRIG_FRAME], e.entity)
     else
       player.gui.relative[OILRIG_FRAME].visible = false
     end
-    global.gui_oilrigs[e.player_index] = e.entity
+    storage.gui_oilrigs[e.player_index] = e.entity
   end
 end
 
 -- Removes this player and oilrig from the update list
 function onOilrigGuiClosed(e)
   if e.entity and e.entity.name == "oil_rig" then
-    global.gui_oilrigs[e.player_index] = nil
+    storage.gui_oilrigs[e.player_index] = nil
   end
 end
 
 -- Updates the display on any open oilrigs
 function UpdateOilRigGui(e)
   if e.tick % 5 == 0 then
-    for i, oilrig in pairs(global.gui_oilrigs) do
+    for i, oilrig in pairs(storage.gui_oilrigs) do
       if not oilrig.valid then
-        global.gui_oilrigs[i] = nil
-      elseif game.entity_prototypes["oil_rig"].fluid_capacity > 0 then
+        storage.gui_oilrigs[i] = nil
+      elseif prototypes.entity["oil_rig"].fluid_capacity > 0 then
         updateProgress(game.players[i].gui.relative[OILRIG_FRAME], oilrig)
       end
     end

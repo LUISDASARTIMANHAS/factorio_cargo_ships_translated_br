@@ -1,1 +1,0 @@
-game.print("[Cargo Ships] The recipe for waterways has now been removed. Instead, use the Waterway button on the shortcut bar or press Alt + W.")

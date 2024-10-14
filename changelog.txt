@@ -1,4 +1,34 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.0
+Date: 2024-10-08
+  Features:
+    - Factorio 2.0 pre-release
+    - Overhauled the Oil Rig to add often-requested features and improve performance:
+    - Oil rigs now contain an actual storage tank that shows its fluid level and can be connected to the circuit network.
+    - Oil rig pumpjack can also be connected to the circuit network to read the oil patch mining rate.
+    - Oil rigs now have 4 pipe connection points and can pass through fluid, and can no longer be rotated.
+    - Oil rigs and their components can be blueprinted.
+    - Overhauled Offshore Oil generation:
+    - Offshore oil is now treated as a separate resource on the map generation page. It will only generate on Nauvis.
+    - Overhauled Lifting Bridges to improve performance:
+    - Lifting Bridges can be fully blueprinted, ghost-placed, robot-build, destroyed by damage, and rebuilt by robots.
+    - Lifting Bridges now use the gate prototype to stay open normally, and close automatically when trains (or players) approach without the need for scripted entity creation/deletion.
+  Changes:
+    - Oil rigs now consume oil to generate power (this improves the smoke graphics performance and visuals).
+    - Oil rig component icons now show what part they are (generator, radar, pole or tank).
+    - Oil rig animations are improved, and power pole is shown in the graphic.
+    - Removed the setting to disable oil on land. Do this by disabling Crude Oil in map generation. Remember to manually enable the "No oil for oil rig" option to unlock the technology correctly.
+    - Removed setting to set offshore oil richness. Do this with the resource generation sliders now.
+    - Stack size for big ships and oil rig reduced to 1.
+    - There will be some graphical glitches with Lifting Bridges if trains or ships traverse before the bridge state settles, but it will always return to a good state and requires no scripting overhead to function.
+    - Future possibility to use additional signals and circuit wires to enforce bridge state without scripts.
+    - Many minor graphical and performance improvements.
+  Bugfixes:
+    - Fixed that blueprinting ships and boats on waterways would not store fuel requests.
+    - Fixed that oil rig smoke would continue even when it was not working.
+    - Fixed that ships could accidentally couple to each other (for real this time).
+    - Eliminated many, many corner cases for invisible entities to get messed up.
+---------------------------------------------------------------------------------------------------
 Version: 0.2.7
 Date: 2024-06-30
   Bugfixes:

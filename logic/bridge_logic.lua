@@ -1,289 +1,357 @@
+local math2d = require("math2d")
 
-local spor = {}
-spor[0] = {{x=-4,y=-1.5},{x=-4,y=1.5},{x=6,y=-1.5},{x=6,y=1.5}}
-spor[4] = {{x=4,y=1.5},{x=4,y=-1.5},{x=-6,y=1.5},{x=-6,y=-1.5}}
-spor[2] = {{x=1.5,y=-4.5},{x=-1.5,y=-4.5},{x=1.5,y=6},{x=-1.5,y=6}}
-spor[6] = {{x=-1.5,y=4},{x=1.5,y=4},{x=-1.5,y=-6},{x=1.5,y=-6}}
+bridge_placement_boxes = {
+  [defines.direction.north] = {{-4.5, -3}, {6.5, 3}},
+  [defines.direction.south] = {{-6.5, -3}, {4.5, 3}},
+  [defines.direction.east] = {{-3, -4.5}, {3, 6.5}},
+  [defines.direction.west] = {{-3, -6.5}, {3, 4.5}}
+}
 
-local spow = {}
-spow[0] = {{x=-0.5,y=-2.5},{x=-3.5,y=2.5},{x=-3.5,y=-2.5},{x=-0.5,y=2.5}}
-spow[4] = {{x=0.5,y=2.5},{x=3.5,y=-2.5},{x=3.5,y=2.5},{x=0.5,y=-2.5}}
-spow[2] = {{x=-2.5,y=-1},{x=2.5,y=-3.5},{x=-2.5,y=-3.5},{x=2.5,y=-1}}
-spow[6] = {{x=2.5,y=0.5},{x=-2.5,y=3.5},{x=2.5,y=3.5},{x=-2.5,y=0.5}}
+bridge_definitions = {
+  -- Bridge North: Waterway going north-south, bridge on the right side
+  [defines.direction.north] = {
+    bridge_offset = {-0.5, -0.5},
+    waterway_offsets = {{-2,-2},{-2,0},{-2,2}},
+    rail_offsets = {{-4,0},{-2,0},{0,0},{2,0},{4,0},{6,0}},
+    rail_direction = defines.direction.east,
+    signal_offsets = {{-3.5,-1.5},{-3.5,1.5},{-0.5,-1.5},{-0.5,1.5},  -- waterway signals
+                      {-4.5,-1.5},{6.5,-1.5},{-4.5,1.5},{6.5,1.5}},
+    signal_directions = {defines.direction.north, defines.direction.north, defines.direction.south, defines.direction.south,
+                         defines.direction.east, defines.direction.east, defines.direction.west, defines.direction.west}
+  },
+  -- Bridge South: Waterway going north-south, bridge on the left side
+  [defines.direction.south] = {
+    bridge_offset = {0.5, 0.5},
+    waterway_offsets = {{2,-2}, {2,0}, {2,2}},
+    rail_offsets = {{4,0},{2,0},{0,0},{-2,0},{-4,0},{-6,0}},
+    rail_direction = defines.direction.east,
+    signal_offsets = {{3.5,-1.5},{3.5,1.5},{0.5,-1.5},{0.5,1.5},  -- waterway signals
+                      {4.5,-1.5},{-6.5,-1.5},{4.5,1.5},{-6.5,1.5}},
+    signal_directions = {defines.direction.south, defines.direction.south, defines.direction.north, defines.direction.north,
+                         defines.direction.east, defines.direction.east, defines.direction.west, defines.direction.west}
+  },
+  -- Bridge East: Waterway going east-west, bridge on the bottom side
+  [defines.direction.east] = {
+    bridge_offset = {0.5, -0.5},
+    waterway_offsets = {{-2,-2}, {0,-2}, {2,-2}},
+    rail_offsets = {{0,-4},{0,-2},{0,0},{0,2},{0,4},{0,6}},
+    rail_direction = defines.direction.north,
+    signal_offsets = {{-1.5,-3.5},{1.5,-3.5},{-1.5,-0.5},{1.5,-0.5},  -- waterway signals
+                      {-1.5,-4.5},{-1.5,6.5},{1.5,-4.5},{1.5,6.5}},
+    signal_directions = {defines.direction.east, defines.direction.east, defines.direction.west, defines.direction.west,
+                         defines.direction.north, defines.direction.north, defines.direction.south, defines.direction.south},
+  },
+  -- Bridge West: Waterway going east-west, bridge on the top side
+  [defines.direction.west] = {
+    bridge_offset = {-0.5, 0.5},
+    waterway_offsets = {{-2,2}, {0,2}, {2,2}},
+    rail_offsets = {{0,4},{0,2},{0,0},{0,-2},{0,-4},{0,-6}},
+    rail_direction = defines.direction.north,
+    signal_offsets = {{-1.5,3.5},{1.5,3.5},{-1.5,0.5},{1.5,0.5},  -- waterway signals
+                      {-1.5,4.5},{-1.5,-6.5},{1.5,4.5},{1.5,-6.5}},
+    signal_directions = {defines.direction.west, defines.direction.west, defines.direction.east, defines.direction.east,
+                         defines.direction.north, defines.direction.north, defines.direction.south, defines.direction.south}
+  }
+}
 
-function CreateBridge(ent, player_index)
-  local pos = ent.position
-  local dir = ent.direction
-  local f = ent.force
-  local bridge
-  local closed_bridge
+function offsetArea(area, vector)
+  return {math2d.position.add(vector, area.left_top or area[1]), 
+          math2d.position.add(vector, area.right_bottom or area[2])}
+end
+
+function CreateBridge(entity, player, robot)
+  local position = entity.position
+  local direction = entity.direction
+  local force = entity.force
   local ver, hor, x, y
-  local surface = ent.surface
-  ent.destroy()
-
-  if dir == defines.direction.north then
-    if checkBridgePlacement(pos, -4.5, -3, 6.5, 3, player_index, surface) then
-      bridge = surface.create_entity {name="bridge_north", position = pos, force = f, create_build_effect_smoke = false}
-      closed_bridge = surface.create_entity {name="bridge_north_closed", position = pos, force = f, create_build_effect_smoke = false}
-      surface.create_entity {name="bridge_north_clickable", position = pos, force = f, create_build_effect_smoke = false}
-      ver = 1
-      hor = 0
-    end
-  elseif dir == defines.direction.east then
-    if checkBridgePlacement(pos, -3, -4.5, 3, 6.5, player_index, surface) then
-      bridge = surface.create_entity {name="bridge_east", position = pos, force = f, create_build_effect_smoke = false}
-      closed_bridge = surface.create_entity {name="bridge_east_closed", position = pos, force = f, create_build_effect_smoke = false}
-      surface.create_entity {name="bridge_east_clickable", position = pos, force = f, create_build_effect_smoke = false}
-      ver = 0
-      hor = 1
-    end
-  elseif dir == defines.direction.south then
-    if checkBridgePlacement(pos, -6.5, -3, 4.5, 3, player_index, surface) then
-      bridge = surface.create_entity {name="bridge_south", position = pos, force = f, create_build_effect_smoke = false}
-      closed_bridge = surface.create_entity {name="bridge_south_closed", position = pos, force = f, create_build_effect_smoke = false}
-      surface.create_entity {name="bridge_south_clickable", position = pos, force = f, create_build_effect_smoke = false}
-      ver = -1
-      hor = 0
-    end
-  elseif dir == defines.direction.west then
-    if checkBridgePlacement(pos, -3, -6.5, 3, 4.5, player_index, surface) then
-      bridge = surface.create_entity {name="bridge_west", position = pos, force = f, create_build_effect_smoke = false}
-      closed_bridge = surface.create_entity {name="bridge_west_closed", position = pos, force = f, create_build_effect_smoke = false}
-      surface.create_entity {name="bridge_west_clickable", position = pos, force = f, create_build_effect_smoke = false}
-      ver = 0
-      hor = -1
+  local surface = entity.surface
+  
+  -- Area to check for conflicting entities
+  local placement_area = offsetArea(bridge_placement_boxes[direction], position)
+  -- TODO: This needs to be replaced with a better collision mask check
+  local found = surface.find_entities_filtered{area=placement_area, invert=true, type={"fish", "character", "logistic-robot", "construction-robot", "combat-robot", "explosion", "fire"}}
+  local num_waterways = 0
+  local conflicts = {}
+  for k,e in pairs(found) do
+    if e.name == "legacy-straight-waterway" or e.name == "straight-waterway" then
+      num_waterways = num_waterways + 1
+    elseif e.name ~= "bridge_base" then
+      table.insert(conflicts, e)
     end
   end
-
-  if(bridge and closed_bridge) then
-    bridge.destructible = false
-    closed_bridge.destructible = false
-    local s1,s2,s3,s4, s5, s6
-    s1, s2, s3, s4, s5, s6 = createSlaves(surface, pos, dir, hor, ver, f)
-    table.insert(global.bridges, {bridge, closed_bridge, nil, s1, s2, s3, s4, s5, s6, 0})
+  if num_waterways > 3 or next(conflicts) then
+    -- Area is not clear, return item to player/robot
+    game.print("Items blocking bridge construction: \n"..serpent.block(conflicts))
+    if player and player.valid then
+      player.insert{name=entity.name, count=1}
+      player.print{"cargo-ship-message.error-ship-no-space", entity.localised_name}
+    elseif robot and robot.valid then
+      -- Give the robot back the thing
+      local return_item = entity.name
+      robot.get_inventory(defines.inventory.robot_cargo).insert{name=return_item, count=1}
+      game.print{"cargo-ship-message.error-ship-no-space", entity.localised_name}
+    else
+      game.print{"cargo-ship-message.error-canceled", entity.localised_name}
+    end
+    entity.destroy()
+    return
   end
-end
+  
+  -- No conflicts, so clear the area (including existing waterways and placement port object) and build the bridge
+  entity.destroy()
+  for _,e in pairs(conflicts) do
+    e.destroy()
+  end
+  
+  -- Bridge consists of:
+  -- 1x bridge_gate in the correct location
+  -- 3x straight-waterway in bridge named direction
+  -- 6x invisible-rail crossing the waterways
+  -- 8x invisible-chain-signal at all entrances
 
-function checkBridgePlacement(pos, x1, y1, x2, y2, player_index, surface)
-  local valid = true
-  local entities = surface.find_entities{{pos.x+x1, pos.y+y1}, {pos.x+x2, pos.y+y2}} --{{pos.x-5, pos.y-3},{pos.x+7, pos.y+3}})--
-  local counter = 0
-  for _, ent in pairs(entities) do
-    if (not (ent.name == "fish" or ent.name == "bridge_base")) then
-      counter = counter+1
-      if (ent.name ~= "straight-water-way" or counter > 3) then
-        valid = false
-        break
+  local bridge_defintion = bridge_definitions[direction]
+  
+  -- Build bridge
+  local bridge = surface.create_entity{
+    name = "bridge_gate",
+    position = math2d.position.add(position, bridge_defintion.bridge_offset),
+    direction = direction,
+    force = force
+  }
+  
+  if bridge then
+  
+    -- Build waterways
+    for _,w in pairs(bridge_defintion.waterway_offsets) do
+      local newpos = math2d.position.add(position, w)
+      surface.create_entity{
+        name = "straight-waterway",
+        position = newpos,
+        direction = direction,
+        snap_to_grid = true,
+        force = force,
+        create_build_effect_smoke = false
+      }
+    end
+    
+    -- Build rails
+    local rails = {}
+    for _,r in pairs(bridge_defintion.rail_offsets) do
+      local newpos = math2d.position.add(position, r)
+      local newr = surface.create_entity{
+        name = "invisible-rail",
+        position = newpos,
+        direction = bridge_defintion.rail_direction,
+        snap_to_grid = true,
+        force = force,
+        create_build_effect_smoke = false
+      }
+      if not newr then
+        game.print("Warning, could not build invisible bridge rail at "..util.positiontostr(newpos))
+      else
+        table.insert(rails, newr)
       end
     end
-  end
-  if not valid then
-    if player_index then
-      game.players[player_index].print{"cargo-ship-message.error-ship-no-space", "__ENTITY__bridge_base__"}
-      game.players[player_index].insert{name="bridge_base", count=1}
-    end
-  else
-    for _, ent in pairs(entities) do
-      if (not (ent.name == "fish" or ent.name == "bridge_base")) then
-        ent.destroy()
+    
+    -- Build signals
+    local signals = {}
+    for i,s in pairs(bridge_defintion.signal_offsets) do
+      local newpos = math2d.position.add(position, s)
+      --game.print("Making signal at "..util.positiontostr(newpos).." pointing "..tostring(bridge_defintion.signal_directions[i]))
+      local news = surface.create_entity{
+        name = "invisible-chain-signal",
+        position = newpos,
+        direction = bridge_defintion.signal_directions[i],
+        snap_to_grid = true,
+        force = force,
+        create_build_effect_smoke = false
+      }
+      if not news then
+        game.print("Warning, could not build invisible bridge signal at "..util.positiontostr(newpos))
+      else
+        table.insert(signals, news)
       end
     end
+    
+    -- Register event for destruction
+    script.register_on_object_destroyed(bridge)
+    
+    -- Store entity references
+    storage.bridges[bridge.unit_number] = {
+      surface = bridge.surface,
+      position = bridge.position,  -- Store where the ghost will be if it's killed
+      bridge = bridge,
+      rails = rails,
+      signals = signals
+    }
   end
-  return valid
 end
 
-function createSlaves(surface, pos, dir, hor, ver, f)
-  local tmp, p, x, y, s1, s2, s3, s4, s5, s6, shift_x, shift_y
-  shift_y = 0
-  shift_x = 0
-  -- spawn waterway part of bridge, including signals
-  for s=-2, 2, 2 do
-    x=s*hor - 2*ver
-    y=s*ver - 2*hor
-    p = {pos.x+x, pos.y+y}
-    addEntity(surface, p, dir, "bridge_crossing", f)
+-- Try to delete all the bridge entities. Return false if any of them failed.
+function DeleteBridgeEntities(bridge_data)
+  for _,r in pairs(bridge_data.rails) do
+    if not r.destroy() then
+      return false
+    end
   end
-  -- spawn rail part of bridge, including signals
-  for l=-4,6,2 do
-    x = l*ver
-    y = l*hor
-    p = {pos.x+x, pos.y+y}
-    addEntity(surface, p, (dir+2)%4, "invisible_rail", f)
+  for _,s in pairs(bridge_data.signals) do
+    if not s.destroy() then
+      return false
+    end
   end
-
-  p = calcPos(pos, spow[dir][1])
-  s1 = addEntity(surface, p, (dir+4)%8, "invisible_chain_signal", f)
-  p = calcPos(pos, spow[dir][2])
-  s2 = addEntity(surface, p, dir, "invisible_chain_signal", f)
-  p = calcPos(pos, spow[dir][3])
-  s5 = addEntity(surface, p, dir, "invisible_chain_signal", f)
-  p = calcPos(pos, spow[dir][4])
-  s6 = addEntity(surface, p, (dir+4)%8, "invisible_chain_signal", f)
-
-  p = calcPos(pos, spor[dir][1])
-  s3 = addEntity(surface, p, (dir+2)%8, "invisible_chain_signal", f)
-  p = calcPos(pos, spor[dir][2])
-  addEntity(surface, p, (dir-2)%8, "invisible_chain_signal", f)
-  p = calcPos(pos, spor[dir][3])
-  addEntity(surface, p, (dir+2)%8, "invisible_chain_signal", f)
-  p = calcPos(pos, spor[dir][4])
-  s4 = addEntity(surface, p, (dir-2)%8, "invisible_chain_signal", f)
-
---[[
-  game.players[1].print(dir .. " s1: { x=" .. pos.x - s1.position.x .. ", " .. pos.y - s1.position.y .. "}")
-  game.players[1].print(dir .. " s2: { x=" .. pos.x - s2.position.x .. ", " ..pos.y - s2.position.y .. "}")
-  game.players[1].print(dir .. " s5: { x=" .. pos.x - s5.position.x .. ", " .. pos.y - s5.position.y .. "}")
-  game.players[1].print(dir .. " s6: { x=" .. pos.x - s6.position.x .. ", " .. pos.y - s6.position.y .. "}")
---]]
-  return s1,s2,s3,s4,s5,s6
+  if bridge_data.bridge then
+    if not bridge_data.bridge.destroy() then
+      return false
+    end
+  end
+  return true
 end
 
-function calcPos(pos1, pos2)
-  return {pos1.x+pos2.x, pos1.y+pos2.y}
+-- Check if there are trains/ships on any of the rails and queue for later if necessary
+local function isBlockEmpty(bridge_data)
+  for _,r in pairs(bridge_data.rails) do
+    if r.valid and r.trains_in_block > 0 then
+      return false
+    end
+  end
+  return true
 end
 
-function addEntity(surface, pos, dir, n, f)
-  local tokill = surface.find_entities_filtered{position = pos, name ={"straight-water-way","curved-water-way", "straight-rail", "curved-rail"}}
-  for _, k in pairs(tokill) do
-    k.destroy()
-  end
-
-  local slave = surface.create_entity{name=n , position = pos, direction = dir, force = f, create_build_effect_smoke = false}
-  if slave then
-    --slave.destructible = false
-    slave.minable = false
-  end
-  return slave
-end
-
-
-function DeleteBridge(ent, player_index)
-  local pos = ent.position
-  local name = ent.name
-  local surface = ent.surface
-
-  -- check for any trains/ships using the bridge
-  local entities = surface.find_entities({{pos.x-1.5, pos.y-1.5}, {pos.x+1.5, pos.y+1.5}})
-  local empty = true
-  for _, e in pairs(entities) do
-    if e.name == "invisible_rail" or e.name == "bridge_crossing" then
-      if e.trains_in_block > 0 then
-        empty = false
-        break
+-- OnObjectDestroyed handler for when the bridge entity (bridge_gate) has alreay been destroyed/mined
+function HandleBridgeDestroyed(unit_number)
+  if storage.bridges and storage.bridges[unit_number] then
+    local bridge_data = storage.bridges[unit_number]
+    bridge_data.bridge = nil  -- Bridge already died
+    
+    -- Fix the ghost that was created, if any
+    if bridge_data.surface and bridge_data.position then
+      local ghost = bridge_data.surface.find_entity("entity-ghost",bridge_data.position)
+      if ghost and ghost.ghost_name == "bridge_gate" then
+        HandleBridgeGhost(ghost)
       end
     end
-  end
+    
+    local success = false
+    if isBlockEmpty(bridge_data) then
+      success = DeleteBridgeEntities(bridge_data)
+    end
+    if not success then
+      -- Some or all components could not be deleted.
+      -- Put in queue to delete later
+      storage.bridge_destroyed_queue[unit_number] = bridge_data
+      script.on_nth_tick(72, HandleBridgeQueue)
+    end
 
-  if not empty then
-    if player_index~= nil then
-      game.players[player_index].print{"cargo-ship-message.error-bridge-busy"}
-    end
-    ent.surface.create_entity{name=name, position=pos, direction = ent.direction, force = ent.force, create_build_effect_smoke = false}
-    return false
-  else
-    if string.find(name, "bridge_north") then
-      deleteSlaves(surface, pos, -5,-3,7,3, "north")
-    elseif string.find(name, "bridge_east") then
-      deleteSlaves(surface, pos, -3,-5,3,7, "east")
-    elseif string.find(name, "bridge_south") then
-      deleteSlaves(surface, pos, -7,-3,5,3, "south")
-    elseif string.find(name, "bridge_west") then
-      deleteSlaves(surface, pos, -3,-7,3,5, "west")
-    end
+    storage.bridges[unit_number] = nil
     return true
   end
 end
 
-function deleteSlaves(surface, pos, x1, y1, x2, y2, dirname)
-  local entities =surface.find_entities{{pos.x+x1, pos.y+y1},{pos.x+x2, pos.y+y2}}
-  for _, ent in pairs(entities) do
-    local n = ent.name
-    if (n == "invisible_chain_signal" or
-        n == "invisible_signal" or
-        n == "invisible_rail" or
-        n == "bridge_" .. dirname or
-        n == "bridge_" .. dirname .. "_closed" or
-        n == "bridge_" .. dirname .. "_open" ) then
-      ent.destroy()
-    elseif n == "bridge_crossing" then
-      local p = ent.position
-      local d = ent.direction
-      local f = ent.force
-      ent.destroy()
-      surface.create_entity{name = "straight-water-way", direction = d, position = p, force = f, create_build_effect_smoke = false}
+function HandleBridgeQueue()
+  for k,bridge_data in pairs(storage.bridge_destroyed_queue) do
+    local success = false
+    if isBlockEmpty(bridge_data) then
+      success = DeleteBridgeEntities(bridge_data)
+    end
+    if success then
+      storage.bridge_destroyed_queue[k] = nil
+      break
     end
   end
 end
 
-local animation_time = 7
 
-function ManageBridges(e)
-  if e.tick % 6 == 0 then
-    for i=#global.bridges, 1, -1 do
-      local entry = global.bridges[i]
-      if not entry[1].valid then
-        table.remove(global.bridges, i)
-      else
-        ----------------------------------------------
-        -------------process slow change
-        ----------------------------------------------
-        if entry[10] > 0 then
-          entry[10] = entry[10]-1
-          if entry[1].power_switch_state == false and entry[10]==0 then--closing?
-            entry[2] = entry[1].surface.create_entity{name=entry[1].name .. "_closed", position = entry[1].position, force = entry[1].force, create_build_effect_smoke = false}
-            entry[2].destructible = false
-            entry[2].minable = false
-          elseif entry[1].power_switch_state == false and entry[10] == animation_time -1 then
-            game.play_sound{path = "cs_bridge", position = entry[1].position}
-          elseif entry[1].power_switch_state == true and entry[10] == animation_time -1 then
-            if entry[2].valid then
-              entry[2].destroy()
-              game.play_sound{path = "cs_bridge", position = entry[1].position}
-            end
-          end
+-- Use the fact that rail grid is always 
+local function bridgeLocationFromGate(gatepos)
+  -- Rails and trains stops are always on odd-numbered integer coordinates
+  -- Round to the nearest odd number for x and y
+  local bridgepos = {x=math.ceil(gatepos.x),y=math.ceil(gatepos.y)}
+  if bridgepos.x % 2 == 0 then
+    bridgepos.x = bridgepos.x - 1
+  end
+  if bridgepos.y % 2 == 0 then
+    bridgepos.y = bridgepos.y - 1
+  end
+  
+  local bridgedir
+  local vector_to_gate = math2d.position.subtract(gatepos, bridgepos)
+  if vector_to_gate.x == -0.5 and vector_to_gate.y == -0.5 then
+    bridgedir = defines.direction.north
+  elseif vector_to_gate.x == 0.5 and vector_to_gate.y == 0.5 then
+    bridgedir = defines.direction.south
+  elseif vector_to_gate.x == 0.5 and vector_to_gate.y == -0.5 then
+    bridgedir = defines.direction.east
+  elseif vector_to_gate.x == -0.5 and vector_to_gate.y == 0.5 then
+    bridgedir = defines.direction.west
+  else
+    game.print("couldn't find bridge direction")
+    return
+  end
+  
+  return {position=bridgepos, direction=bridgedir}
+end
 
-        ----------------------------------------------
-        -------------check signal reservations
-        ----------------------------------------------
-        else
-          --check if valid first, got some errors on "entry[4].signal_state"
-          local valid = true
-          for i = 4, 9 do
-            valid = valid and entry[i].valid
-          end
-          -- delete broken bridge...
-          if not valid then
-            DeleteBridge(entry[1])
-          end
+function HandleBridgeGhost(ghost)
+  -- Somebody made a bridge_gate ghost and we have to clean up after them
+  local bridge = bridgeLocationFromGate(ghost.position)
+  if bridge then
+    ghost.surface.create_entity{
+      name = "entity-ghost",
+      ghost_name = "bridge_base",
+      force = ghost.force,
+      position = bridge.position,
+      direction = bridge.direction,
+      snap_to_grid = true,
+    }
+  end
+  ghost.destroy()
+end
 
-          if valid and entry[1].power_switch_state == false then -- bridge closed ?
-            --game.players[1].print("bridge " .. i .. " is closed")
-            if (entry[4].signal_state == defines.signal_state.reserved or
-                entry[5].signal_state == defines.signal_state.reserved) then -- reserved by ship?
-              -- open bridge --
-              entry[1].power_switch_state = true
-              entry[10] = animation_time - entry[10]
-              --entry[3] =surface.create_entity{name=entry[1].name .. "_open", position = entry[1].position, force = entry[1].force}
-              --entry[3].destructible = false
-            end
-          else -- bridge open?
-            if valid and (
-                ((entry[8].signal_state == defines.signal_state.open or entry[9].signal_state == defines.signal_state.open) and
-                  entry[4].signal_state ~= defines.signal_state.reserved and entry[5].signal_state ~= defines.signal_state.reserved) or
-                  entry[6].signal_state == defines.signal_state.reserved or
-                  entry[7].signal_state == defines.signal_state.reserved
-              ) then -- no ships or reserved by train?
-              -- close bridge --
-              entry[1].power_switch_state = false
-              entry[10] = animation_time - entry[10]
-              --[[if entry[3].valid then
-                entry[3].destroy()
-              end
-              --]]
-            end
-          end
+function HandleBridgeBlueprint(event)
+  local item1 = game.get_player(event.player_index).blueprint_to_setup
+  local item2 = game.get_player(event.player_index).cursor_stack
+  local bp = nil
+  if item1 and item1.valid_for_read==true then
+    bp = item1
+  elseif item2 and item2.valid_for_read==true and item2.is_blueprint==true then
+    bp = item2
+  end
+  local changed = false
+  
+  -- Get Entity table from blueprint
+  local entities = bp.get_blueprint_entities()
+  
+  if entities and next(entities) then
+    for k,bridge in pairs(entities) do
+      if bridge.name == "bridge_gate" then
+        game.print("Found bridge_gate in blueprint at "..util.positiontostr(bridge.position))
+        local bridge_success = false
+        
+        local bridge_location = bridgeLocationFromGate(bridge.position)
+        if bridge then
+          -- Change the bridge_gate to a bridge_base at this position
+          entities[k] = {
+            entity_number = entities[k].entity_number,
+            name = "bridge_base",
+            position = bridge_location.position,
+            direction = bridge_location.direction
+          }
+          changed = true
+          game.print("Bridge replaced at "..util.positiontostr(bridge_location.position).." pointing "..tostring(bridge_location.direction))
+          bridge_success = true
+        end
+        
+        -- If we couldn't replace the bridge, delete item
+        if not bridge_success then
+          entities[k] = nil
+          changed = true
         end
       end
     end
+  end
+  
+  -- Write the new blueprint
+  if changed then
+    bp.set_blueprint_entities(entities)
   end
 end
