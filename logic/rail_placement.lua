@@ -18,7 +18,7 @@ function CheckRailPlacement(entity, player, robot)
     -- Check if this waterway is connected to a non-waterway
     if settings.global["prevent_waterway_rail_connections"].value then
       for _, rail in pairs(get_connected_rails(entity)) do
-        if not (string.find(rail.name, "%-waterway") or rail.name == "bridge_crossing") then
+        if not string.find(rail.name, "%-waterway") then
           if player then
             player.print{"cargo-ship-message.error-connect-rails", "__ENTITY__"..entity.name.."__", "__ENTITY__"..rail.name.."__"}
           else
@@ -35,7 +35,7 @@ function CheckRailPlacement(entity, player, robot)
   elseif settings.global["prevent_waterway_rail_connections"].value then
     -- Check if this rail is connected to a waterway
     for _, rail in pairs(get_connected_rails(entity)) do
-      if string.find(rail.name, "%-waterway") or rail.name == "bridge_crossing" then
+      if string.find(rail.name, "%-waterway") then
         local refund = entity.prototype.items_to_place_this[1]
         if player then
           player.insert(refund)

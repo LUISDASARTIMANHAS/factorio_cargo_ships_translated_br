@@ -420,7 +420,6 @@ end)
 
 
 -- Console commands
---commands.add_command("regenerate-oil", {"cargo-ship-message.regenerate-oil-help"}, RegenerateOilCommand)
 commands.add_command("cargo-ships-dump", "Dump storage to log", function() log(serpent.block(storage)) end)
 
 
