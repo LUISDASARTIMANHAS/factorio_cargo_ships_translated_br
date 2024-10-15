@@ -34,7 +34,7 @@ is_rail = util.list_to_map{
 -- spawn additional invisible entities
 local function OnEntityBuilt(event)
 
-  local entity = event.created_entity or event.entity or event.destination
+  local entity = event.entity or event.destination
   local surface = entity.surface
   local force = entity.force
   local player = (event.player_index and game.players[event.player_index]) or nil

@@ -316,6 +316,7 @@ function HandleBridgeBlueprint(event)
   elseif item2 and item2.valid_for_read==true and item2.is_blueprint==true then
     bp = item2
   end
+  if not (bp and bp.valid_for_read and bp.is_blueprint) then return end
   local changed = false
   
   -- Get Entity table from blueprint

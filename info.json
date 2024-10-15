@@ -4,6 +4,7 @@
   "title": "Cargo Ships",
   "author": "rude_grass",
   "description": "Adds cargo ships, oil tankers, deep sea oil rigs and other ocean based content",
+  "factorio_version": "2.0",
   "dependencies": [
     "base",
     "cargo-ships-graphics >= 1.0.0",
@@ -19,7 +20,6 @@
     "! cargo-ships-seraph",
     "(?) rso-mod"
   ],
-  "factorio_version": "1.2",
   "package": {
     "ignore": [
       "blender/*",
