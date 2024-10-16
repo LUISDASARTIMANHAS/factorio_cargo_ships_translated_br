@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.1
+Date: 2024-10-15
+  Features:
+    - Ship engines are now deconstructable and minable.  Mining the engine will also mine the ship body.
+    - When robots deconstruct a ship, there will be enough dispatched to empty the engine fuel in one trip.
+  Bugfixes:
+    - Fixed that undoing a blueprinted ship construction could trigger a game bug crash.
+    - Fixed that undoing the mining of a ship engine could create an orphaned ship engine ghost.
+---------------------------------------------------------------------------------------------------
 Version: 1.0.0
 Date: 2024-10-08
   Features:
