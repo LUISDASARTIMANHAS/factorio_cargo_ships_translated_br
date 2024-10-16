@@ -39,7 +39,7 @@ local function OnEntityBuilt(event)
   local force = entity.force
   local player = (event.player_index and game.players[event.player_index]) or nil
 
-  log("Event happened:"..serpent.block(event))
+  --log("Event happened:"..serpent.block(event))
 
   -- check ghost entities first
   if entity.name == "entity-ghost" then
@@ -112,7 +112,41 @@ end
 local function OnMarkedForDeconstruction(event)
   local entity = event.entity
   if is_waterway[entity.name] then
+    -- Instantly deconstruct waterways
     entity.destroy()
+  elseif storage.ship_bodies[entity.name] or storage.ship_engines[entity.name] then
+    -- If a ship or ship engine is marked for deconstruction, make sure its coupled pair is too
+    if entity.train then
+      local otherstock
+      -- Find attached engine or body
+      otherstock = entity.get_connected_rolling_stock(defines.rail_direction.front) or 
+                   entity.get_connected_rolling_stock(defines.rail_direction.back)
+      if otherstock and not otherstock.to_be_deconstructed() then
+        -- Copy deconstruction order
+        local player = game.players[event.player_index]
+        local force = (player and player.force) or entity.force
+        otherstock.order_deconstruction(force, player, 1)
+      end
+    end
+  end
+end
+
+local function OnCancelledDeconstruction(event)
+  local entity = event.entity
+  if storage.ship_bodies[entity.name] or storage.ship_engines[entity.name] then
+    -- If a ship or ship engine is cancelled for deconstruction, make sure its coupled pair is too
+    if entity.train then
+      local otherstock
+      -- Find attached engine or body
+      otherstock = entity.get_connected_rolling_stock(defines.rail_direction.front) or 
+                   entity.get_connected_rolling_stock(defines.rail_direction.back)
+      if otherstock and otherstock.to_be_deconstructed() then
+        -- Copy deconstruction order
+        local player = game.players[event.player_index]
+        local force = (player and player.force) or entity.force
+        otherstock.cancel_deconstruction(force, player)
+      end
+    end
   end
 end
 
@@ -179,47 +213,40 @@ function OnObjectDestroyed(event)
 end
 
 
--- recover fuel of cargo ship engine if attempted to mine by player and robot
-local function OnPreEntityMined(event)
+-- Robots can try to mine it, but get sent away with something else if there is still cargo
+local function OnRobotPreMined(event)
   if(event.entity and event.entity.valid) then
     local entity = event.entity
-    local okay_to_delete = true
-    if storage.ship_bodies[entity.name] then
-      okay_to_delete = false
-      local player = (event.player_index and game.players[event.player_index]) or nil
-      local robot = event.robot
-      if entity.train then
-        local engine
-        if entity.train.back_stock and
-          (storage.ship_engines[entity.train.back_stock.name]) then
-          engine = entity.train.back_stock
-        elseif entity.train.front_stock and
-              (storage.ship_engines[entity.train.front_stock.name]) then
-          engine = entity.train.front_stock
+    if storage.ship_bodies[entity.name] or storage.ship_engines[entity.name] then
+      -- Find attached engine or body
+      local otherstock = entity.get_connected_rolling_stock(defines.rail_direction.front) or 
+                         entity.get_connected_rolling_stock(defines.rail_direction.back)
+      if otherstock then
+        local save_inventory
+        -- Get the correct inventory from the attached engine or body
+        -- Ignore engines with recover_fuel=false because they don't have fuel items to recover
+        if storage.ship_engines[otherstock.name] and storage.ship_engines[otherstock.name].recover_fuel then
+          save_inventory = otherstock.get_fuel_inventory()
+        -- If not an engine, then it must be a body because we already checked it's one or the other
+        elseif otherstock.type == "cargo-wagon" then
+          save_inventory = otherstock.get_inventory(defines.inventory.cargo_wagon)
+        elseif otherstock.type == "artillery-wagon" then
+          save_inventory = otherstock.get_inventory(defines.inventory.artillery_wagon_ammo)
         end
-        if ( engine and storage.ship_engines[engine.name].recover_fuel and
-             engine.get_fuel_inventory() and not engine.get_fuel_inventory().is_empty() ) then
-          local fuel_inventory = engine.get_fuel_inventory()
-          if player and player.character then
-            for _, fuel in pairs(fuel_inventory.get_contents()) do
-              player.insert{name=fuel.name, count=fuel.count}  -- TODO 2.0 quality
-              fuel_inventory.remove{name=fuel.name, count=fuel.count}
-            end
-          elseif robot then
-            local robotInventory = robot.get_inventory(defines.inventory.robot_cargo)
-            local robotSize = 1 + robot.force.worker_robots_storage_bonus
-            local robotEmpty = robotInventory.is_empty()
-            if robotEmpty and fuel_inventory then
-              for index=1, #fuel_inventory do
-                local stack = fuel_inventory[index]
-                if stack.valid_for_read then
-                  --game.print("Giving robot cargo stack: "..stack.name.." : "..stack.count)
-                  local inserted = robotInventory.insert{name=stack.name, count=math.min(stack.count, robotSize)}
-                  fuel_inventory.remove{name=stack.name, count=inserted}
-                  if not robotInventory.is_empty() then
-                    robotEmpty = false
-                    break
-                  end
+        if save_inventory and not save_inventory.is_empty() then
+          -- Give contents of inventory to robot
+          local robotInventory = event.robot.get_inventory(defines.inventory.robot_cargo)
+          local robotSize = 1 + event.robot.force.worker_robots_storage_bonus
+          if robotInventory.is_empty() then
+            -- Find something to give to the robot. Otherwise the robot remains empty when the event returns, and it will finish mining the entity
+            for index=1, #save_inventory do
+              local stack = save_inventory[index]
+              if stack.valid_for_read then
+                --game.print("Giving robot cargo stack: "..stack.name.." : "..stack.count)
+                local inserted = robotInventory.insert{name=stack.name, count=math.min(stack.count, robotSize)}
+                save_inventory.remove{name=stack.name, count=inserted}
+                if not robotInventory.is_empty() then
+                  break
                 end
               end
             end
@@ -230,6 +257,88 @@ local function OnPreEntityMined(event)
   end
 end
 
+-- Robot mining the actually ship/engine (after both are empty).
+-- If one half of a ship is mined, also mine the other half into the same robot. Only one of them will be the actual item.
+local function OnRobotMinedEntity(event)
+  if event.entity and event.entity.valid then
+    local entity = event.entity
+    if storage.ship_bodies[entity.name] or storage.ship_engines[entity.name] then
+      -- Find attached engine or body to mine
+      local otherstock = entity.get_connected_rolling_stock(defines.rail_direction.front) or 
+                         entity.get_connected_rolling_stock(defines.rail_direction.back)
+      if otherstock then
+        -- Mine the other entity and add it to the mining buffer (this avoids infinite loop of starting a new player.mine_entity operation)
+        -- If it's a ship engine, only fuel is returned, entity turns into nothing
+        local inventory_size = (otherstock.type == "locomotive" and #otherstock.get_fuel_inventory()) or
+                               (otherstock.type == "cargo-wagon" and #otherstock.get_inventory(defines.inventory.cargo_wagon)) or
+                               (otherstock.type == "artillery-wagon" and otherstock.get_item_count()) or 0
+        local dummy_inventory = game.create_inventory(1+inventory_size)
+        otherstock.mine{inventory=dummy_inventory, force=true, raise_destroyed=false, ignore_minable=true}
+        for slot=1,#dummy_inventory do
+          if dummy_inventory[slot].valid_for_read then
+            event.buffer.insert(dummy_inventory[slot])
+          end
+        end
+        dummy_inventory.destroy()
+      end
+    end
+  end
+end
+
+-- When the player mines a ship or engine, also make the player mine the coupled entity
+-- Unfortunately the API won't let us combine them into one undo action yet
+local function OnPlayerMinedEntity(event)
+  local entity = event.entity
+  local player = game.players[event.player_index]
+  if entity and entity.valid then
+    storage.currently_mining = storage.currently_mining or {}
+    if not storage.currently_mining[entity.unit_number] then
+      if storage.ship_bodies[entity.name] or storage.ship_engines[entity.name] then
+        -- Find attached engine or body to mine
+        local otherstock = entity.get_connected_rolling_stock(defines.rail_direction.front) or 
+                           entity.get_connected_rolling_stock(defines.rail_direction.back)
+        if otherstock then
+          storage.currently_mining[otherstock.unit_number] = entity
+          player.mine_entity(otherstock, true)
+          -- This mining operation completes before returning
+          -- Now merge the undo actions.  Most recent is entity, second-most-recent is otherstock
+          local item1 = player.undo_redo_stack.get_undo_item(1)
+          if #item1 == 1 and item1[1].type == "removed-entity" and storage.ship_engines[item1[1].target.name] then
+            -- otherstock was an engine that we can safely remove from the undo stack
+            game.print("Removing engine from undo stack")
+            player.undo_redo_stack.remove_undo_item(1)
+          end
+        end
+      end
+    else
+      -- This mining operation was started by script, don't start another one and clear the flag
+      storage.currently_mining[entity.unit_number] = nil
+    end
+  end
+end
+
+-- Check if this undo created a lone ship engine ghost, because that's not allowed
+local function OnUndoApplied(event)
+  local actions = event.actions
+  local action = actions[1]
+  if #actions == 1 and action.type == "removed-entity" and storage.ship_engines[action.target.name] then
+    -- Find the ghost at the action coordinates
+    local surface = game.surfaces[action.surface_index]
+    local found = surface and surface.find_entities_filtered{ghost_name=action.target.name, position=action.target.position, limit=1}
+    -- In 2.0.3, action.surface_index is off by 1
+    if not found then
+      surface = game.surfaces[action.surface_index+1]
+      found = surface and surface.find_entities_filtered{ghost_name=action.target.name, position=action.target.position, limit=1}
+    end
+    
+    if found and found[1] then
+      found[1].destroy()
+      game.print("Destroyed engine ghost from undo action")
+    else
+      game.print("Couldn't find ghost engine from undo action")
+    end
+  end
+end
 
 local function OnModSettingsChanged(event)
   if event.setting == "waterway_reach_increase" then
@@ -300,8 +409,6 @@ function init_events()
   end
   script.on_event(defines.events.on_entity_died, OnEntityDeleted, deleted_filters)
   script.on_event(defines.events.script_raised_destroy, OnEntityDeleted, deleted_filters)
-  script.on_event(defines.events.on_player_mined_entity, OnEntityDeleted, deleted_filters)
-  script.on_event(defines.events.on_robot_mined_entity, OnEntityDeleted, deleted_filters)
   
   -- Handle Oil Rig and Bridge components
   script.on_event(defines.events.on_object_destroyed, OnObjectDestroyed)
@@ -313,9 +420,17 @@ function init_events()
       table.insert(mined_filters, {filter="name", name=name})
     end
   end
-  script.on_event(defines.events.on_pre_player_mined_item, OnPreEntityMined, mined_filters)
-  script.on_event(defines.events.on_robot_pre_mined, OnPreEntityMined, mined_filters)
-
+  if storage.ship_engines then
+    for name,_ in pairs(storage.ship_engines) do
+      table.insert(mined_filters, {filter="name", name=name})
+    end
+  end
+  script.on_event(defines.events.on_robot_pre_mined, OnRobotPreMined, mined_filters)
+  script.on_event(defines.events.on_player_mined_entity, OnPlayerMinedEntity, mined_filters)
+  script.on_event(defines.events.on_robot_mined_entity , OnRobotMinedEntity, mined_filters)
+  
+  script.on_event(defines.events.on_undo_applied, OnUndoApplied)
+  
   local deconstructed_filters = {
     {filter="name", name="straight-waterway"},
     {filter="name", name="half-diagonal-waterway"},
@@ -324,7 +439,30 @@ function init_events()
     {filter="name", name="legacy-straight-waterway"},
     {filter="name", name="legacy-curved-waterway"},
   }
+  if storage.ship_bodies then
+    for name,_ in pairs(storage.ship_bodies) do
+      table.insert(deconstructed_filters, {filter="name", name=name})
+    end
+  end
+  if storage.ship_engines then
+    for name,_ in pairs(storage.ship_engines) do
+      table.insert(deconstructed_filters, {filter="name", name=name})
+    end
+  end
   script.on_event(defines.events.on_marked_for_deconstruction, OnMarkedForDeconstruction, deconstructed_filters)
+  
+  local cancel_decon_filters = {}
+  if storage.ship_bodies then
+    for name,_ in pairs(storage.ship_bodies) do
+      table.insert(cancel_decon_filters, {filter="name", name=name})
+    end
+  end
+  if storage.ship_engines then
+    for name,_ in pairs(storage.ship_engines) do
+      table.insert(cancel_decon_filters, {filter="name", name=name})
+    end
+  end
+  script.on_event(defines.events.on_cancelled_deconstruction, OnCancelledDeconstruction, cancel_decon_filters)
   
   -- update entities
   script.on_event(defines.events.on_tick, OnTick)
@@ -388,6 +526,7 @@ local function init()
   storage.pump_markers = storage.pump_markers or {}
   storage.disable_this_tick = storage.disable_this_tick or {}
   storage.driving_state_locks = storage.driving_state_locks or {}
+  storage.currently_mining = storage.currently_mining or {}
   
   init_ship_globals()  -- Init database of ship parameters
 
