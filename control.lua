@@ -11,6 +11,8 @@ require("__cargo-ships__/logic/oil_rig_logic")
 --require("__cargo-ships__/logic/crane_logic")
 
 
+BRIDGE_NTH_TICK = 72
+
 is_waterway = util.list_to_map{
   "straight-waterway",
   "half-diagonal-waterway",
@@ -469,9 +471,9 @@ function init_events()
   
   -- bridge queue
   if storage.bridge_destroyed_queue and next(storage.bridge_destroyed_queue) then
-    script.on_nth_tick(72, HandleBridgeQueue)
+    script.on_nth_tick(BRIDGE_NTH_TICK, HandleBridgeQueue)
   else
-    script.on_nth_tick(72, nil)
+    script.on_nth_tick(BRIDGE_NTH_TICK, nil)
   end
   
   -- long reach

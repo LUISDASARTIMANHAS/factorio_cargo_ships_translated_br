@@ -239,7 +239,7 @@ function HandleBridgeDestroyed(unit_number)
       -- Some or all components could not be deleted.
       -- Put in queue to delete later
       storage.bridge_destroyed_queue[unit_number] = bridge_data
-      script.on_nth_tick(72, HandleBridgeQueue)
+      script.on_nth_tick(BRIDGE_NTH_TICK, HandleBridgeQueue)
     end
 
     storage.bridges[unit_number] = nil
