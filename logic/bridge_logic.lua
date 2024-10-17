@@ -1,4 +1,5 @@
 local math2d = require("math2d")
+local BRIDGE_NTH_TICK = 72
 
 bridge_placement_boxes = {
   [defines.direction.north] = {{-4.5, -3}, {6.5, 3}},
@@ -239,7 +240,7 @@ function HandleBridgeDestroyed(unit_number)
       -- Some or all components could not be deleted.
       -- Put in queue to delete later
       storage.bridge_destroyed_queue[unit_number] = bridge_data
-      script.on_nth_tick(BRIDGE_NTH_TICK, HandleBridgeQueue)
+      RegisterBridgeNthTick()
     end
 
     storage.bridges[unit_number] = nil
@@ -257,6 +258,15 @@ function HandleBridgeQueue()
       storage.bridge_destroyed_queue[k] = nil
       break
     end
+  end
+  RegisterBridgeNthTick()
+end
+
+function RegisterBridgeNthTick()
+  if storage.bridge_destroyed_queue and next(storage.bridge_destroyed_queue) then
+    script.on_nth_tick(BRIDGE_NTH_TICK, HandleBridgeQueue)
+  else
+    script.on_nth_tick(BRIDGE_NTH_TICK, nil)
   end
 end
 

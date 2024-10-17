@@ -11,8 +11,6 @@ require("__cargo-ships__/logic/oil_rig_logic")
 --require("__cargo-ships__/logic/crane_logic")
 
 
-BRIDGE_NTH_TICK = 72
-
 is_waterway = util.list_to_map{
   "straight-waterway",
   "half-diagonal-waterway",
@@ -95,7 +93,7 @@ local function OnEntityBuilt(event)
     end
     -- check placement in next tick after wagons connect
     table.insert(storage.check_placement_queue, {entity=entity, engine=engine, player=player, robot=event.robot})
-
+    RegisterPlacementOnTick()
   -- add oilrig component entities
   elseif entity.name == "oil_rig" then
     CreateOilRig(entity, player, event.robot)
@@ -335,16 +333,10 @@ local function OnModSettingsChanged(event)
   end
 end
 
-local function OnTick(event)
-  processPlacementQueue()
-  UpdateVisuals(event)
-end
-
 local function OnStackChanged(event)
   increaseReach(event)
   PumpVisualisation(event)
 end
-
 
 -- Register conditional events based on mod settting
 function init_events()
@@ -458,15 +450,14 @@ function init_events()
   end
   script.on_event(defines.events.on_cancelled_deconstruction, OnCancelledDeconstruction, cancel_decon_filters)
   
-  -- update entities
-  script.on_event(defines.events.on_tick, OnTick)
+  -- update ship placement
+  RegisterPlacementOnTick()
   
   -- bridge queue
-  if storage.bridge_destroyed_queue and next(storage.bridge_destroyed_queue) then
-    script.on_nth_tick(BRIDGE_NTH_TICK, HandleBridgeQueue)
-  else
-    script.on_nth_tick(BRIDGE_NTH_TICK, nil)
-  end
+  RegisterBridgeNthTick()
+  
+  -- update visuals
+  RegisterVisualsNthTick()
   
   -- long reach
   script.on_event(defines.events.on_player_cursor_stack_changed, OnStackChanged)

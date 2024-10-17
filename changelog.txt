@@ -5,6 +5,7 @@ Date: 2024-10-16
     - When placing ships or oil rigs with quality, ship engine and oil_rig components receive the same quality.
     - Removed "placing_item" parameter from Ship API definitions.  Use EntityPrototype::items_to_place_this instead.
     - Set oil_rig item back to stack_size=5.
+    - Moved OnTick processes to conditional Nth tick subscriptions for best performance.
   Bugfixes:
     - Preserve quality when pipetting ships and oil rigs (total rewrite of pipette logic to use built-in functionality).
     - Fixed some weirdness with undo/redo. Still not perfect.

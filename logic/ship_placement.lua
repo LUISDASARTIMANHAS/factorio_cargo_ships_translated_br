@@ -102,6 +102,7 @@ function CheckBoatPlacement(entity, player, robot)
       local engine_loc = localizeEngine(ship)  -- Get better position for engine now that boat is on rails
       local engine = surface.create_entity{name=ship_data.engine, position=engine_loc.pos, direction=engine_loc.dir, force=force}
       table.insert(storage.check_placement_queue, {entity=ship, engine=engine, player=player, robot=robot})
+      RegisterPlacementOnTick()
     else
       local refund = prototypes.entity[ship_name].items_to_place_this[1]
       refund.quality = quality
@@ -205,6 +206,7 @@ function processPlacementQueue()
     end
   end
   storage.check_placement_queue = {}
+  RegisterPlacementOnTick()
 end
 
 -- Disconnects/reconnects rolling stocks if they get wrongly connected/disconnected
@@ -265,4 +267,12 @@ function DestroyShipGhost(ghost)
     engine_ghost.destroy()
   end
 
+end
+
+function RegisterPlacementOnTick()
+  if storage.placement_queue and next(storage.placement_queue) then
+    script.on_event(defines.events.on_tick, processPlacementQueue)
+  else
+    script.on_event(defines.events.on_tick, nil)
+  end
 end

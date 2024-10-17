@@ -1,3 +1,5 @@
+local PUMP_NTH_TICK = 120
+
 local function PlaceVisuals(position, horizontal, mult, player)
   local surface = player.surface
   local markers = {}
@@ -60,14 +62,14 @@ local function RemoveVisuals(player_index)
 end
 
 function UpdateVisuals(e)
-  if e.tick % 120 == 0 then
-    for pidx, player in pairs(game.players) do
-      if storage.ship_pump_selected[pidx] then
-        RemoveVisuals(pidx)
-        AddVisuals(player)
-      end
+  for pidx,_ in pairs(storage.ship_pump_selected) do
+    local player = game.players[pidx]
+    RemoveVisuals(pidx)
+    if player then
+      AddVisuals(player)
     end
   end
+  RegisterVisualsNthTick()
 end
 
 local function is_holding_pump(player)
@@ -106,5 +108,14 @@ function PumpVisualisation(e)
     -- if last was pump, current is not
     RemoveVisuals(e.player_index)
     storage.ship_pump_selected[e.player_index] = nil
+  end
+  RegisterVisualsNthTick()
+end
+
+function RegisterVisualsNthTick()
+  if storage.ship_pump_selected and next(storage.ship_pump_selected) then
+    script.on_nth_tick(PUMP_NTH_TICK, UpdateVisuals)
+  else
+    script.on_nth_tick(PUMP_NTH_TICK, nil)
   end
 end
