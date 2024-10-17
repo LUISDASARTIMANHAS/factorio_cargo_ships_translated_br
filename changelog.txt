@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.2
-Date: 2024-10-16
+Date: 2024-10-17
   Changes:
     - When placing ships or oil rigs with quality, ship engine and oil_rig components receive the same quality.
     - Removed "placing_item" parameter from Ship API definitions.  Use EntityPrototype::items_to_place_this instead.
