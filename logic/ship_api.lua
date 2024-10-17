@@ -32,7 +32,6 @@ end
     add_ship:  Adds definition for a new ship and ship engine (rolling-stock types)
     parameters:
       name (string, mandatory): Name of the ship body entity
-      placing_item (string, optional): Name of item that places this ship, if different from prototype data.
       engine (string, optional): Name of engine entity
       engine_offset (table of Position, optional): Table of relative positions to place the engine. [0]=N, [1]=NNE, etc.
       engine_scale (float, optional): Ignored if engine_offset is present. Defaults to 1 if not specified. Scales the standard cargo ship offset table.
@@ -54,18 +53,6 @@ function add_ship(params)
     log("Warning: Ship '"..params.name.."' already added")
   end
   ship_data.name = params.name
-
-  -- Find the item to refund if building fails
-  if params.placing_item then
-    if prototypes.item[params.placing_item] then
-      ship_data.placing_item = params.placing_item
-    else
-      log("Error adding ship data: Cannot find item named '"..tostring(params.placing_item).."'")
-      return
-    end
-  else
-    ship_data.placing_item = prototypes.entity[params.name].items_to_place_this and prototypes.entity[params.name].items_to_place_this[1].name
-  end
 
   -- Process engine data, if any
   if params.engine and prototypes.entity[params.engine] then
@@ -254,7 +241,6 @@ function init_ship_globals()
 
   add_ship({
     name = "boat",
-    placing_item = "boat",
     engine = "boat_engine",
     engine_scale = 0.3,
     engine_at_front = true,
@@ -262,7 +248,6 @@ function init_ship_globals()
 
   add_boat({
     name = "indep-boat",
-    placing_item = "boat",
     rail_version = "boat",
   })
   -- List ship engines 

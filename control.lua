@@ -38,6 +38,7 @@ local function OnEntityBuilt(event)
 
   local entity = event.entity or event.destination
   local surface = entity.surface
+  local quality = entity.quality
   local force = entity.force
   local player = (event.player_index and game.players[event.player_index]) or nil
 
@@ -84,6 +85,7 @@ local function OnEntityBuilt(event)
           game.print("Creating "..ship_data.engine.." for "..entity.name)
           engine = surface.create_entity{
             name = ship_data.engine,
+            quality = quality,
             position = engine_loc.pos,
             direction = engine_loc.dir,
             force = force
@@ -127,7 +129,7 @@ local function OnMarkedForDeconstruction(event)
         -- Copy deconstruction order
         local player = game.players[event.player_index]
         local force = (player and player.force) or entity.force
-        otherstock.order_deconstruction(force, player, 1)
+        otherstock.order_deconstruction(force, player)
       end
     end
   end
@@ -269,19 +271,7 @@ local function OnRobotMinedEntity(event)
       local otherstock = entity.get_connected_rolling_stock(defines.rail_direction.front) or 
                          entity.get_connected_rolling_stock(defines.rail_direction.back)
       if otherstock then
-        -- Mine the other entity and add it to the mining buffer (this avoids infinite loop of starting a new player.mine_entity operation)
-        -- If it's a ship engine, only fuel is returned, entity turns into nothing
-        local inventory_size = (otherstock.type == "locomotive" and #otherstock.get_fuel_inventory()) or
-                               (otherstock.type == "cargo-wagon" and #otherstock.get_inventory(defines.inventory.cargo_wagon)) or
-                               (otherstock.type == "artillery-wagon" and otherstock.get_item_count()) or 0
-        local dummy_inventory = game.create_inventory(1+inventory_size)
-        otherstock.mine{inventory=dummy_inventory, force=true, raise_destroyed=false, ignore_minable=true}
-        for slot=1,#dummy_inventory do
-          if dummy_inventory[slot].valid_for_read then
-            event.buffer.insert(dummy_inventory[slot])
-          end
-        end
-        dummy_inventory.destroy()
+        otherstock.mine{inventory=event.robot.get_inventory(defines.inventory.robot_cargo), force=true, raise_destroyed=false, ignore_minable=true}
       end
     end
   end
@@ -327,11 +317,6 @@ local function OnUndoApplied(event)
     -- Find the ghost at the action coordinates
     local surface = game.surfaces[action.surface_index]
     local found = surface and surface.find_entities_filtered{ghost_name=action.target.name, position=action.target.position, limit=1}
-    -- In 2.0.3, action.surface_index is off by 1
-    if not found then
-      surface = game.surfaces[action.surface_index+1]
-      found = surface and surface.find_entities_filtered{ghost_name=action.target.name, position=action.target.position, limit=1}
-    end
     
     if found and found[1] then
       found[1].destroy()
@@ -432,6 +417,7 @@ function init_events()
   script.on_event(defines.events.on_robot_mined_entity , OnRobotMinedEntity, mined_filters)
   
   script.on_event(defines.events.on_undo_applied, OnUndoApplied)
+  script.on_event(defines.events.on_redo_applied, OnUndoApplied)
   
   local deconstructed_filters = {
     {filter="name", name="straight-waterway"},

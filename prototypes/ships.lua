@@ -409,7 +409,7 @@ boat.icon = nil
 boat.flags = {"placeable-neutral", "player-creation", "placeable-off-grid", "not-on-map"}
 boat.allow_copy_paste = true
 boat.minable = {mining_time = 1, result = "boat"}
-boat.placeable_by = {{item="boat", count=1}, {item="indep-boat", count=1}}
+boat.placeable_by = {{item="boat", count=1}}
 boat.max_health = 1500
 boat.selection_box = {{-1.2, -1.5}, {1.2, 1.5}}
 boat.collision_box = {{-1.3, -1.5}, {1.3, 1.5}}

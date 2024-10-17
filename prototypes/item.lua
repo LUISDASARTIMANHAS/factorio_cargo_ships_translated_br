@@ -179,7 +179,7 @@ if settings.startup["offshore_oil_enabled"].value then
       subgroup = "extraction-machine",
       order = "b[fluids]-c[oil_rig]",
       place_result = "oil_rig",
-      stack_size = 1,
+      stack_size = 5,
     },
     {
       type = "item",

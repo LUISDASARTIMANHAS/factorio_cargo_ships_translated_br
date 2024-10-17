@@ -7,10 +7,11 @@ function CreateOilRig(entity, player, robot)
   local surface = entity.surface
   local force = entity.force
   local position = entity.position
+  local quality = entity.quality
   
   -- Create component entities or revive ghosts
-  local power = surface.create_entity{name = "or_power_electric", position = position, force = force, create_build_effect_smoke=false}
-  local radar = surface.create_entity{name = "or_radar", position = position, force = force, create_build_effect_smoke=false}
+  local power = surface.create_entity{name="or_power_electric", quality=quality, position=position, force=force, create_build_effect_smoke=false}
+  local radar = surface.create_entity{name="or_radar", quality=quality, position=position, force=force, create_build_effect_smoke=false}
   
   local pole,dummy
   local pole_ghost = surface.find_entities_filtered{ghost_name = "or_pole", position = position, radius = 1, limit = 1}[1]
@@ -19,7 +20,7 @@ function CreateOilRig(entity, player, robot)
     pole.teleport(math2d.position.add(position,pole_offset))
   end
   if not pole then
-    pole = surface.create_entity{name = "or_pole", position = math2d.position.add(position,pole_offset), force = force, create_build_effect_smoke=false}
+    pole = surface.create_entity{name = "or_pole", quality=quality, position = math2d.position.add(position,pole_offset), force = force, create_build_effect_smoke=false}
   end
   
   local tank
@@ -29,7 +30,7 @@ function CreateOilRig(entity, player, robot)
     tank.teleport(position)
   end
   if not tank then
-    tank = surface.create_entity{name = "or_tank", position = entity.position, force = entity.force, create_build_effect_smoke=false}
+    tank = surface.create_entity{name = "or_tank", quality=quality, position = entity.position, force = entity.force, create_build_effect_smoke=false}
   end
   
   -- If there was a problem, cancel the construction

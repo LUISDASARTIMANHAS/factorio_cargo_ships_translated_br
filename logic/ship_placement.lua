@@ -55,11 +55,8 @@ local function cancelPlacement(entity, player, robot)
       end
     elseif robot and robot.valid then
       -- Give the robot back the thing
-      local return_item = entity.name
-      if storage.ship_bodies[entity.name] then
-        return_item = storage.ship_bodies[entity.name].placing_item
-      end
-      robot.get_inventory(defines.inventory.robot_cargo).insert{name=return_item, count=1}
+      local return_item = prototypes.entity[entity.name].items_to_place_this[1]
+      robot.get_inventory(defines.inventory.robot_cargo).insert(return_item)
       if storage.ship_bodies[entity.name] then
         game.print{"cargo-ship-message.error-ship-no-space", entity.localised_name}
       else
@@ -92,9 +89,10 @@ function CheckBoatPlacement(entity, player, robot)
     local ship_name = boat_data.rail_version
     local ship_data = storage.ship_bodies[ship_name]
     local force = entity.force
+    local quality = entity.quality
     local ship_loc = localizeEngine(entity, ship_name)
     entity.destroy()
-    local ship = surface.create_entity{name=ship_name, position=boat_pos, direction=ship_loc.dir, force=force}
+    local ship = surface.create_entity{name=ship_name, quality=quality, position=boat_pos, direction=ship_loc.dir, force=force}
     if ship then
       if player then
         player.print{"cargo-ship-message.place-on-waterway", local_name}
@@ -105,12 +103,14 @@ function CheckBoatPlacement(entity, player, robot)
       local engine = surface.create_entity{name=ship_data.engine, position=engine_loc.pos, direction=engine_loc.dir, force=force}
       table.insert(storage.check_placement_queue, {entity=ship, engine=engine, player=player, robot=robot})
     else
+      local refund = prototypes.entity[ship_name].items_to_place_this[1]
+      refund.quality = quality
       if player then
-        player.insert{name=ship_data.placing_item, count=1}
+        player.insert(refund)
         player.print{"cargo-ship-message.error-place-on-waterway", local_name}
       else
         if robot then
-          robot.get_inventory(defines.inventory.robot_cargo).insert{name=ship_data.placing_item, count=1}
+          robot.get_inventory(defines.inventory.robot_cargo).insert(refund)
         end
         game.print{"cargo-ship-message.error-place-on-waterway", local_name}
       end
