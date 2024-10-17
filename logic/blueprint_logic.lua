@@ -6,7 +6,7 @@ function FixPipette(event)
   local cursor = player.cursor_stack
   local selected = player.selected
   local item = event.item
-  game.print("pipetted "..item.name)
+  --game.print("pipetted "..item.name)
   local newItemWithQuality
   if is_oil_rig_part[item.name] then
     --cursor.clear()

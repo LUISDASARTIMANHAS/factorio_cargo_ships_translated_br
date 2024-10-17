@@ -81,10 +81,10 @@ function CreateBridge(entity, player, robot)
   end
   if num_waterways > 3 or next(conflicts) then
     -- Area is not clear, return item to player/robot
-    game.print("Items blocking bridge construction: \n"..serpent.block(conflicts))
+    --game.print("Items blocking bridge construction: \n"..serpent.block(conflicts))
     if player and player.valid then
       player.insert{name=entity.name, count=1}
-      player.print{"cargo-ship-message.error-ship-no-space", entity.localised_name}
+      player.create_local_flying_text{text={"cargo-ship-message.error-ship-no-space", entity.localised_name}, create_at_cursor=true}
     elseif robot and robot.valid then
       -- Give the robot back the thing
       local return_item = entity.name
@@ -284,7 +284,7 @@ local function bridgeLocationFromGate(gatepos)
   elseif vector_to_gate.x == -0.5 and vector_to_gate.y == 0.5 then
     bridgedir = defines.direction.west
   else
-    game.print("couldn't find bridge direction")
+    game.print("Error couldn't find bridge direction")
     return
   end
   
@@ -325,7 +325,7 @@ function HandleBridgeBlueprint(event)
   if entities and next(entities) then
     for k,bridge in pairs(entities) do
       if bridge.name == "bridge_gate" then
-        game.print("Found bridge_gate in blueprint at "..util.positiontostr(bridge.position))
+        --game.print("Found bridge_gate in blueprint at "..util.positiontostr(bridge.position))
         local bridge_success = false
         
         local bridge_location = bridgeLocationFromGate(bridge.position)
@@ -338,7 +338,7 @@ function HandleBridgeBlueprint(event)
             direction = bridge_location.direction
           }
           changed = true
-          game.print("Bridge replaced at "..util.positiontostr(bridge_location.position).." pointing "..tostring(bridge_location.direction))
+          --game.print("Bridge replaced at "..util.positiontostr(bridge_location.position).." pointing "..tostring(bridge_location.direction))
           bridge_success = true
         end
         

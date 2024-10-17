@@ -20,7 +20,7 @@ function CheckRailPlacement(entity, player, robot)
       for _, rail in pairs(get_connected_rails(entity)) do
         if not string.find(rail.name, "%-waterway") then
           if player then
-            player.print{"cargo-ship-message.error-connect-rails", "__ENTITY__"..entity.name.."__", "__ENTITY__"..rail.name.."__"}
+            player.create_local_flying_text{text={"cargo-ship-message.error-connect-rails", "__ENTITY__"..entity.name.."__", "__ENTITY__"..rail.name.."__"}, create_at_cursor=true}
           else
             game.print{"cargo-ship-message.error-connect-rails", "__ENTITY__"..entity.name.."__", "__ENTITY__"..rail.name.."__"}
           end
@@ -39,7 +39,7 @@ function CheckRailPlacement(entity, player, robot)
         local refund = entity.prototype.items_to_place_this[1]
         if player then
           player.insert(refund)
-          player.print{"cargo-ship-message.error-connect-rails", "__ENTITY__"..entity.name.."__", "__ENTITY__"..rail.name.."__"}
+          player.create_local_flying_text{text={"cargo-ship-message.error-connect-rails", "__ENTITY__"..entity.name.."__", "__ENTITY__"..rail.name.."__"}, create_at_cursor=true}
         else
           if robot then
             robot.get_inventory(defines.inventory.robot_cargo).insert(refund)

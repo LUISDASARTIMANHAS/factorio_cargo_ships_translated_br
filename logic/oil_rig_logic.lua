@@ -35,12 +35,12 @@ function CreateOilRig(entity, player, robot)
   
   -- If there was a problem, cancel the construction
   if not (power and pole and radar and tank) then
-    game.print("Could not create all oil rig components.")
+    --game.print("Could not create all oil rig components.")
     if player then
-      player.insert{name="oil_rig", count= 1}
-      player.print{"cargo-ship-message.error-place-on-water", entity.localised_name}
+      player.mine_entity(entity, true)
+      player.create_local_flying_text{text={"cargo-ship-message.error-place-on-water", entity.localised_name}, create_at_cursor=true}
     elseif robot then
-      robot.get_inventory(defines.inventory.robot_cargo).insert{name="oil_rig", count= 1}
+      entity.mine{inventory=robot.get_inventory(defines.inventory.robot_cargo), force=true, raise_destroyed=false, ignore_minable=true}
       game.print{"cargo-ship-message.error-place-on-water", entity.localised_name}
     end
     entity.destroy()

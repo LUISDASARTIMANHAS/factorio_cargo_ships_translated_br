@@ -68,21 +68,21 @@ local function OnEntityBuilt(event)
       local ship_data = storage.ship_bodies[entity.name]
       if ship_data.engine then
         local engine_loc = localizeEngine(entity)
-        game.print("looking for engine ghost at "..util.positiontostr(engine_loc.pos).." pointing "..tostring(engine_loc.dir))
+        --game.print("looking for engine ghost at "..util.positiontostr(engine_loc.pos).." pointing "..tostring(engine_loc.dir))
         -- see if there is an engine ghost from a blueprint behind us
         local ghost = surface.find_entities_filtered{ghost_name=ship_data.engine, position=engine_loc.pos, force=force, limit=1}[1]
         if ghost then
-          game.print("found ghost at "..util.positiontostr(ghost.position).." pointing "..tostring(ghost.orientation)..", reviving")
+          --game.print("found ghost at "..util.positiontostr(ghost.position).." pointing "..tostring(ghost.orientation)..", reviving")
           local dummy
           dummy, engine = ghost.revive()
           -- If couldn't revive engine, destroy ghost
           if not engine then
-            game.print("couldn't revive ghost at "..util.positiontostr(newghost.position))
+            --game.print("couldn't revive ghost at "..util.positiontostr(newghost.position))
             ghost.destroy()
           end
         end
         if not engine then
-          game.print("Creating "..ship_data.engine.." for "..entity.name)
+          --game.print("Creating "..ship_data.engine.." for "..entity.name)
           engine = surface.create_entity{
             name = ship_data.engine,
             quality = quality,
@@ -297,7 +297,7 @@ local function OnPlayerMinedEntity(event)
           local item1 = player.undo_redo_stack.get_undo_item(1)
           if #item1 == 1 and item1[1].type == "removed-entity" and storage.ship_engines[item1[1].target.name] then
             -- otherstock was an engine that we can safely remove from the undo stack
-            game.print("Removing engine from undo stack")
+            --game.print("Removing engine from undo stack")
             player.undo_redo_stack.remove_undo_item(1)
           end
         end
@@ -313,6 +313,7 @@ end
 local function OnUndoApplied(event)
   local actions = event.actions
   local action = actions[1]
+  --game.print(serpent.block(action))
   if #actions == 1 and action.type == "removed-entity" and storage.ship_engines[action.target.name] then
     -- Find the ghost at the action coordinates
     local surface = game.surfaces[action.surface_index]
@@ -320,9 +321,9 @@ local function OnUndoApplied(event)
     
     if found and found[1] then
       found[1].destroy()
-      game.print("Destroyed engine ghost from undo action")
+      --game.print("Destroyed engine ghost from undo action")
     else
-      game.print("Couldn't find ghost engine from undo action")
+      --game.print("Couldn't find ghost engine from undo action")
     end
   end
 end
@@ -375,6 +376,11 @@ function init_events()
       table.insert(entity_filters, {filter="name", name=name})
     end
   end
+  --if storage.ship_engines then
+  --  for name,_ in pairs(storage.ship_engines) do
+  --    table.insert(entity_filters, {filter="ghost", ghost_name=name})
+  --  end
+  --end
   script.on_event(defines.events.on_built_entity, OnEntityBuilt, entity_filters)
   script.on_event(defines.events.on_robot_built_entity, OnEntityBuilt, entity_filters)
   script.on_event(defines.events.on_entity_cloned, OnEntityBuilt, entity_filters)

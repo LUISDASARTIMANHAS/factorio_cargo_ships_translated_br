@@ -49,9 +49,9 @@ local function cancelPlacement(entity, player, robot)
     if player and player.valid then
       player.insert{name=entity.name, count=1}
       if storage.ship_bodies[entity.name] then
-        player.print{"cargo-ship-message.error-ship-no-space", entity.localised_name}
+        player.create_local_flying_text{text={"cargo-ship-message.error-ship-no-space", entity.localised_name}, create_at_cursor=true}
       else
-        player.print{"cargo-ship-message.error-train-on-waterway", entity.localised_name}
+        player.create_local_flying_text{text={"cargo-ship-message.error-train-on-waterway", entity.localised_name}, create_at_cursor=true}
       end
     elseif robot and robot.valid then
       -- Give the robot back the thing
@@ -95,7 +95,7 @@ function CheckBoatPlacement(entity, player, robot)
     local ship = surface.create_entity{name=ship_name, quality=quality, position=boat_pos, direction=ship_loc.dir, force=force}
     if ship then
       if player then
-        player.print{"cargo-ship-message.place-on-waterway", local_name}
+        player.create_local_flying_text{text={"cargo-ship-message.place-on-waterway", local_name}, create_at_cursor=true}
       else
         game.print{"cargo-ship-message.place-on-waterway", local_name}
       end
@@ -107,7 +107,7 @@ function CheckBoatPlacement(entity, player, robot)
       refund.quality = quality
       if player then
         player.insert(refund)
-        player.print{"cargo-ship-message.error-place-on-waterway", local_name}
+        player.create_local_flying_text{text={"cargo-ship-message.error-place-on-waterway", local_name}, create_at_cursor=true}
       else
         if robot then
           robot.get_inventory(defines.inventory.robot_cargo).insert(refund)
@@ -117,7 +117,7 @@ function CheckBoatPlacement(entity, player, robot)
     end
   else
     if player then
-      player.print{"cargo-ship-message.place-independent", local_name}
+      player.create_local_flying_text{text={"cargo-ship-message.place-independent", local_name}, create_at_cursor=true}
     else
       game.print{"cargo-ship-message.place-independent", local_name}
     end
@@ -126,16 +126,16 @@ end
 
 -- checks placement of rolling stock, and returns the placed entities to the player if necessary
 function processPlacementQueue()
-  if #storage.check_placement_queue > 0 then
-    game.print(tostring(game.tick)..": checking placement "..tostring(#storage.check_placement_queue).." entities")
-  end
+  --if #storage.check_placement_queue > 0 then
+  --  game.print(tostring(game.tick)..": checking placement "..tostring(#storage.check_placement_queue).." entities")
+  --end
   for _, entry in pairs(storage.check_placement_queue) do
     local entity = entry.entity
     local engine = entry.engine
     local player = entry.player
     local robot = entry.robot
     
-    game.print("checking "..entity.name.." "..tostring(entity.unit_number))
+    --game.print("checking "..entity.name.." "..tostring(entity.unit_number))
 
     if entity and entity.valid then
       if storage.ship_bodies[entity.name] then
@@ -145,41 +145,41 @@ function processPlacementQueue()
         if ship_data.engine and not engine then
           -- See if there is already an engine connected to this ship
           if not hasCorrectConnectedStock(entity) then
-            game.print("incorrectly coupled ship / no engine")
+            --game.print("incorrectly coupled ship / no engine")
             cancelPlacement(entity, player, robot)
           else
-            game.print("Correct stock coupled but wasn't given by creator")
+            --game.print("Correct stock coupled but wasn't given by creator")
           end
         elseif ship_data.engine and entity.orientation ~= engine.orientation then
-          game.print("engine is wrong orientation")
+          --game.print("engine is wrong orientation")
           cancelPlacement(entity, player, robot)
           cancelPlacement(engine, player)
         elseif entity.train then
           -- check if connected to too many carriages
           if ((ship_data.engine and #entity.train.carriages > 2) or
               (not ship_data.engine and #entity.train.carriages > 1)) then
-            game.print("too many carriages connected together")
+            --game.print("too many carriages connected together")
             cancelPlacement(entity, player, robot)
             cancelPlacement(engine, player)
           -- check if on rails
           elseif entity.train.front_end then
             if not is_waterway[entity.train.front_end.rail.name] then
-              game.print("front is not waterway")
+              --game.print("front is not waterway")
               cancelPlacement(entity, player, robot)
               cancelPlacement(engine, player)
             else
-              game.print("front is waterway, okay")
+              --game.print("front is waterway, okay")
             end
           elseif entity.train.back_end then
             if not is_waterway[entity.train.back_end.rail.name] then
-              game.print("back is not waterway")
+              --game.print("back is not waterway")
               cancelPlacement(entity, player, robot)
               cancelPlacement(engine, player)
             else
-              game.print("back is waterway, okay")
+              --game.print("back is waterway, okay")
             end
           else
-            game.print("Not sure what this means")
+            --game.print("Not sure what this means")
           end
         end
 
@@ -243,7 +243,7 @@ function OnTrainCreated(event)
         local wrong_direction = right_direction == defines.rail_direction.front and defines.rail_direction.back or defines.rail_direction.front
         local stock = parts[i]
         if stock.get_connected_rolling_stock(wrong_direction) then
-          game.print("Cargo ships disconnecting rolling stock from "..(wrong_direction==defines.rail_direction.front and "front" or "back").." of "..name.." #"..tostring(stock.unit_number))
+          --game.print("Cargo ships disconnecting rolling stock from "..(wrong_direction==defines.rail_direction.front and "front" or "back").." of "..name.." #"..tostring(stock.unit_number))
           if stock.disconnect_rolling_stock(wrong_direction) then 
             break
           end
