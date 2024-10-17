@@ -59,7 +59,7 @@ function on_enter_vehicle_keypress (event)
     local ships = {}
     for _, vehicle in pairs(vehicles) do
       if storage.enter_ship_entities[vehicle.name] then
-        table.insert(ships, vehicle)
+        ships[#ships+1] = vehicle
       end
     end
     if ships[1] then

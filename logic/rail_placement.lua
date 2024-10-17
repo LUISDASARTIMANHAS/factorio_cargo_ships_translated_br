@@ -6,7 +6,7 @@ local function get_connected_rails(rail)
     for _, c in pairs({defines.rail_connection_direction.straight, defines.rail_connection_direction.left, defines.rail_connection_direction.right}) do
       local r = rail.get_connected_rail{rail_direction = d, rail_connection_direction = c}
       if r then
-        table.insert(connected_rails, r)
+        connected_rails[#connected_rails+1] = r
       end
     end
   end

@@ -191,12 +191,13 @@ local function OnEntityDeleted(event)
           end
         end
       end
+    
     elseif entity.name == "entity-ghost" then
       if entity.ghost_name == "oil_rig" then
         -- Delete any or_tank or or_pole ghosts in the area
         DestroyOilRigGhost(entity)
       elseif storage.ship_bodies[entity.ghost_name] then
-        -- Delete any ship engine ghost int he area
+        -- Delete any ship engine ghost in the area
         DestroyShipGhost(entity)
       end
     end
@@ -368,11 +369,6 @@ function init_events()
       table.insert(entity_filters, {filter="name", name=name})
     end
   end
-  --if storage.ship_engines then
-  --  for name,_ in pairs(storage.ship_engines) do
-  --    table.insert(entity_filters, {filter="ghost", ghost_name=name})
-  --  end
-  --end
   script.on_event(defines.events.on_built_entity, OnEntityBuilt, entity_filters)
   script.on_event(defines.events.on_robot_built_entity, OnEntityBuilt, entity_filters)
   script.on_event(defines.events.on_entity_cloned, OnEntityBuilt, entity_filters)

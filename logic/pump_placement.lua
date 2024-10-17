@@ -9,7 +9,7 @@ local function PlaceVisuals(position, horizontal, mult, player)
         local pos = {position.x+x*mult, position.y-y*mult}
         local m = surface.create_entity{name="pump_marker", position=pos}
         m.render_player = player
-        table.insert(markers, m)
+        markers[#markers+1] = m
       end
     end
   else
@@ -18,7 +18,7 @@ local function PlaceVisuals(position, horizontal, mult, player)
         local pos = {position.x+x*mult, position.y+y*mult}
         local m = surface.create_entity {name="pump_marker", position=pos}
         m.render_player = player
-        table.insert(markers, m)
+        markers[#markers+1] = m
       end
     end
   end
@@ -32,7 +32,7 @@ local function AddVisuals(player)
   local ports = player.surface.find_entities_filtered{area=a, name="port"}
   local ltnports = (prototypes.entity["ltn-port"] and player.surface.find_entities_filtered{area=a, name="ltn-port"}) or {}
   for _, ltnport in pairs(ltnports) do
-    table.insert(ports, ltnport)
+    ports[#ports+1] = ltnport
   end
   -- initalize marker array if necessarry
   storage.pump_markers[player.index] = storage.pump_markers[player.index] or {}

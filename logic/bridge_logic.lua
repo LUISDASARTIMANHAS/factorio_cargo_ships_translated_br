@@ -77,7 +77,7 @@ function CreateBridge(entity, player, robot)
     if e.name == "legacy-straight-waterway" or e.name == "straight-waterway" then
       num_waterways = num_waterways + 1
     elseif e.name ~= "bridge_base" then
-      table.insert(conflicts, e)
+      conflicts[#conflicts+1] = e
     end
   end
   if num_waterways > 3 or next(conflicts) then
@@ -150,7 +150,7 @@ function CreateBridge(entity, player, robot)
       if not newr then
         game.print("Warning, could not build invisible bridge rail at "..util.positiontostr(newpos))
       else
-        table.insert(rails, newr)
+        rails[#rails+1] = newr
       end
     end
     
@@ -170,7 +170,7 @@ function CreateBridge(entity, player, robot)
       if not news then
         game.print("Warning, could not build invisible bridge signal at "..util.positiontostr(newpos))
       else
-        table.insert(signals, news)
+        signals[#signals+1] = news
       end
     end
     
