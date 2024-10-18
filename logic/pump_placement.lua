@@ -89,7 +89,7 @@ local function is_holding_pump(player)
     return true
   end
   local ghost = player.cursor_ghost
-  if ghost and ghost.name == "pump" then
+  if ghost and ghost.name.name == "pump" then
     return true
   end
 end

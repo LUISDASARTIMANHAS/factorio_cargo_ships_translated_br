@@ -156,7 +156,7 @@ local function OnGiveWaterway(event)
   local player = game.get_player(event.player_index)
   local cleared = player.clear_cursor()
   if cleared then
-    player.cursor_ghost = "waterway"
+    player.cursor_ghost = {name="waterway"}
   end
 end
 
