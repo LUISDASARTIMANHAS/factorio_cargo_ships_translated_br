@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.3
+Date: 2024-10-18
+  Changes:
+    - Added new waterway graphics.
+  Bugfixes:
+    - Fixed ship pump visualisations not being shown in remote view or when holding ghosts.
+---------------------------------------------------------------------------------------------------
 Version: 1.0.2
 Date: 2024-10-17
   Changes:
