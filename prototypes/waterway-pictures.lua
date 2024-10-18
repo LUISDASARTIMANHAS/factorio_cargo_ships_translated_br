@@ -133,9 +133,9 @@ local function make_new_rail_pictures(keys, elems, max_variations)
       for _ , elem in ipairs(elems) do
         local layers = nil
         local variations = variation_count;
-        if (elem[1] == "segment_visualisation_middle") then
-          variations = nil
-        end
+        --if (elem[1] == "segment_visualisation_middle") then
+        variations = nil
+        --end
         if (type(elem[2]) == "table") then
           layers = { layers = {} }
           for _, subelem in ipairs(elem[2]) do
@@ -214,7 +214,7 @@ function new_waterway_pictures(rail_type, invisible)
   end
   local elems =
   {
-    { "metals",                       "__base__/graphics/entity/rails/rail/rail-metals.png",             mipmap = true },
+    { "metals",                       "__cargo-ships-graphics__/graphics/entity/waterway/waterways.png", },
     --{ "backplates",                   "__base__/graphics/entity/rails/rail/rail-backplates.png",         mipmap = true },
     --{ "ties",                         "__base__/graphics/entity/rails/rail/rail-ties.png"                              },
     --{ "stone_path",                   "__base__/graphics/entity/rails/rail/rail-stone-path-inside.png"                 },
