@@ -352,17 +352,8 @@ function init_events()
       {filter="ghost", ghost_name="legacy-curved-waterway"},
       {filter="name", name="oil_rig"},
       {filter="name", name="bridge_base"},
-      {filter="type", type="cargo-wagon"},
-      {filter="type", type="fluid-wagon"},
-      {filter="type", type="locomotive"},
-      {filter="type", type="artillery-wagon"},
-      {filter="type", type="straight-rail"},
-      {filter="type", type="half-diagonal-rail"},
-      {filter="type", type="curved-rail-a"},
-      {filter="type", type="curved-rail-b"},
-      {filter="type", type="rail-ramp"},
-      {filter="type", type="legacy-straight-rail"},
-      {filter="type", type="legacy-curved-rail"},
+      {filter="rolling-stock"},
+      {filter="rail"}
     }
   if storage.boat_bodies then
     for name,_ in pairs(storage.boat_bodies) do
