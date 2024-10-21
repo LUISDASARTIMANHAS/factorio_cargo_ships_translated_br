@@ -64,9 +64,9 @@ data:extend{
       order = "a",
       base_density = 10,          -- amount of stuff, on average, to be placed per tile
       base_spots_per_km2 = 1.8,     -- number of patches per square kilometer near the starting area
-      random_probability = 1/75, -- probability of placement at any given tile within a patch (set low to ensure space between deposits for rigs to be placed)
-      random_spot_size_minimum = 1,
-      random_spot_size_maximum = 1, -- don't randomize spot size (so single entities are placed alone)
+      random_probability = 1/400, -- probability of placement at any given tile within a patch (set low to ensure space between deposits for rigs to be placed)
+      random_spot_size_minimum = 3,
+      random_spot_size_maximum = 4,
       additional_richness = 350000, -- this increases the total everywhere, so base_density needs to be decreased to compensate
       has_starting_area_placement = false,
       regular_rq_factor_multiplier = 1 -- rq_factor is the ratio of the radius of a patch to the cube root of its quantity,
@@ -110,4 +110,5 @@ end
 
 -- Add to Nauvis planet definition
 data.raw.planet.nauvis.map_gen_settings.autoplace_controls["offshore-oil"] = {}
+data.raw.planet.nauvis.map_gen_settings.autoplace_settings.entity.settings["offshore-oil"] = {}
 -- TODO: Add other Space Age planets
