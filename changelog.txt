@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.4
+Date: 2024-10-20
+  Changes:
+    - Updated Offshore Oil graphics and map generation defaults.
+    - Merged signal buoys into Automated Water Transport technology.
+    - First batch of translation updates from Crowdin. Please contribute updates there!
+  Bugfixes:
+    - Fixed pipetting ship engines and oil rig tanks to get ghost items (thanks to new feature in Factorio 2.0.7).
+    - Fixed incorrect entries in Factoriopedia.
+---------------------------------------------------------------------------------------------------
 Version: 1.0.3
 Date: 2024-10-18
   Changes:
