@@ -14,7 +14,7 @@ function FixPipette(event)
       local oil_rig = selected.surface.find_entities_filtered{name="oil_rig", position=selected.position, radius = 0.5, limit=1}[1]
       if oil_rig then
         -- Pipette the oil rig instead
-        player.pipette_entity(oil_rig)
+        player.pipette_entity(oil_rig, true)
       end
     end
   elseif storage.ship_engines[item.name] then
@@ -24,7 +24,7 @@ function FixPipette(event)
                          selected.get_connected_rolling_stock(defines.rail_direction.back)
       if otherstock then
         -- Pipette the ship body instead
-        player.pipette_entity(otherstock)
+        player.pipette_entity(otherstock, true)
       end
     end
   elseif is_waterway[item.name] then
