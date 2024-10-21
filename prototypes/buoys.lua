@@ -192,6 +192,7 @@ buoy.water_reflection = {
   rotate = false,
   orientation_to_variation = true
 }
+buoy.factoriopedia_simulation = nil
 
 ---------------------------------------------------------------------------------------------------------------
 
@@ -242,6 +243,7 @@ chain_buoy.green_light = nil
 chain_buoy.orange_light = nil
 chain_buoy.red_light = nil
 chain_buoy.blue_light = nil
+chain_buoy.factoriopedia_simulation = nil
 
 ---------------------------------------------------------------------------------------------------------------
 
@@ -377,6 +379,7 @@ port.light1 =
 }
 port.light2 = nil
 port.working_sound = nil
+port.factoriopedia_simulation = nil
 
 -- build a new 4 way definition for port
 -- show_shadow=false prevents floating circuit box shadows, but wire shadows end nowhere

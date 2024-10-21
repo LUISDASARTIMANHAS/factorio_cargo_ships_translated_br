@@ -196,6 +196,7 @@ local or_power_electric = {
         get_icons(data.raw["generator"]["steam-engine"]), 
         icon_inputs),
   flags = {"not-deconstructable", "not-blueprintable", "not-rotatable", "placeable-off-grid"},
+  hidden = true,
   max_health = oil_rig.max_health,
   effectivity = 5,
   fluid_usage_per_tick = 0.1,
@@ -286,9 +287,10 @@ local psy = 96
 or_pole = {
   type = "electric-pole",
   name = "or_pole",
-  icons = util.combine_icons(oil_rig.icons, get_icons(data.raw["electric-pole"]["medium-electric-pole"]), 
+  icons = util.combine_icons(oil_rig.icons, get_icons(data.raw["electric-pole"]["medium-electric-pole"]),
                                   icon_inputs),
   flags = {"not-deconstructable", "placeable-neutral", "player-creation", "not-rotatable", "placeable-off-grid"},
+  hidden = true,
   max_health = oil_rig.max_health,
   collision_mask = {layers={}},
   collision_box = {{-0.5, -0.5}, {0.5, 0.5}},
@@ -374,9 +376,10 @@ end
 local or_radar = {
   type = "radar",
   name = "or_radar",
-  icons = util.combine_icons(oil_rig.icons, get_icons(data.raw["radar"]["radar"]), 
+  icons = util.combine_icons(oil_rig.icons, get_icons(data.raw["radar"]["radar"]),
                                     icon_inputs),
   flags = {"not-blueprintable", "not-deconstructable", "placeable-off-grid"},
+  hidden = true,
   fast_replaceable_group = "radar",
   max_health = oil_rig.max_health,
   selectable_in_game = false,
@@ -417,14 +420,15 @@ circuit_connector_definitions["or_tank"] = circuit_connector_definitions.create_
   }
 )
 
-local or_tank = 
+local or_tank =
 {
   type = "storage-tank",
   name = "or_tank",
-  icons = util.combine_icons( oil_rig.icons, get_icons(data.raw["storage-tank"]["storage-tank"]), 
+  icons = util.combine_icons( oil_rig.icons, get_icons(data.raw["storage-tank"]["storage-tank"]),
                               icon_inputs),
   max_health = oil_rig.max_health,
   flags = {"not-deconstructable", "placeable-neutral", "player-creation", "not-rotatable"},
+  hidden = true,
   selectable_in_game = true,
   allow_copy_paste = true,
   collision_box = oil_rig.collision_box,
