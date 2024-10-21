@@ -25,7 +25,7 @@ data:extend{
   {
     type = "resource",
     name = "offshore-oil",
-    icon = "__base__/graphics/icons/crude-oil-resource.png",
+    icon = "__cargo-ships-graphics__/graphics/icons/crude-oil-resource.png",
     flags = {"placeable-neutral"},
     category = "offshore-fluid",
     subgroup = "mineable-fluids",

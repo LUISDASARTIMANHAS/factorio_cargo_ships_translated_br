@@ -145,16 +145,6 @@ data:extend{
     place_result = "chain_buoy",
     stack_size = 100
   },
-  {
-    type = "item",
-    name = "pump_marker",
-    icon = "__base__/graphics/icons/crude-oil-resource.png",
-    icon_size = 64,
-    hidden = true,
-    order = "b[fluids]-c[oil_rig]",
-    place_result = "pump_marker",
-    stack_size = 5,
-  },
 }
 
 if settings.startup["offshore_oil_enabled"].value then
