@@ -429,6 +429,7 @@ boat.vertical_doors = nil
 boat.wheels = nil
 boat.working_sound = nil
 boat.drive_over_tie_trigger = nil
+boat.factoriopedia_simulation = nil
 boat.corpse = nil
 
 ----------------------------------------------------------------
@@ -440,6 +441,7 @@ local boat_engine_power = 300 + (speed_modifier -1) * 150
 local boat_engine = table.deepcopy(data.raw["locomotive"]["locomotive"])
 boat_engine.name = "boat_engine"
 boat_engine.flags = {"placeable-neutral", "placeable-off-grid", "player-creation"}
+boat_engine.hidden_in_factoriopedia = true
 boat_engine.allow_copy_paste = true
 boat_engine.minable = {mining_time = 1, results = nil}
 boat_engine.icons = util.combine_icons(boat.icons, get_icons(data.raw["item"]["engine-unit"]), 
@@ -508,6 +510,7 @@ boat_engine.back_light = nil
 boat_engine.stand_by_light = nil
 boat_engine.stop_trigger = nil
 boat_engine.drive_over_tie_trigger = nil
+boat_engine.factoriopedia_simulation = nil
 boat_engine.corpse = nil
 
 ----------------------------------------------------------------
@@ -578,6 +581,7 @@ cargo_ship.selected_minimap_representation = {
   size = {26, 160},
   scale = 0.5
 }
+cargo_ship.factoriopedia_simulation = nil
 cargo_ship.corpse = nil
 
 ----------------------------------------------------------------
@@ -622,6 +626,7 @@ oil_tanker.selected_minimap_representation = {
   size = {26, 160},
   scale = 0.5
 }
+oil_tanker.factoriopedia_simulation = nil
 oil_tanker.corpse = nil
 
 ----------------------------------------------------------------
@@ -634,6 +639,7 @@ local cargo_ship_engine = table.deepcopy(data.raw["locomotive"]["locomotive"])
 cargo_ship_engine.name = "cargo_ship_engine"
 cargo_ship_engine.minable = {mining_time = 1, result = nil}
 cargo_ship_engine.flags =  {"placeable-neutral", "player-creation", "placeable-off-grid"}
+cargo_ship_engine.hidden_in_factoriopedia = true
 cargo_ship_engine.allow_copy_paste = true
 cargo_ship_engine.icons = util.combine_icons(cargo_ship.icons, get_icons(data.raw["item"]["engine-unit"]), 
                                   icon_inputs)
@@ -716,6 +722,7 @@ cargo_ship_engine.back_light = nil
 cargo_ship_engine.stand_by_light = nil
 cargo_ship_engine.stop_trigger = nil
 cargo_ship_engine.drive_over_tie_trigger = nil
+cargo_ship_engine.factoriopedia_simulation = nil
 cargo_ship_engine.corpse = nil
 
 data:extend{cargo_ship_engine, cargo_ship, oil_tanker, indep_boat, boat, boat_engine}

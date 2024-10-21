@@ -37,6 +37,7 @@ bridge.icon_size = 64
 bridge.localised_description = {"description-template.bridge_base", {"entity-description.bridge_gate"}}
 bridge.fast_replaceable_group  = nil
 bridge.next_upgrade = nil
+bridge.factoriopedia_simulation = nil
 bridge.animations = make_4way_animation_from_spritesheet({
   layers = {
     {
@@ -49,7 +50,7 @@ bridge.animations = make_4way_animation_from_spritesheet({
     }
   }
 })
-data:extend{bridge, 
+data:extend{bridge,
   {
     type = "item",
     name = "bridge_base",
@@ -97,6 +98,9 @@ local invisible_rail = table.deepcopy(data.raw["straight-rail"]["straight-rail"]
 invisible_rail.name = "invisible-rail"
 --invisible_rail.icon = GRAPHICSPATH .. "icons/water_rail.png"
 --invisible_rail.icon_size = 64
+invisible_rail.localised_name = {"entity-name.bridge_base"}
+invisible_rail.localised_description = {"entity-description.bridge_base"}
+
 invisible_rail.flags = {"not-blueprintable", "not-deconstructable", "placeable-neutral", "player-creation", "building-direction-8-way"}
 invisible_rail.pictures = new_waterway_pictures("straight", true)
 invisible_rail.minable = nil
@@ -148,7 +152,6 @@ local function build_bridge_animation(ori, base_shift, shadow_shift)
   local anim_speed = 0.38
   return {
     layers = {
-    
       -- This correctly draws the shadow as the bridge is going up (gate closed)
       -- The last frame (fully down) is empty (#1) because otherwise the shadow gets drawn on top of the bridge deck
       {
@@ -229,7 +232,10 @@ local bridge_gate = {
   type = "gate",
   name = "bridge_gate",
   icon = "__base__/graphics/icons/gate.png",
+  localised_name = {"entity-name.bridge_base"},
+  localised_description = {"entity-description.bridge_base"},
   flags = {"placeable-neutral","placeable-player", "player-creation"},
+  hidden = true,
   minable = {mining_time = 3, result = "bridge_base"},
   max_health = 1000,
   corpse = "straight-rail-remnants",
