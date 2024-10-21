@@ -52,6 +52,8 @@ data:extend ({
   icon_size = 256,
   effects = {
     unlock("port"),
+    unlock("buoy"),
+    unlock("chain_buoy"),
   },
   prerequisites = {"water_transport"},
   unit = {
@@ -85,26 +87,6 @@ data:extend ({
 },
 {
   type = "technology",
-  name = "water_transport_signals",
-  icon = GRAPHICSPATH .. "technology/water_transport_signals.png",
-  icon_size = 256,
-  effects = {
-    unlock("buoy"),
-    unlock("chain_buoy"),
-  },
-  prerequisites = {"automated_water_transport"},
-  unit = {
-    count = 75,
-    ingredients = {
-      {"automation-science-pack", 1},
-      {"logistic-science-pack", 1},
-    },
-    time = 30
-  },
-  order = "c-g-b",
-},
-{
-  type = "technology",
   name = "tank_ship",
   icon = GRAPHICSPATH .. "technology/tank_ship.png",
   icon_size = 256,
@@ -130,7 +112,7 @@ data:extend ({
   effects = {
     unlock("bridge_base"),
   },
-  prerequisites = {"water_transport_signals", "advanced-circuit"},
+  prerequisites = {"automated_water_transport", "advanced-circuit"},
   unit = {
     count = 200,
     ingredients = {
