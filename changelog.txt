@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.7
+Date: 2024-10-22
+  Bugfixes:
+    - Attempt number 3 to fix blueprint handling crashes.
+    - Added migration to fix migrated waterways that were still set to be unminable.
+---------------------------------------------------------------------------------------------------
 Version: 1.0.6
 Date: 2024-10-22
   Bugfixes:
