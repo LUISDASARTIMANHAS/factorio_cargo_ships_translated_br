@@ -94,7 +94,7 @@ local function is_holding_pump(player)
         -- Check all blueprints in this library book, since we can't know which print player selected
         -- Don't check nested books
         for _,record in pairs(blueprint.contents) do
-          if record.type == "blueprint" and not blueprint.is_blueprint_preview and check_blueprint_for_pumps(record) then
+          if record.type == "blueprint" and not record.is_blueprint_preview and check_blueprint_for_pumps(record) then
             return true
           end
         end
