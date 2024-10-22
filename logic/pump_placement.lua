@@ -89,32 +89,40 @@ local function is_holding_pump(player)
   -- Check for pump in blueprint player is holding
   if player.is_cursor_blueprint() then
     local blueprint = player.cursor_record
-    if blueprint and blueprint.type == "blueprint-book" then
-      -- Check all blueprints in this library book, since we can't know which print player selected
-      for _,record in pairs(blueprint.contents) do
-        if check_blueprint_for_pumps(record) then
-          return true
+    if blueprint then
+      if blueprint.type == "blueprint-book" then
+        -- Check all blueprints in this library book, since we can't know which print player selected
+        -- Don't check nested books
+        for _,record in pairs(blueprint.contents) do
+          if record.type == "blueprint" and check_blueprint_for_pumps(record) then
+            return true
+          end
         end
+        return false
+      elseif blueprint.type == "blueprint" then
+        return check_blueprint_for_pumps(blueprint)
+      else
+        return false
       end
-      return false
-    elseif not blueprint or blueprint.type ~= "blueprint" then
+    else
       -- No library book or blueprint, so check cursor item
       blueprint = player.cursor_stack
       if not (blueprint and blueprint.valid_for_read) then
         -- Cursor stack is not present for some reason
         return false
       end
-      if blueprint.is_blueprint_book then
+      -- Check item blueprint book recursively
+      while blueprint.is_blueprint_book do
         -- Get active blueprint from this book item
         blueprint = blueprint.get_inventory(defines.inventory.item_main)[blueprint.active_index]
       end
-      if not blueprint.is_blueprint then
-        -- Cursor is not a blueprint, or entry from book was not a blueprint
-        return false
+      if blueprint.is_blueprint then
+        -- Check the blueprint for pumps
+        return check_blueprint_for_pumps(blueprint)
       end
+      -- Cursor is not a blueprint, or entry from book was not a blueprint
+      return false
     end
-    -- Check the blueprint for pumps
-    return check_blueprint_for_pumps(blueprint)
   end
   
   -- Check for actual pump item in cursor

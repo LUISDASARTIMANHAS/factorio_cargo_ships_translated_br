@@ -1,9 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.6
+Date: 2024-10-22
+  Bugfixes:
+    - Fixed crash when holding a nested blueprint book and non-blueprint planners. Library books are only searched on the first level; inventory books are searched recursively.
+---------------------------------------------------------------------------------------------------
 Version: 1.0.5
 Date: 2024-10-21
+  Changes:
+    - Handle pump visualisations when holding blueprint books from inventory and library.
   Bugfixes:
     - Fixed crash when using blueprints from Blueprint Library.
-    - Properly handle pump visualisations when holding blueprint books from inventory and library.
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.4
 Date: 2024-10-20
