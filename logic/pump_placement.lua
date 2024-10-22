@@ -72,29 +72,58 @@ function UpdateVisuals(e)
   RegisterVisualsNthTick()
 end
 
-local function is_holding_pump(player)
-  if player.is_cursor_blueprint() then
-    local blueprint = player.cursor_record
-    if not (blueprint and blueprint.type == "blueprint") then
-      blueprint = player.cursor_stack
-      if not (blueprint and blueprint.valid_for_read and blueprint.is_blueprint) then
-        return false
+
+local function check_blueprint_for_pumps(blueprint)
+  local blueprint_entities = blueprint.get_blueprint_entities()
+  if blueprint_entities then
+    for _, bp_entity in pairs(blueprint_entities) do
+      if bp_entity.name == "pump" then
+        return true
       end
     end
-    local blueprint_entities = blueprint.get_blueprint_entities()
-    if blueprint_entities then
-      for _, bp_entity in pairs(blueprint_entities) do
-        if bp_entity.name == "pump" then
+  end
+  return false
+end
+
+local function is_holding_pump(player)
+  -- Check for pump in blueprint player is holding
+  if player.is_cursor_blueprint() then
+    local blueprint = player.cursor_record
+    if blueprint and blueprint.type == "blueprint-book" then
+      -- Check all blueprints in this library book, since we can't know which print player selected
+      for _,record in pairs(blueprint.contents) do
+        if check_blueprint_for_pumps(record) then
           return true
         end
       end
+      return false
+    elseif not blueprint or blueprint.type ~= "blueprint" then
+      -- No library book or blueprint, so check cursor item
+      blueprint = player.cursor_stack
+      if not (blueprint and blueprint.valid_for_read) then
+        -- Cursor stack is not present for some reason
+        return false
+      end
+      if blueprint.is_blueprint_book then
+        -- Get active blueprint from this book item
+        blueprint = blueprint.get_inventory(defines.inventory.item_main)[blueprint.active_index]
+      end
+      if not blueprint.is_blueprint then
+        -- Cursor is not a blueprint, or entry from book was not a blueprint
+        return false
+      end
     end
-    return false
+    -- Check the blueprint for pumps
+    return check_blueprint_for_pumps(blueprint)
   end
+  
+  -- Check for actual pump item in cursor
   local stack = player.cursor_stack
   if stack and stack.valid_for_read and stack.name == "pump" then
     return true
   end
+  
+  -- Check for pump ghost in cursor
   local ghost = player.cursor_ghost
   if ghost and ghost.name.name == "pump" then
     return true

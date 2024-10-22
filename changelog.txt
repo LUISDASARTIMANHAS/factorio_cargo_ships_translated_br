@@ -3,6 +3,7 @@ Version: 1.0.5
 Date: 2024-10-21
   Bugfixes:
     - Fixed crash when using blueprints from Blueprint Library.
+    - Properly handle pump visualisations when holding blueprint books from inventory and library.
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.4
 Date: 2024-10-20
