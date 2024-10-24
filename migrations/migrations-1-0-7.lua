@@ -3,8 +3,12 @@
 local count = 0
 for _, surface in pairs(game.surfaces) do
   for _, entity in pairs(surface.find_entities_filtered{name="legacy-straight-waterway"}) do
-    entity.minable = true
-    count = count + 1
+    if not entity.minable then
+      count = count + 1
+      entity.minable = true
+    end
   end
 end
-log("Fixed "..tostring(count).." waterways that were unminable.")
+if count > 0 then
+  log("Fixed "..tostring(count).." waterways that were unminable.")
+end

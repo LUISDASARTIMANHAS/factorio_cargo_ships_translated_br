@@ -203,7 +203,7 @@ log("Migrated "..tostring(table_size(newstorage.bridges)).." bridges successfull
 newstorage.bridge_destroyed_queue = {}
 
 
-local function find_teleport_make(name, surface, area, position, force, flags)
+local function find_teleport_make(name, surface, area, position, force)
   local entity
   local found = surface.find_entities_filtered{name=name, area=area}
   for _,e in pairs(found) do
@@ -219,7 +219,7 @@ local function find_teleport_make(name, surface, area, position, force, flags)
     entity.teleport(position)
   end
   if not entity then
-    entity = surface.create_entity(util.merge{{name=name, position=position, force=force, create_build_effect_smoke=false}, flags or {}})
+    entity = surface.create_entity{name=name, position=position, force=force, create_build_effect_smoke=false}
     log("Making new "..name.." entity "..tostring(entity))
   end
   return entity
@@ -231,25 +231,28 @@ if settings.startup["offshore_oil_enabled"].value then
   newstorage.oil_rigs = {}
   for _, surface in pairs(game.surfaces) do
     local stored_entities = {}
-    for _, entity in pairs(surface.find_entities_filtered{name="oil_rig"}) do
+    for _, entity in pairs(surface.find_entities_filtered{name="oil_rig_migration"}) do
       log("Migrating oil_rig "..tostring(entity))
       -- Old oil rigs had multiple directions.  Not sure how this will migrate.  Just ignore direction for now.
       -- There might not be offshore-oil under the oil_rig anymore.  We're going to ignore that so the player can come and move it.
-      entity.direction = defines.direction.north
       
       local force = entity.force
       local position = entity.position
-      local direction = entity.direction
+      local direction = defines.direction.north
       
       -- To be nice, we can try and preserve the amount of oil in the mining_drill buffer when it moves to the storage tank.
-      log("get_fluid_contents() => "..serpent.line(entity.get_fluid_contents()))
-      log('get_fluid_count("crude-oil") => '..tostring(entity.get_fluid_count("crude-oil")))
-      log('fluidbox[1] => '..serpent.line(entity.fluidbox[1]))
       local oil_contents = entity.get_fluid_count("crude-oil")
+      log('get_fluid_count("crude-oil") => '..tostring(oil_contents))
+      
+      local area = offsetArea(entity.prototype.selection_box, position)
+      
+      -- Destroy the migration oil rig
+      entity.destroy()
       
       -- Search for existing entities, and they might not be in the right place
       local power, pole, radar, tank
-      local area = offsetArea(entity.prototype.selection_box, position)
+      
+      entity = find_teleport_make("oil_rig", surface, area, position, force)
       
       -- Fluid burning generator, or_power_electric
       power = find_teleport_make("or_power_electric", surface, area, position, force)
@@ -263,7 +266,7 @@ if settings.startup["offshore_oil_enabled"].value then
       -- Storage tank, or_tank
       tank = find_teleport_make("or_tank", surface, area, position, force)
       
-      if not (power and pole and radar and tank) then
+      if not (entity and power and pole and radar and tank) then
         log("Could not create all oil rig components. Oil rig "..tostring(entity).." will be deleted.")
       else
         -- Make components invincible
@@ -300,7 +303,7 @@ if settings.startup["offshore_oil_enabled"].value then
       end
     end
     -- Now delete all the unused bridge entities on this surface
-    local found_entities = surface.find_entities_filtered{name={"oil_rig", "or_power_electric", "or_pole", "or_radar", "or_tank"}}
+    local found_entities = surface.find_entities_filtered{name={"oil_rig", "oil_rig_migration", "or_power_electric", "or_pole", "or_radar", "or_tank"}}
     if #found_entities > 0 then
       for _,entity in pairs(found_entities) do
         if not stored_entities[entity.unit_number] then

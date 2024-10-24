@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.8
+Date: 2024-10-23
+  Changes:
+    - Tweaked the oil rig sounds so oil pumping is more prominent than steam engine.
+  Bugfixes:
+    - Fixed that migrated oil rigs only had 5k oil in them (of the expected 100k).
+---------------------------------------------------------------------------------------------------
 Version: 1.0.7
 Date: 2024-10-22
   Bugfixes:

@@ -14,7 +14,8 @@
     ["bridge_south_clickable", "bridge_base"],
     ["bridge_east_clickable", "bridge_base"],
     ["bridge_west_clickable", "bridge_base"],
-    ["deep_oil", "offshore-oil"]
+    ["deep_oil", "offshore-oil"],
+    ["oil_rig", "oil_rig_migration"]
   ],
   "item":
   [

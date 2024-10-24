@@ -159,7 +159,7 @@ local oil_rig = {
   close_sound = {filename = "__base__/sound/open-close/pumpjack-close.ogg", volume = 0.5},
   working_sound =
   {
-    sound = {filename = "__base__/sound/pumpjack.ogg", volume = 0.7},
+    sound = {filename = "__base__/sound/pumpjack.ogg", volume = 0.85},
     max_sounds_per_type = 3,
     audible_distance_modifier = 0.6,
     fade_in_ticks = 4,
@@ -176,6 +176,45 @@ if external_power == "disabled" then
   oil_rig.energy_source.type = "void"
 end
 
+
+local oil_rig_migration = {
+  type = "mining-drill",
+  name = "oil_rig_migration",
+  icons = {{icon=GRAPHICSPATH .. "icons/oil_rig.png", icon_size= 64}},
+  flags = {"placeable-neutral", "player-creation", "not-rotatable"},
+  minable = {mining_time = 1.5, result = "oil_rig"},
+  resource_categories = {"offshore-fluid"},
+  max_health = 1000,
+  collision_mask = {layers = {object = true, train = true}},
+  collision_box = {{-3.2, -3.2}, {3.2, 3.2}},
+  selection_box = {{-3.5, -3.5}, {3.5, 3.5}},
+  energy_source =
+  {
+    type = "electric",
+    emissions_per_minute = { pollution = 25 },
+    usage_priority = "secondary-input"
+  },
+  output_fluid_box =
+  {
+    volume = 1000 * oil_rig_capacity,
+    hide_connection_info = true,
+    pipe_connections =
+    {
+      {
+        connection_type = "linked",
+        linked_connection_id = 1,
+        flow_direction = "output",
+      }
+    }
+  },
+  energy_usage = "750kW",
+  mining_speed = 1,
+  resource_searching_radius = 1.4,
+  vector_to_place_result = {0, 0},  -- Disables the output arrow for fluid miners
+
+  circuit_connector = circuit_connector_definitions["oil_rig"],
+  circuit_wire_max_distance = default_circuit_wire_max_distance
+}
 
 ----------------------------------------------------------------
 ----------- OIL PLATFORM COMPONENT ENTITES--------------------------
@@ -255,12 +294,12 @@ local or_power_electric = {
     sound =
     {
       filename = "__base__/sound/steam-engine-90bpm.ogg",
-      volume = 0.25,
+      volume = 0.2,
       speed_smoothing_window_size = 60,
       advanced_volume_control = {attenuation = "exponential"},
     },
     match_speed_to_activity = true,
-    audible_distance_modifier = 0.8,
+    audible_distance_modifier = 0.5,
     max_sounds_per_type = 3,
     fade_in_ticks = 4,
     fade_out_ticks = 20
@@ -515,4 +554,4 @@ local or_tank =
   circuit_wire_max_distance = default_circuit_wire_max_distance,
 }
 
-data:extend{oil_rig, or_power_electric, or_pole, or_radar, or_tank}
+data:extend{oil_rig, oil_rig_migration, or_power_electric, or_pole, or_radar, or_tank}
