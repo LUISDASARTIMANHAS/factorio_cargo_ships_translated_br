@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.10
+Date: 2024-10-28
+  Changes:
+    - Updated translations from Crowdin.
+    - Removed dependency on RSO (the old RSO compatibility code has been removed).
+  Bugfixes:
+    - Fix compatibility with Shallow Water Landfill Fix for real this time.
+---------------------------------------------------------------------------------------------------
 Version: 1.0.9
 Date: 2024-10-28
   Bugfixes:

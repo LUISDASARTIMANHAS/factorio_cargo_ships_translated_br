@@ -2,8 +2,6 @@
 --------------------------- PUMP -------------------------------
 ----------------------------------------------------------------
 
-local collision_mask_util = require("collision-mask-util")
-
 local pump = data.raw["pump"]["pump"]
 pump.collision_mask = {layers = {object = true}}  -- Player collision with pump is handled in data-final-fixes.lua
 pump.water_reflection = {
@@ -37,7 +35,7 @@ pump_marker.selectable_in_game = false
 pump_marker.allow_copy_paste = false
 pump_marker.render_layer = "selection-box"
 pump_marker.minable = nil
-pump_marker.collision_mask = collision_mask_util.new_mask
+pump_marker.collision_mask = {layers={}}
 pump_marker.picture = {
   filename = GRAPHICSPATH .. "green_selection_box.png",
   width = 128,

@@ -1,6 +1,6 @@
 {
   "name": "cargo-ships",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "title": "Cargo Ships",
   "author": "rude_grass",
   "description": "Adds cargo ships, oil tankers, deep sea oil rigs and other ocean based content",
@@ -17,8 +17,7 @@
     "? angelspetrochem >= 0.9.17",
     "? ctg >= 0.4.3",
     "? Krastorio2 >= 1.0.18",
-    "! cargo-ships-seraph",
-    "(?) rso-mod"
+    "! cargo-ships-seraph"
   ],
   "package": {
     "ignore": [
