@@ -14,20 +14,22 @@ import math
 old_direction_number = 8
 
 
-filenames = [[r"hr-buoy-base.png", 64, -14],
-             [r"hr-buoy-lights.png", 64, -14],
-             [r"hr-buoy-shadow.png", 64, -14],
-             [r"buoy_water_reflection.png", 6.4, -1.4]]
+filenames = [#[r"hr-buoy-base.png", 64, -14],
+             [r"hr-buoy-lights.png", 64, -14, 32],
+             #[r"hr-buoy-shadow.png", 64, -14],
+             #[r"buoy_water_reflection.png", 6.4, -1.4]
+             ]
 
 for filename in filenames:
     OG_sheet = Image.open(filename[0])
     pixels_per_tile = filename[1]
     og_xshift = filename[2]
+    og_yshift = filename[3]
     
     
     width, height = OG_sheet.size
     sprite_size = height/old_direction_number  # because the original sprites have 8 rotations, but could have multiple frames on each line
-    OG_sprite = ImageChops.offset(OG_sheet.crop((0,0,width,sprite_size)), round(og_xshift), 0)
+    OG_sprite = ImageChops.offset(OG_sheet.crop((0,0,width,sprite_size)), round(og_xshift), round(og_yshift))
     #OG_sprite.save("test1.png")
     
     

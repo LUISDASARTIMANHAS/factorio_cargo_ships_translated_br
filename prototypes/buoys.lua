@@ -1,3 +1,15 @@
+-------
+-- Copied from __core__/lualib/circuit-connector-generated-definitions.lua
+local function get_variation_with_shifting(variation, offset_x, offset_y)
+  return {
+    variation = variation,
+    main_offset = util.by_pixel(offset_x, offset_y),
+    shadow_offset = util.by_pixel(offset_x, offset_y),
+    show_shadow = true
+  }
+end
+-------
+
 local floating_pole = table.deepcopy(data.raw["electric-pole"]["big-electric-pole"])
 floating_pole.name = "floating-electric-pole"
 floating_pole.icon = GRAPHICSPATH .. "icons/floating_pole.png"
@@ -177,6 +189,7 @@ local buoy = {
           height = 230,
           frame_count = 3,
           direction_count = 16,
+          shift = {0, -0.5},
           scale = 0.5,
           draw_as_glow = true,
         },
@@ -291,7 +304,28 @@ local buoy = {
       yellow = { light = {intensity = 0.3, size = 4, color={r=1, g=0.5, b=0 }, shift = {0, -0.65}}, shift = { -1, 0 }},
       red    = { light = {intensity = 0.3, size = 4, color={r=1, g=0,   b=0 }, shift = {0, -0.65}}, shift = { -1, 0 }},
     },
-    circuit_connector = circuit_connector_definitions["rail-signal"],
+    circuit_connector = circuit_connector_definitions.create_vector
+    (
+      universal_connector_template,
+      {
+        get_variation_with_shifting(17, -35, -4),  -- North
+        get_variation_with_shifting(17, 0, 0),
+        get_variation_with_shifting(17, 0, 0),
+        get_variation_with_shifting(17, 0, 0),
+        get_variation_with_shifting(17, 0, 0),  -- East
+        get_variation_with_shifting(17, 0, 0),
+        get_variation_with_shifting(17, 0, 0),
+        get_variation_with_shifting(17, 0, 0),
+        get_variation_with_shifting(19, 36, -4),  -- South
+        get_variation_with_shifting(17, 0, 0),
+        get_variation_with_shifting(17, 0, 0),
+        get_variation_with_shifting(17, 0, 0),
+        get_variation_with_shifting(17, 0, 0),  -- West
+        get_variation_with_shifting(17, 0, 0),
+        get_variation_with_shifting(17, 0, 0),
+        get_variation_with_shifting(17, 0, 0),
+      }
+    ),
   },
   elevated_picture_set = data.raw["rail-signal"]["rail-signal"].elevated_picture_set,
   circuit_wire_max_distance = default_circuit_wire_max_distance,
@@ -481,7 +515,28 @@ local chain_buoy = {
       red    = { light = {intensity = 0.3, size = 4, color={r=1,   g=0,   b=0 }, shift = {0, -0.5}}, shift = { -1, 0 }},
       blue   = { light = {intensity = 0.2, size = 4, color={r=0.4, g=0.4, b=1 }, shift = {0, -0.5}}, shift = { -1, 0 }},
     },
-    circuit_connector = circuit_connector_definitions["rail-chain-signal"],
+    circuit_connector = circuit_connector_definitions.create_vector
+    (
+      universal_connector_template,
+      {
+        get_variation_with_shifting( 0,  5, 14),
+        get_variation_with_shifting(32, -8, 12),
+        get_variation_with_shifting( 7, -4, 16),
+        get_variation_with_shifting(39,-11 ,11),
+        get_variation_with_shifting( 6,-14, 11),
+        get_variation_with_shifting(34, 17,  3),
+        get_variation_with_shifting( 1, 12, 10),
+        get_variation_with_shifting(33, 17,  7),
+        get_variation_with_shifting( 0,  5, 12),
+        get_variation_with_shifting(32,  9, 13),
+        get_variation_with_shifting( 7, -1, 12),
+        get_variation_with_shifting(39,  0, 16),
+        get_variation_with_shifting( 2, 16, -6),
+        get_variation_with_shifting(34,  9, 10),
+        get_variation_with_shifting( 1,  9,  7),
+        get_variation_with_shifting(33,  3, 14),
+      }
+    ),
   },
 
   elevated_picture_set = data.raw["rail-chain-signal"]["rail-chain-signal"].elevated_picture_set,
