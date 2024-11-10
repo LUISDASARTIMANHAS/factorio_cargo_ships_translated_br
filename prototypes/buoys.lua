@@ -308,22 +308,22 @@ local buoy = {
     (
       universal_connector_template,
       {
-        get_variation_with_shifting(17, -35, -4),  -- North
-        get_variation_with_shifting(17, 0, 0),
-        get_variation_with_shifting(17, 0, 0),
-        get_variation_with_shifting(17, 0, 0),
-        get_variation_with_shifting(17, 0, 0),  -- East
-        get_variation_with_shifting(17, 0, 0),
-        get_variation_with_shifting(17, 0, 0),
-        get_variation_with_shifting(17, 0, 0),
+        get_variation_with_shifting(19, -28, -4),  -- North
+        get_variation_with_shifting(19, -24, -16),
+        get_variation_with_shifting(19, -18, -26),
+        get_variation_with_shifting(19, -7, -33),
+        get_variation_with_shifting(19, 4, -36),  -- East
+        get_variation_with_shifting(19, 17, -33),
+        get_variation_with_shifting(19, 27, -26),
+        get_variation_with_shifting(19, 35, -16),
         get_variation_with_shifting(19, 36, -4),  -- South
-        get_variation_with_shifting(17, 0, 0),
-        get_variation_with_shifting(17, 0, 0),
-        get_variation_with_shifting(17, 0, 0),
-        get_variation_with_shifting(17, 0, 0),  -- West
-        get_variation_with_shifting(17, 0, 0),
-        get_variation_with_shifting(17, 0, 0),
-        get_variation_with_shifting(17, 0, 0),
+        get_variation_with_shifting(19, 34, 8),
+        get_variation_with_shifting(19, 27, 19),
+        get_variation_with_shifting(19, 17, 26),
+        get_variation_with_shifting(19, 4, 28),  -- West
+        get_variation_with_shifting(19, -7, 26),
+        get_variation_with_shifting(19, -18, 19),
+        get_variation_with_shifting(19, -25, 8),
       }
     ),
   },
@@ -357,7 +357,7 @@ local chain_buoy = {
   name = "chain_buoy",
   icon = GRAPHICSPATH .. "icons/chain_buoy.png",
   flags = {"placeable-neutral", "player-creation", "building-direction-16-way", "filter-directions"},
-  collision_mask = {layers = {object = true, rail = true}},  -- waterway_layer will be added in final-fixes
+  collision_mask = {layers = {object = true, rail = true}},  -- waterway_layer will be added in data-final-fixes
   fast_replaceable_group = "buoy-signal",
   minable = {mining_time = 0.5, result = "chain_buoy"},
   max_health = 100,
@@ -519,22 +519,22 @@ local chain_buoy = {
     (
       universal_connector_template,
       {
-        get_variation_with_shifting( 0,  5, 14),
-        get_variation_with_shifting(32, -8, 12),
-        get_variation_with_shifting( 7, -4, 16),
-        get_variation_with_shifting(39,-11 ,11),
-        get_variation_with_shifting( 6,-14, 11),
-        get_variation_with_shifting(34, 17,  3),
-        get_variation_with_shifting( 1, 12, 10),
-        get_variation_with_shifting(33, 17,  7),
-        get_variation_with_shifting( 0,  5, 12),
-        get_variation_with_shifting(32,  9, 13),
-        get_variation_with_shifting( 7, -1, 12),
-        get_variation_with_shifting(39,  0, 16),
-        get_variation_with_shifting( 2, 16, -6),
-        get_variation_with_shifting(34,  9, 10),
-        get_variation_with_shifting( 1,  9,  7),
-        get_variation_with_shifting(33,  3, 14),
+        get_variation_with_shifting(19, -28, -4),  -- North
+        get_variation_with_shifting(19, -24, -16),
+        get_variation_with_shifting(19, -18, -26),
+        get_variation_with_shifting(19, -7, -33),
+        get_variation_with_shifting(19, 4, -36),  -- East
+        get_variation_with_shifting(19, 17, -33),
+        get_variation_with_shifting(19, 27, -26),
+        get_variation_with_shifting(19, 35, -16),
+        get_variation_with_shifting(19, 36, -4),  -- South
+        get_variation_with_shifting(19, 34, 8),
+        get_variation_with_shifting(19, 27, 19),
+        get_variation_with_shifting(19, 17, 26),
+        get_variation_with_shifting(19, 4, 28),  -- West
+        get_variation_with_shifting(19, -7, 26),
+        get_variation_with_shifting(19, -18, 19),
+        get_variation_with_shifting(19, -25, 8),
       }
     ),
   },
