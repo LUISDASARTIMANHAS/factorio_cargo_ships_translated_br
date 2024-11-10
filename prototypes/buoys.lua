@@ -130,120 +130,383 @@ for _,v in pairs(floating_pole.connection_points) do
 end
 
 ---------------------------------------------------------------------------------------------------------------
+local buoy = {
+  type = "rail-signal",
+  name = "buoy",
+  icon = GRAPHICSPATH .. "icons/buoy.png",
+  collision_mask = {layers = {object = true, rail = true}},  -- waterway_layer added in data-final-fixes
+  flags = {"placeable-neutral", "player-creation", "building-direction-16-way", "filter-directions"},
+  fast_replaceable_group = "buoy-signal",
+  minable = {mining_time = 0.5, result = "buoy"},
+  max_health = 100,
+  dying_explosion = "rail-signal-explosion",
+  damaged_trigger_effect = data.raw["rail-signal"]["rail-signal"].damaged_trigger_effect,
+  collision_box = {{-0.2, -0.2}, {0.2, 0.2}},
+  selection_box = {{-1.5, -0.5}, {-0.5, 0.5}},
+  --selection_box = {{-1.35, -0.65}, {-0.35, 0.35}}  -- This one doesn't work and ends up shifted oddly
+  --selection_box = {{-0.5, 0.5}, {-0.5, 0.5}}  -- This makes selection break completely, don't know why
 
-local buoy = table.deepcopy(data.raw["rail-signal"]["rail-signal"])
-buoy.name = "buoy"
-buoy.icon = GRAPHICSPATH .. "icons/buoy.png"
-buoy.icon_size = 64
-buoy.collision_mask = {layers = {object = true, rail = true}}  -- waterway_layer added in data-final-fixes
-buoy.selection_box = {{-1.6, -0.8}, {0.01, 0.8}}
-buoy.fast_replaceable_group = "buoy"
-buoy.minable = {mining_time = 0.5, result = "buoy"}
---[[buoy.ground_picture_set.structure = {
-  layers = {
-    {
-      filename = GRAPHICSPATH .. "entity/buoy/hr-buoy-base.png",
-      width = 230,
-      height = 230,
-      frame_count = 1,
-      repeat_count = 3,
-      direction_count = 8,
-      scale = 0.5
+  open_sound = data.raw["rail-signal"]["rail-signal"].open_sound,
+  close_sound = data.raw["rail-signal"]["rail-signal"].close_sound,
+  
+  ground_picture_set = {
+    structure = {
+      layers = {
+        {
+          filename = GRAPHICSPATH .. "entity/buoy/hr-buoy-base-16.png",
+          width = 230,
+          height = 230,
+          frame_count = 1,
+          repeat_count = 3,
+          direction_count = 16,
+          scale = 0.5
+        },
+        {
+          filename = GRAPHICSPATH .. "entity/buoy/hr-buoy-shadow-16.png",
+          width = 230,
+          height = 230,
+          frame_count = 1,
+          repeat_count = 3,
+          direction_count = 16,
+          scale = 0.5,
+          draw_as_shadow = true,
+        },
+        {
+          filename = GRAPHICSPATH .. "entity/buoy/hr-buoy-lights-16.png",
+          width = 230,
+          height = 230,
+          frame_count = 3,
+          direction_count = 16,
+          scale = 0.5,
+          draw_as_glow = true,
+        },
+      }
     },
+    structure_align_to_animation_index =
     {
-      filename = GRAPHICSPATH .. "entity/buoy/hr-buoy-shadow.png",
-      draw_as_shadow = true,
-      width = 230,
-      height = 230,
-      frame_count = 1,
-      repeat_count = 3,
-      direction_count = 8,
-      scale = 0.5
+      --  X0Y0, X1Y0, X0Y1, X1Y1
+      --  Left turn  | Straight/Multi |  Right turn
+       0,  0,  0,  0,   0,  0,  0,  0,   0,  0,  0,  0, -- North
+       1,  1,  1,  1,   1,  1,  1,  1,   1,  1,  1,  1,
+       2,  2,  2,  2,   2,  2,  2,  2,   2,  2,  2,  2,
+       3,  3,  3,  3,   3,  3,  3,  3,   3,  3,  3,  3,
+       4,  4,  4,  4,   4,  4,  4,  4,   4,  4,  4,  4, -- East
+       5,  5,  5,  5,   5,  5,  5,  5,   5,  5,  5,  5,
+       6,  6,  6,  6,   6,  6,  6,  6,   6,  6,  6,  6,
+       7,  7,  7,  7,   7,  7,  7,  7,   7,  7,  7,  7,
+       8,  8,  8,  8,   8,  8,  8,  8,   8,  8,  8,  8, -- South
+       9,  9,  9,  9,   9,  9,  9,  9,   9,  9,  9,  9,
+      10, 10, 10, 10,  10, 10, 10, 10,  10, 10, 10, 10,
+      11, 11, 11, 11,  11, 11, 11, 11,  11, 11, 11, 11,
+      12, 12, 12, 12,  12, 12, 12, 12,  12, 12, 12, 12, -- West
+      13, 13, 13, 13,  13, 13, 13, 13,  13, 13, 13, 13,
+      14, 14, 14, 14,  14, 14, 14, 14,  14, 14, 14, 14,
+      15, 15, 15, 15,  15, 15, 15, 15,  15, 15, 15, 15,
     },
+    signal_color_to_structure_frame_index =
     {
-      filename = GRAPHICSPATH .. "entity/buoy/hr-buoy-lights.png",
-      blend_mode = "additive",
-      draw_as_glow = true,
-      width = 230,
-      height = 230,
-      frame_count = 3,
-      direction_count = 8,
-      scale = 0.5
+      green  = 0,
+      yellow = 1,
+      red    = 2,
     },
-  }
-}]]
-buoy.ground_picture_set.rail_piece = nil
-buoy.ground_picture_set.lights = {
-  green  = nil,
-  yellow  = nil,
-  red  = nil,
-}
-buoy.water_reflection = {
-  pictures =
-  {
-    filename = GRAPHICSPATH .. "entity/buoy/buoy_water_reflection.png",
-    width = 23,
-    height = 23,
-    --shift = util.by_pixel(0, -25),
-    variation_count = 8,
-    line_length = 1,
-    scale = 5
+    selection_box_shift =
+    {
+      -- Given this affects SelectionBox, it is part of game state.
+      -- NOTE: Those shifts are not processed (yet) by PrototypeAggregateValues::calculateBoxExtensionForSelectionBoxSearch()
+      --    so if you exceed some reasonable values, a signal may become unselectable
+      -- NOTE: only applies to normal selection box. It is ignored for chart selection box
+      --
+      --  X0Y0, X1Y0, X0Y1, X1Y1
+      -- North -- 0
+      {0,0},{0,0},{0,0},{0,0}, --  Left turn
+      {0,0},{0,0},{0,0},{0,0}, --  Straight/Multi
+      {0,0},{0,0},{0,0},{0,0}, --  Right turn
+
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      -- East
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      -- South
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      -- West
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+    },
+    lights =
+    {
+      green  = { light = {intensity = 0.2, size = 4, color={r=0, g=1,   b=0 }, shift = {0, -0.65}}, shift = { -1, 0 }},
+      yellow = { light = {intensity = 0.3, size = 4, color={r=1, g=0.5, b=0 }, shift = {0, -0.65}}, shift = { -1, 0 }},
+      red    = { light = {intensity = 0.3, size = 4, color={r=1, g=0,   b=0 }, shift = {0, -0.65}}, shift = { -1, 0 }},
+    },
+    circuit_connector = circuit_connector_definitions["rail-signal"],
   },
-  rotate = false,
-  orientation_to_variation = true
+  elevated_picture_set = data.raw["rail-signal"]["rail-signal"].elevated_picture_set,
+  circuit_wire_max_distance = default_circuit_wire_max_distance,
+
+  default_red_output_signal = {type = "virtual", name = "signal-red"},
+  default_orange_output_signal = {type = "virtual", name = "signal-yellow"},
+  default_green_output_signal = {type = "virtual", name = "signal-green"},
+  
+  water_reflection = 
+  {
+    pictures =
+    {
+      filename = GRAPHICSPATH .. "entity/buoy/buoy_water_reflection-16.png",
+      width = 23,
+      height = 23,
+      variation_count = 16,
+      line_length = 1,
+      scale = 5
+    },
+    rotate = false,
+    orientation_to_variation = true
+  }
 }
-buoy.factoriopedia_simulation = nil
 
 ---------------------------------------------------------------------------------------------------------------
 
-local chain_buoy = table.deepcopy(data.raw["rail-chain-signal"]["rail-chain-signal"])
-chain_buoy.name = "chain_buoy"
-chain_buoy.icon = GRAPHICSPATH .. "icons/chain_buoy.png"
-chain_buoy.icon_size = 64
-chain_buoy.collision_mask = {layers = {object = true, rail = true}}  -- waterway_layer added in data-final-fixes
-chain_buoy.selection_box = {{-1.6, -0.8}, {0.01, 0.8}}
-chain_buoy.fast_replaceable_group = "buoy"
-chain_buoy.minable = {mining_time = 0.5, result = "chain_buoy"}
-chain_buoy.animation = {
-  layers = {
+local chain_buoy = {
+  type = "rail-chain-signal",
+  name = "chain_buoy",
+  icon = GRAPHICSPATH .. "icons/chain_buoy.png",
+  flags = {"placeable-neutral", "player-creation", "building-direction-16-way", "filter-directions"},
+  collision_mask = {layers = {object = true, rail = true}},  -- waterway_layer will be added in final-fixes
+  fast_replaceable_group = "buoy-signal",
+  minable = {mining_time = 0.5, result = "chain_buoy"},
+  max_health = 100,
+  dying_explosion = "rail-chain-signal-explosion",
+  collision_box = {{-0.2, -0.2}, {0.2, 0.2}},
+  selection_box = {{-1.5, -0.5}, {-0.5, 0.5}},
+  damaged_trigger_effect = data.raw["rail-chain-signal"]["rail-chain-signal"].damaged_trigger_effect,
+  open_sound = data.raw["rail-chain-signal"]["rail-chain-signal"].open_sound,
+  close_sound = data.raw["rail-chain-signal"]["rail-chain-signal"].close_sound,
+  ground_picture_set = 
+  {
+    structure =
     {
-      filename = GRAPHICSPATH .. "entity/chain_buoy/hr-chain-buoys-base.png",
-      width = 522,
-      height = 410,
-      frame_count = 1,
-      repeat_count = 5,
-      axially_symmetrical = false,
-      direction_count = 8,
-      scale = 0.5
+      layers = {
+        {
+          filename = GRAPHICSPATH .. "entity/chain_buoy/hr-chain-buoys-base_tlc-16.png",
+          width = 230,
+          height = 230,
+          frame_count = 1,
+          repeat_count = 4,
+          direction_count = 16,
+          scale = 0.5
+        },
+        {
+          filename = GRAPHICSPATH .. "entity/chain_buoy/hr-chain-buoys-shadow_tlc-16.png",
+          width = 230,
+          height = 230,
+          frame_count = 1,
+          repeat_count = 4,
+          direction_count = 16,
+          scale = 0.5,
+          draw_as_shadow = true,
+        },
+        {
+          filename = GRAPHICSPATH .. "entity/chain_buoy/hr-chain-buoys-lights_tlc-16.png",
+          width = 230,
+          height = 230,
+          frame_count = 4,
+          direction_count = 16,
+          scale = 0.5,
+          draw_as_glow = true,
+        },
+      }
     },
+    structure_render_layer = "floor-mechanics",
+    structure_align_to_animation_index =
     {
-      filename = GRAPHICSPATH .. "entity/chain_buoy/hr-chain-buoys-lights.png",
-      draw_as_glow = true,
-      line_length = 5,
-      width = 522,
-      height = 410,
-      frame_count = 5,
-      direction_count = 8,
-      scale = 0.5
-    }
+      --  X0Y0, X1Y0, X0Y1, X1Y1
+      --  Left turn  | Straight/Multi |  Right turn
+       0,  0,  0,  0,   0,  0,  0,  0,   0,  0,  0,  0, -- North
+       1,  1,  1,  1,   1,  1,  1,  1,   1,  1,  1,  1,
+       2,  2,  2,  2,   2,  2,  2,  2,   2,  2,  2,  2,
+       3,  3,  3,  3,   3,  3,  3,  3,   3,  3,  3,  3,
+       4,  4,  4,  4,   4,  4,  4,  4,   4,  4,  4,  4, -- East
+       5,  5,  5,  5,   5,  5,  5,  5,   5,  5,  5,  5,
+       6,  6,  6,  6,   6,  6,  6,  6,   6,  6,  6,  6,
+       7,  7,  7,  7,   7,  7,  7,  7,   7,  7,  7,  7,
+       8,  8,  8,  8,   8,  8,  8,  8,   8,  8,  8,  8, -- South
+       9,  9,  9,  9,   9,  9,  9,  9,   9,  9,  9,  9,
+      10, 10, 10, 10,  10, 10, 10, 10,  10, 10, 10, 10,
+      11, 11, 11, 11,  11, 11, 11, 11,  11, 11, 11, 11,
+      12, 12, 12, 12,  12, 12, 12, 12,  12, 12, 12, 12, -- West
+      13, 13, 13, 13,  13, 13, 13, 13,  13, 13, 13, 13,
+      14, 14, 14, 14,  14, 14, 14, 14,  14, 14, 14, 14,
+      15, 15, 15, 15,  15, 15, 15, 15,  15, 15, 15, 15,
+    },
+    signal_color_to_structure_frame_index =
+    {
+      none   = 0,
+      red    = 0,
+      yellow = 1,
+      green  = 2,
+      blue   = 3,
+    },
+    selection_box_shift =
+    {
+      -- Given this affects SelectionBox, it is part of game state.
+      -- NOTE: Those shifts are not processed (yet) by PrototypeAggregateValues::calculateBoxExtensionForSelectionBoxSearch()
+      --    so if you exceed some reasonable values, a signal may become unselectable
+      -- NOTE: only applies to normal selection box. It is ignored for chart selection box
+      --
+      --  X0Y0, X1Y0, X0Y1, X1Y1
+      -- North -- 0
+      {0,0},{0,0},{0,0},{0,0}, --  Left turn
+      {0,0},{0,0},{0,0},{0,0}, --  Straight/Multi
+      {0,0},{0,0},{0,0},{0,0}, --  Right turn
+
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      -- East
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      -- South
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      -- West
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+      {0,0},{0,0},{0,0},{0,0},
+    },
+    lights =
+    {
+      green  = { light = {intensity = 0.2, size = 4, color={r=0,   g=1,   b=0 }, shift = {0, -0.5}}, shift = { -1, 0 }},
+      yellow = { light = {intensity = 0.3, size = 4, color={r=1,   g=0.5, b=0 }, shift = {0, -0.5}}, shift = { -1, 0 }},
+      red    = { light = {intensity = 0.3, size = 4, color={r=1,   g=0,   b=0 }, shift = {0, -0.5}}, shift = { -1, 0 }},
+      blue   = { light = {intensity = 0.2, size = 4, color={r=0.4, g=0.4, b=1 }, shift = {0, -0.5}}, shift = { -1, 0 }},
+    },
+    circuit_connector = circuit_connector_definitions["rail-chain-signal"],
+  },
+
+  elevated_picture_set = data.raw["rail-chain-signal"]["rail-chain-signal"].elevated_picture_set,
+  circuit_wire_max_distance = default_circuit_wire_max_distance,
+
+  default_red_output_signal = {type = "virtual", name = "signal-red"},
+  default_orange_output_signal = {type = "virtual", name = "signal-yellow"},
+  default_green_output_signal = {type = "virtual", name = "signal-green"},
+  default_blue_output_signal = {type = "virtual", name = "signal-blue"},
+  
+  water_reflection = 
+  {
+    pictures =
+    {
+      filename = GRAPHICSPATH .. "entity/chain_buoy/chain-buoys-water-reflection-16.png",
+      width = 52,
+      height = 41,
+      variation_count = 16,
+      line_length = 1,
+      scale = 5
+    },
+    rotate = false,
+    orientation_to_variation = true
   }
 }
-chain_buoy.selection_box_offsets = {  -- TODO 2.0
-  {-0.15, 0},
-  {-0.25, -1},
-  {0.8, -1.1},
-  {1.7, -1.0},
-  {1.8, -0.1},
-  {1.9, 0.6},
-  {0.9, 0.65},
-  {-0.1, 0.6}
-}
-chain_buoy.rail_piece = nil
-chain_buoy.green_light = nil
-chain_buoy.orange_light = nil
-chain_buoy.red_light = nil
-chain_buoy.blue_light = nil
-chain_buoy.factoriopedia_simulation = nil
 
 ---------------------------------------------------------------------------------------------------------------
 
