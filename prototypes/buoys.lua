@@ -142,6 +142,29 @@ for _,v in pairs(floating_pole.connection_points) do
 end
 
 ---------------------------------------------------------------------------------------------------------------
+local buoy_connector = circuit_connector_definitions.create_vector
+    (
+      universal_connector_template,
+      {
+        get_variation_with_shifting(19, -27, -4),  -- North
+        get_variation_with_shifting(19, -24, -16),
+        get_variation_with_shifting(19, -18, -26),
+        get_variation_with_shifting(19, -7, -33),
+        get_variation_with_shifting(19, 5, -36),  -- East
+        get_variation_with_shifting(19, 17, -33),
+        get_variation_with_shifting(19, 27, -26),
+        get_variation_with_shifting(19, 35, -16),
+        get_variation_with_shifting(19, 37, -4),  -- South
+        get_variation_with_shifting(19, 34, 8),
+        get_variation_with_shifting(19, 27, 19),
+        get_variation_with_shifting(19, 17, 26),
+        get_variation_with_shifting(19, 5, 28),  -- West
+        get_variation_with_shifting(19, -7, 26),
+        get_variation_with_shifting(19, -18, 19),
+        get_variation_with_shifting(19, -25, 8),
+      }
+    )
+
 local buoy = {
   type = "rail-signal",
   name = "buoy",
@@ -304,28 +327,7 @@ local buoy = {
       yellow = { light = {intensity = 0.3, size = 4, color={r=1, g=0.5, b=0 }, shift = {0, -0.65}}, shift = { -1, 0 }},
       red    = { light = {intensity = 0.3, size = 4, color={r=1, g=0,   b=0 }, shift = {0, -0.65}}, shift = { -1, 0 }},
     },
-    circuit_connector = circuit_connector_definitions.create_vector
-    (
-      universal_connector_template,
-      {
-        get_variation_with_shifting(19, -28, -4),  -- North
-        get_variation_with_shifting(19, -24, -16),
-        get_variation_with_shifting(19, -18, -26),
-        get_variation_with_shifting(19, -7, -33),
-        get_variation_with_shifting(19, 4, -36),  -- East
-        get_variation_with_shifting(19, 17, -33),
-        get_variation_with_shifting(19, 27, -26),
-        get_variation_with_shifting(19, 35, -16),
-        get_variation_with_shifting(19, 36, -4),  -- South
-        get_variation_with_shifting(19, 34, 8),
-        get_variation_with_shifting(19, 27, 19),
-        get_variation_with_shifting(19, 17, 26),
-        get_variation_with_shifting(19, 4, 28),  -- West
-        get_variation_with_shifting(19, -7, 26),
-        get_variation_with_shifting(19, -18, 19),
-        get_variation_with_shifting(19, -25, 8),
-      }
-    ),
+    circuit_connector = buoy_connector
   },
   elevated_picture_set = data.raw["rail-signal"]["rail-signal"].elevated_picture_set,
   circuit_wire_max_distance = default_circuit_wire_max_distance,
@@ -352,6 +354,7 @@ local buoy = {
 
 ---------------------------------------------------------------------------------------------------------------
 
+
 local chain_buoy = {
   type = "rail-chain-signal",
   name = "chain_buoy",
@@ -373,7 +376,7 @@ local chain_buoy = {
     {
       layers = {
         {
-          filename = GRAPHICSPATH .. "entity/chain_buoy/hr-chain-buoys-base_tlc-16.png",
+          filename = GRAPHICSPATH .. "entity/chain_buoy/hr-chain-buoys-base-16.png",
           width = 230,
           height = 230,
           frame_count = 1,
@@ -382,7 +385,7 @@ local chain_buoy = {
           scale = 0.5
         },
         {
-          filename = GRAPHICSPATH .. "entity/chain_buoy/hr-chain-buoys-shadow_tlc-16.png",
+          filename = GRAPHICSPATH .. "entity/chain_buoy/hr-chain-buoys-shadow-16.png",
           width = 230,
           height = 230,
           frame_count = 1,
@@ -392,7 +395,7 @@ local chain_buoy = {
           draw_as_shadow = true,
         },
         {
-          filename = GRAPHICSPATH .. "entity/chain_buoy/hr-chain-buoys-lights_tlc-16.png",
+          filename = GRAPHICSPATH .. "entity/chain_buoy/hr-chain-buoys-lights-16.png",
           width = 230,
           height = 230,
           frame_count = 4,
@@ -515,28 +518,7 @@ local chain_buoy = {
       red    = { light = {intensity = 0.3, size = 4, color={r=1,   g=0,   b=0 }, shift = {0, -0.5}}, shift = { -1, 0 }},
       blue   = { light = {intensity = 0.2, size = 4, color={r=0.4, g=0.4, b=1 }, shift = {0, -0.5}}, shift = { -1, 0 }},
     },
-    circuit_connector = circuit_connector_definitions.create_vector
-    (
-      universal_connector_template,
-      {
-        get_variation_with_shifting(19, -28, -4),  -- North
-        get_variation_with_shifting(19, -24, -16),
-        get_variation_with_shifting(19, -18, -26),
-        get_variation_with_shifting(19, -7, -33),
-        get_variation_with_shifting(19, 4, -36),  -- East
-        get_variation_with_shifting(19, 17, -33),
-        get_variation_with_shifting(19, 27, -26),
-        get_variation_with_shifting(19, 35, -16),
-        get_variation_with_shifting(19, 36, -4),  -- South
-        get_variation_with_shifting(19, 34, 8),
-        get_variation_with_shifting(19, 27, 19),
-        get_variation_with_shifting(19, 17, 26),
-        get_variation_with_shifting(19, 4, 28),  -- West
-        get_variation_with_shifting(19, -7, 26),
-        get_variation_with_shifting(19, -18, 19),
-        get_variation_with_shifting(19, -25, 8),
-      }
-    ),
+    circuit_connector = buoy_connector
   },
 
   elevated_picture_set = data.raw["rail-chain-signal"]["rail-chain-signal"].elevated_picture_set,
