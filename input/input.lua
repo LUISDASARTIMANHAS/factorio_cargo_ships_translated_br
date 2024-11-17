@@ -23,9 +23,9 @@ data:extend{
     associated_control_input = "give-waterway",
     technology_to_unlock = "automated_water_transport",
     --style = "blue",
-    icon = GRAPHICSPATH .. "icons/waterway-shortcut.png",
-    icon_size = 32,
-    small_icon = GRAPHICSPATH .. "icons/waterway-shortcut.png",
-    small_icon_size = 32,
+    icon = GRAPHICSPATH .. "icons/waterway-shortcut-x56.png",
+    icon_size = 56,
+    small_icon = GRAPHICSPATH .. "icons/waterway-shortcut-x24.png",
+    small_icon_size = 24,
   }
 }
