@@ -169,7 +169,7 @@ local buoy = {
   type = "rail-signal",
   name = "buoy",
   icon = GRAPHICSPATH .. "icons/buoy.png",
-  collision_mask = {layers = {object = true, rail = true}},  -- waterway_layer added in data-final-fixes
+  collision_mask = {layers = {object = true, is_lower_object = true}},  -- waterway_layer added in data-final-fixes
   flags = {"placeable-neutral", "player-creation", "building-direction-16-way", "filter-directions"},
   fast_replaceable_group = "buoy-signal",
   minable = {mining_time = 0.5, result = "buoy"},
@@ -360,7 +360,7 @@ local chain_buoy = {
   name = "chain_buoy",
   icon = GRAPHICSPATH .. "icons/chain_buoy.png",
   flags = {"placeable-neutral", "player-creation", "building-direction-16-way", "filter-directions"},
-  collision_mask = {layers = {object = true, rail = true}},  -- waterway_layer will be added in data-final-fixes
+  collision_mask = {layers = {object = true, is_lower_object = true}},  -- waterway_layer will be added in data-final-fixes
   fast_replaceable_group = "buoy-signal",
   minable = {mining_time = 0.5, result = "chain_buoy"},
   max_health = 100,
