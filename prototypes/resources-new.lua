@@ -11,7 +11,7 @@ data:extend{
     localised_name = {"", "[entity=offshore-oil] ", {"entity-name.offshore-oil"}},
     richness = true,
     can_be_disabled = true,
-    order = "b-g",
+    order = "a-e-a",
     category = "resource"
   },
 }
