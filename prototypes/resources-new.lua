@@ -111,4 +111,47 @@ end
 -- Add to Nauvis planet definition
 data.raw.planet.nauvis.map_gen_settings.autoplace_controls["offshore-oil"] = {}
 data.raw.planet.nauvis.map_gen_settings.autoplace_settings.entity.settings["offshore-oil"] = {}
--- TODO: Add other Space Age planets
+
+if mods["space-age"] then
+  resource_autoplace.initialize_patch_set("offshore-oil", false, "aquilo")
+
+  data:extend{
+    {
+      type = "autoplace-control",
+      name = "aquilo_offshore_oil",
+      localised_name = {"", "[entity=offshore-oil] ", {"entity-name.offshore-oil"}},
+      richness = true,
+      order = "e-a-a",
+      category = "resource"
+    },
+    {
+      type = "noise-expression",
+      name = "aquilo_offshore_oil_spots",
+      expression = "aquilo_spot_noise{seed = 568,\z
+                                      count = 4,\z
+                                      skip_offset = 0,\z
+                                      region_size = 600 + 400 / control:aquilo_offshore_oil:frequency,\z
+                                      density = 1,\z
+                                      radius = aquilo_spot_size * sqrt(control:aquilo_offshore_oil:size),\z
+                                      favorability = 1}"
+    },
+    {
+      type = "noise-expression",
+      name = "aquilo_offshore_oil_probability",
+      expression = "(control:aquilo_offshore_oil:size > 0)\z
+                    * (min(aquilo_starting_mask, aquilo_crude_oil_spots) * 0.015)"
+    },
+    {
+      type = "noise-expression",
+      name = "aquilo_offshore_oil_richness",
+      expression = "max(aquilo_starting_crude_oil * 1800000,\z
+                        aquilo_crude_oil_spots * 1440000) * control:aquilo_offshore_oil:richness"
+    },
+  }
+
+  data.raw.planet.aquilo.map_gen_settings.property_expression_names["entity:offshore-oil:probability"] = "aquilo_offshore_oil_probability"
+  data.raw.planet.aquilo.map_gen_settings.property_expression_names["entity:offshore-oil:richness"] = "aquilo_offshore_oil_richness"
+  data.raw.planet.aquilo.map_gen_settings.autoplace_controls["aquilo_offshore_oil"] = {}
+  data.raw.planet.aquilo.map_gen_settings.autoplace_settings.entity.settings["offshore-oil"] = {}
+
+end
