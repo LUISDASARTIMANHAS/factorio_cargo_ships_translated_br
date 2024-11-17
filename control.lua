@@ -524,6 +524,10 @@ script.on_load(function()
 end)
 script.on_init(function()
   init()
+  local map_gen_settings = game.planets.nauvis.surface.map_gen_settings
+  map_gen_settings.autoplace_controls["offshore-oil"] = {}
+  map_gen_settings.autoplace_settings.entity.settings["offshore-oil"] = {}
+  game.planets.nauvis.surface.map_gen_settings = map_gen_settings
 end)
 script.on_configuration_changed(function()
   init()
