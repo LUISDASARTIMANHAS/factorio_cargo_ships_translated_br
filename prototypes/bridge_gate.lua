@@ -79,12 +79,18 @@ invisible_chain_signal.selectable_in_game = false
 invisible_chain_signal.collision_mask = {layers = {object = true, rail = true}}  -- waterway added in data-final-fixes
 invisible_chain_signal.allow_copy_paste = false
 invisible_chain_signal.minable = nil
---[[invisible_chain_signal.animation = {
-  filename = GRAPHICSPATH .. "blank.png",
-  size = 1,
-  frame_count = 3,
-  direction_count = 8,
-}]]
+invisible_chain_signal.ground_picture_set = {
+  structure = {
+    direction_count = 16,
+    filenames = {GRAPHICSPATH .. "blank.png"},
+    lines_per_file = 16,
+    size = 1,
+    frame_count = 1,
+  },
+  signal_color_to_structure_frame_index = {},
+  lights = {},
+}
+invisible_chain_signal.elevated_picture_set = invisible_chain_signal.ground_picture_set
 invisible_chain_signal.rail_piece = nil
 invisible_chain_signal.green_light = nil
 invisible_chain_signal.orange_light = nil
