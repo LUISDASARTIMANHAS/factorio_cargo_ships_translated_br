@@ -270,7 +270,7 @@ function DestroyShipGhost(ghost)
 end
 
 function RegisterPlacementOnTick()
-  if storage.placement_queue and next(storage.placement_queue) then
+  if storage.check_placement_queue and next(storage.check_placement_queue) then
     script.on_event(defines.events.on_tick, processPlacementQueue)
   else
     script.on_event(defines.events.on_tick, nil)
