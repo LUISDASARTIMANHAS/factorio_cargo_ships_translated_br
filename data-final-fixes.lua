@@ -81,6 +81,26 @@ end
 -----------------------------
 
 if data.raw.resource["offshore-oil"] then
+  -- Add new "water_resource" collision layer to all the tiles that have "ground_tile"
+  for name, tile in pairs(data.raw.tile) do
+    local collision_mask = tile.collision_mask
+    if collision_mask.layers["ground_tile"] then
+      log("Adding collision layer 'water_resource' to tile '"..name.."'")
+      collision_mask.layers["water_resource"] = true
+    end
+  end
+
+  -- Add new "water_resource" collision layer to all non-deep water tiles if "Offshore oil on Deep Water only" is enabled
+  if settings.startup["no_shallow_oil"].value then
+    for _, name in pairs({"water", "water-green", "water-shallow", "water-mud"}) do
+      if data.raw.tile[name] then
+        local collision_mask = data.raw.tile[name].collision_mask
+        log("Adding collision layer 'water_resource' to tile '"..name.."'")
+        collision_mask.layers["water_resource"] = true
+      end
+    end
+  end
+
   -- Make sure the oil rig can mine deep oil:
   data.raw["mining-drill"]["oil_rig"].resource_categories = {data.raw.resource["offshore-oil"].category}
   -- Make sure the oil rig can burn crude-oil
