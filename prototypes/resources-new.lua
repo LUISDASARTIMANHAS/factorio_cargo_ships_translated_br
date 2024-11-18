@@ -23,6 +23,10 @@ data:extend{
     name = "offshore-fluid"
   },
   {
+    type = "collision-layer",
+    name = "water_resource",
+  },  
+  {
     type = "resource",
     name = "offshore-oil",
     icon = "__cargo-ships-graphics__/graphics/icons/crude-oil-resource.png",
@@ -52,7 +56,7 @@ data:extend{
     },
     walking_sound = data.raw.resource["crude-oil"].walking_sound,
     driving_sound = data.raw.resource["crude-oil"].driving_sound,
-    collision_mask = {layers = {ground_tile = true}},
+    collision_mask = {layers={water_resource=true}},
     protected_from_tile_building = false,
     --collision_box = {{-2.4, -2.4}, {2.4, 2.4}},
     --selection_box = {{-1.0, -1.0}, {1.0, 1.0}},
