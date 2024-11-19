@@ -521,7 +521,7 @@ local function init()
     game.planets.nauvis.surface.map_gen_settings = map_gen_settings
     game.planets.nauvis.surface.regenerate_entity("offshore-oil")
   end
-  if game.planets.aquilo then
+  if game.planets.aquilo and game.planets.aquilo.surface then
     local aquilo_map_gen_settings = game.planets.aquilo.surface.map_gen_settings
     if aquilo_map_gen_settings.autoplace_settings.entity.settings["offshore-oil"] == nil then
       aquilo_map_gen_settings.autoplace_controls["aquilo_offshore_oil"] = {}
