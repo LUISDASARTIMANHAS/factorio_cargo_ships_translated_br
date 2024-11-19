@@ -134,22 +134,29 @@ if mods["space-age"] then
       expression = "aquilo_spot_noise{seed = 568,\z
                                       count = 4,\z
                                       skip_offset = 0,\z
-                                      region_size = 600 + 400 / control:aquilo_offshore_oil:frequency,\z
-                                      density = 1,\z
-                                      radius = aquilo_spot_size * sqrt(control:aquilo_offshore_oil:size),\z
+                                      region_size = 600 + 450 / control:aquilo_offshore_oil:frequency,\z
+                                      density = 0.75,\z
+                                      radius = 1.5 * aquilo_spot_size * sqrt(control:aquilo_offshore_oil:size),\z
                                       favorability = 1}"
     },
     {
       type = "noise-expression",
       name = "aquilo_offshore_oil_probability",
-      expression = "(control:aquilo_offshore_oil:size > 0)\z
-                    * (min(aquilo_starting_mask, aquilo_crude_oil_spots) * 0.015)"
+      expression = "(control:aquilo_offshore_oil:size > 0) * -aquilo_min_elevation(-1.5)\z
+                    * (min(aquilo_starting_mask,\z
+                           aquilo_offshore_oil_spots * random_penalty{x = x, y = y, source = 1, amplitude = 1/aquilo_offshore_oil_random_penalty})\z
+                           * 0.015)"
     },
     {
       type = "noise-expression",
       name = "aquilo_offshore_oil_richness",
-      expression = "max(aquilo_starting_crude_oil * 1800000,\z
-                        aquilo_crude_oil_spots * 1440000) * control:aquilo_offshore_oil:richness"
+      expression = "(aquilo_offshore_oil_spots * 1440000) * control:aquilo_offshore_oil:richness\z
+                    / aquilo_offshore_oil_random_penalty"
+    },
+    {
+      type = "noise-expression",
+      name = "aquilo_offshore_oil_random_penalty",
+      expression = 1/4
     },
   }
 
