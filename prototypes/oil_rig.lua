@@ -182,6 +182,7 @@ local oil_rig_migration = {
   name = "oil_rig_migration",
   icons = {{icon=GRAPHICSPATH .. "icons/oil_rig.png", icon_size= 64}},
   flags = {"placeable-neutral", "player-creation", "not-rotatable"},
+  hidden = true,
   minable = {mining_time = 1.5, result = "oil_rig"},
   resource_categories = {"offshore-fluid"},
   max_health = 1000,
