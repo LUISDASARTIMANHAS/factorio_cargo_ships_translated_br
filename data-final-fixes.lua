@@ -10,14 +10,6 @@ data:extend{
     type = "collision-layer",
     name = "pump",
   },
-  {
-    type = "collision-layer",
-    name = "land_resource",
-  },
-  {
-    type = "collision-layer",
-    name = "water_resource",
-  },
 }
 
 
@@ -88,71 +80,30 @@ end
 ---- DEEP OIL GENERATION ----
 -----------------------------
 
--- Disable sea oil generation and extraction if Omnimatter or Seablock are installed
 if data.raw.resource["offshore-oil"] then
-
-  -- If Water_Ores is not installed, make it so that:
-  -- 1. Crude Oil can generate on deepwater tiles, and
-  -- 2. Other resources cannot generate on any water tiles
-  -- (Water ores removes resource-layer from all water tiles, so crude oil AND ores can generate on water.
-  --  In that case, it is up to the player if they want Offshore Oil to be consolidated, or leave the vanilla patches.)
-  if not mods["Water_Ores"] then
-    -- Replace 'resource' with 'land_resource' in the collision masks of water tiles where oil can go
-    if settings.startup["no_shallow_oil"].value then
-      valid_oil_tiles = {}
-      for _, tile in pairs(data.raw.tile) do
-        if tile.collision_mask.layers["water_tile"] and string.find(tile.name, "deep") then
-          table.insert(valid_oil_tiles, tile.name)
-        end
-      end
-    else
-      valid_oil_tiles = {}
-      for _, tile in pairs(data.raw.tile) do
-        if tile.collision_mask.layers["water_tile"] then
-          table.insert(valid_oil_tiles, tile.name)
-        end
-      end
+  -- Add new "water_resource" collision layer to all the tiles that have "ground_tile"
+  for name, tile in pairs(data.raw.tile) do
+    local collision_mask = tile.collision_mask
+    if collision_mask.layers["ground_tile"] then
+      log("Adding collision layer 'water_resource' to tile '"..name.."'")
+      collision_mask.layers["water_resource"] = true
     end
-    
-    --Add new "land_resource" collision layer to water tiles
-    for _, name in pairs(valid_oil_tiles) do
+  end
+
+  -- Add new "water_resource" collision layer to all non-deep water tiles if "Offshore oil on Deep Water only" is enabled
+  if settings.startup["no_shallow_oil"].value then
+    for _, name in pairs({"water", "water-green", "water-shallow", "water-mud"}) do
       if data.raw.tile[name] then
         local collision_mask = data.raw.tile[name].collision_mask
-        if collision_mask.layers["resource"] then
-          log("Replacing collision layer 'resource' with 'land_resource' on tile '"..name.."'")
-          collision_mask.layers["resource"] = nil
-          collision_mask.layers["land_resource"] = true
-        end
-      end
-    end
-    
-    -- Add new "water_resource" collision layer to all the tiles that don't have "land_resource"
-    for name, tile in pairs(data.raw.tile) do
-      local collision_mask = tile.collision_mask
-      if not collision_mask.layers["land_resource"] then
-        log("Adding collision layer 'water_resource' on tile '"..name.."'")
+        log("Adding collision layer 'water_resource' to tile '"..name.."'")
         collision_mask.layers["water_resource"] = true
       end
     end
-    
-    -- Add new "land_resource" collision layer to land resources (If Water_Ores is not installed)
-    for name, prototype in pairs(data.raw.resource) do
-      if name ~= "offshore-oil" then
-        local collision_mask = collision_mask_util.get_mask(prototype)
-        collision_mask.layers["land_resource"] = true
-        prototype.collision_mask = collision_mask
-        log("Adding collision layer 'land_resource' to resource '"..name) --.."' and demoting to selection_priority="..tostring(prototype.selection_priority))
-      end
-    end
-    
-    -- Add "water_resource" to the offshore oil deposit
-    data.raw.resource["offshore-oil"].collision_mask.layers["water_resource"] = true
-
   end
 
   -- Make sure the oil rig can mine deep oil:
   data.raw["mining-drill"]["oil_rig"].resource_categories = {data.raw.resource["offshore-oil"].category}
   -- Make sure the oil rig can burn crude-oil
   data.raw.fluid["crude-oil"].fuel_value = data.raw.fluid["crude-oil"].fuel_value or "100MJ"
-  
+
 end

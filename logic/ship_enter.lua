@@ -1,6 +1,7 @@
 --[[
   Copied from AAI Vehicles: Ironclad with permission from Earendel
 ]]
+local math2d = require("math2d")
 
 local enter_vehicle_radius = 10
 
@@ -33,10 +34,11 @@ function vehicle_enter(player, vehicle)
   end
 end
 
-function on_enter_vehicle_keypress (event)
+function on_enter_vehicle_keypress(event)
   local player = game.players[event.player_index]
   local character = player.character
   if not character then return end
+  if player.controller_type == defines.controllers.remote then return end
 
   storage.disable_this_tick = storage.disable_this_tick or {}
   if storage.disable_this_tick[player.index] and storage.disable_this_tick[player.index] == event.tick then
@@ -52,25 +54,31 @@ function on_enter_vehicle_keypress (event)
     end
   else
     local vehicles = character.surface.find_entities_filtered{
-      type = {"car", "locomotive", "cargo-wagon", "fluid-wagon", "artillery-wagon"},
+      type = {"car", "locomotive", "cargo-wagon", "fluid-wagon", "artillery-wagon", "spider-vehicle"},
       position = character.position,
       radius = enter_vehicle_radius
     }
-    local ships = {}
+    local closest_vehicle
+    local closest_distance = 1000
     for _, vehicle in pairs(vehicles) do
-      if storage.enter_ship_entities[vehicle.name] then
-        ships[#ships+1] = vehicle
+      local distance = math2d.position.distance(vehicle.position, character.position)
+      if distance < closest_distance then
+        closest_vehicle = vehicle
+        closest_distance = distance
       end
     end
-    if ships[1] then
-      storage.driving_state_locks[player.index] = {valid_time = game.tick + 1, vehicle = ships[1] }
-      vehicle_enter(player, ships[1])
+    if closest_vehicle then
+      -- If closest vehicle is a ship, enter it
+      if storage.enter_ship_entities[closest_vehicle.name] then
+        storage.driving_state_locks[player.index] = {valid_time = game.tick + 1, vehicle = closest_vehicle}
+        vehicle_enter(player, closest_vehicle)
+      end
     end
   end
 end
 script.on_event("enter-vehicle", on_enter_vehicle_keypress)
 
-function on_player_driving_changed_state (event)
+function on_player_driving_changed_state(event)
   local player = game.players[event.player_index]
   local character = player.character
   if not character then return end
