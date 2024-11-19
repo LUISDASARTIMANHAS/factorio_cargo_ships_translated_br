@@ -499,7 +499,7 @@ local function init()
   storage.disable_this_tick = storage.disable_this_tick or {}
   storage.driving_state_locks = storage.driving_state_locks or {}
   storage.currently_mining = storage.currently_mining or {}
-  
+
   init_ship_globals()  -- Init database of ship parameters
 
   -- Initialize or migrate long reach state
@@ -513,6 +513,24 @@ local function init()
 
   -- Reapply long reach settings to existing characters
 
+  -- Enable offshore oil generation if it has been added to a save
+  local map_gen_settings = game.planets.nauvis.surface.map_gen_settings
+  if map_gen_settings.autoplace_settings.entity.settings["offshore-oil"] == nil then
+    map_gen_settings.autoplace_controls["offshore-oil"] = {}
+    map_gen_settings.autoplace_settings.entity.settings["offshore-oil"] = {}
+    game.planets.nauvis.surface.map_gen_settings = map_gen_settings
+    game.planets.nauvis.surface.regenerate_entity("offshore-oil")
+  end
+  if game.planets.aquilo then
+    local aquilo_map_gen_settings = game.planets.aquilo.surface.map_gen_settings
+    if aquilo_map_gen_settings.autoplace_settings.entity.settings["offshore-oil"] == nil then
+      aquilo_map_gen_settings.autoplace_controls["aquilo_offshore_oil"] = {}
+      aquilo_map_gen_settings.autoplace_settings.entity.settings["offshore-oil"] = {}
+      game.planets.aquilo.surface.map_gen_settings = aquilo_map_gen_settings
+      game.planets.aquilo.surface.regenerate_entity("offshore-oil")
+    end
+  end
+
   -- Register conditional events
   init_events()
 end
@@ -524,10 +542,6 @@ script.on_load(function()
 end)
 script.on_init(function()
   init()
-  local map_gen_settings = game.planets.nauvis.surface.map_gen_settings
-  map_gen_settings.autoplace_controls["offshore-oil"] = {}
-  map_gen_settings.autoplace_settings.entity.settings["offshore-oil"] = {}
-  game.planets.nauvis.surface.map_gen_settings = map_gen_settings
 end)
 script.on_configuration_changed(function()
   init()
