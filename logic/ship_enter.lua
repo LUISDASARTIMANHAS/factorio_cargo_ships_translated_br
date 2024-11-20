@@ -3,7 +3,7 @@
 ]]
 local math2d = require("math2d")
 
-local enter_vehicle_radius = 10
+local enter_ship_distance = 10
 
 -- When the button is pressed decide the action, record it, and perform it.
 -- Apply a short term lock.
@@ -46,33 +46,42 @@ function on_enter_vehicle_keypress(event)
   end
 
   storage.driving_state_locks = storage.driving_state_locks or {}
-  if character.vehicle and storage.enter_ship_entities[character.vehicle.name] then
-    local position = character.surface.find_non_colliding_position(character.name, character.position, enter_vehicle_radius, 0.5, true)
-    if position then
-      storage.driving_state_locks[player.index] = {valid_time = game.tick + 1, position = position }
-      vehicle_exit(player, position)
+  if character.vehicle then
+    -- Character is in a vehicle and requested to exit.
+    -- If vehicle is a ship, then do the exiting ourselves. Otherwise let the game handle it.
+    if storage.enter_ship_entities[character.vehicle.name] then
+      local position = character.surface.find_non_colliding_position(character.name, character.position, enter_ship_distance, 0.25, true)
+      if position then
+        storage.driving_state_locks[player.index] = {valid_time = game.tick + 1, position = position }
+        vehicle_exit(player, position)
+      end
     end
   else
+    -- Character is not in a vehicle and requested to enter one.
+    -- If a non-ship vehicle is closest, let the game handle it.
+    -- If a ship is closest, handle entering it ourselves, to cross water tiles.
+    -- If a ship is not the closest, but the closest vehicle is inaccessible, we should handle it but this is tricky.
+    local enter_vehicle_distance = character.prototype.enter_vehicle_distance + 1.5
     local vehicles = character.surface.find_entities_filtered{
       type = {"car", "locomotive", "cargo-wagon", "fluid-wagon", "artillery-wagon", "spider-vehicle"},
       position = character.position,
-      radius = enter_vehicle_radius
+      radius = math.max(enter_ship_distance, enter_vehicle_distance)
     }
     local closest_vehicle
     local closest_distance = 1000
     for _, vehicle in pairs(vehicles) do
       local distance = math2d.position.distance(vehicle.position, character.position)
       if distance < closest_distance then
-        closest_vehicle = vehicle
-        closest_distance = distance
+        if distance < enter_vehicle_distance or (storage.enter_ship_entities[vehicle.name] and distance < enter_ship_distance) then
+          closest_vehicle = vehicle
+          closest_distance = distance
+        end
       end
     end
-    if closest_vehicle then
-      -- If closest vehicle is a ship, enter it
-      if storage.enter_ship_entities[closest_vehicle.name] then
-        storage.driving_state_locks[player.index] = {valid_time = game.tick + 1, vehicle = closest_vehicle}
-        vehicle_enter(player, closest_vehicle)
-      end
+    -- If closest vehicle is a ship, enter it
+    if closest_vehicle and storage.enter_ship_entities[closest_vehicle.name] then
+      storage.driving_state_locks[player.index] = {valid_time = game.tick + 1, vehicle = closest_vehicle}
+      vehicle_enter(player, closest_vehicle)
     end
   end
 end
