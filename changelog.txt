@@ -1,4 +1,22 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.12
+Date: 2024-11-19
+  Features:
+    - [space-age] Added offshore oil generation to Aquilo.
+    - Added console commands to help adding offshore oil generation to existing/migrated maps.
+  Changes:
+    - Updated waterway shortcut icon resolution for 2.0.18.
+    - Eliminated one custom collision layer used in offshore oil placement.
+    - Updated translations from Crowdin.
+  Bugfixes:
+    - Fixed that ships could be placed without engines attached.
+    - Fixed that offshore oil generation was not added to Nauvis when Cargo Ships mod is added to an existing save or migrated from 1.1.
+    - Fixed inconsistencies and error messages when entering/leaving ships and other vehicles.
+    - [space-age] Fixed ice tiles spawning around crude oil near water.
+    - Fixed that automatic bridge chain signals were visible.
+    - Fixed that dummy migration oil rig was visisble in some tooltips.
+    - Fixed that buoys could not be placed on lava ^_^
+---------------------------------------------------------------------------------------------------
 Version: 1.0.11
 Date: 2024-11-09
   Changes:
