@@ -184,7 +184,7 @@ local oil_rig_migration = {
   flags = {"placeable-neutral", "player-creation", "not-rotatable"},
   hidden = true,
   minable = {mining_time = 1.5, result = "oil_rig"},
-  resource_categories = {"offshore-fluid"},
+  resource_categories = {"migration-offshore-fluid"},
   max_health = 1000,
   collision_mask = {layers = {object = true, train = true}},
   collision_box = {{-3.2, -3.2}, {3.2, 3.2}},

@@ -23,6 +23,10 @@ data:extend{
     name = "offshore-fluid"
   },
   {
+    type = "resource-category",
+    name = "migration-offshore-fluid"
+  },
+  {
     type = "collision-layer",
     name = "water_resource",
   },  
