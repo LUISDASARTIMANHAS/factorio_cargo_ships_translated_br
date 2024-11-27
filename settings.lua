@@ -38,7 +38,7 @@ data:extend({
     type = "bool-setting",
     name = "no_shallow_oil",
     setting_type = "startup",
-    default_value = true,
+    default_value = false,
     order = "a-g"
   },
   {
