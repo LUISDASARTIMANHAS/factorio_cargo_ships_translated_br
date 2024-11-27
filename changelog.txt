@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.13
+Date: 2024-11-26
+  Bugfixes:
+    - Fixed that Oil Processing tech would not unlock when offshore oil deposits are mined.
+    - Fixed crash when mod setting disables offshore-oil and oil rig.
+    - Fixed that console command /set-oil-settings applied to wrong resources.
+---------------------------------------------------------------------------------------------------
 Version: 1.0.12
 Date: 2024-11-19
   Features:
