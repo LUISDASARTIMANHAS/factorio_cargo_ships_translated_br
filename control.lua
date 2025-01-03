@@ -145,7 +145,7 @@ local function OnCancelledDeconstruction(event)
                    entity.get_connected_rolling_stock(defines.rail_direction.back)
       if otherstock and otherstock.to_be_deconstructed() then
         -- Copy deconstruction order
-        local player = game.players[event.player_index]
+        local player = event.player_index and game.players[event.player_index]
         local force = (player and player.force) or entity.force
         otherstock.cancel_deconstruction(force, player)
       end
