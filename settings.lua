@@ -1,10 +1,17 @@
 data:extend({
-    {
+  {
+    type = "bool-setting",
+    name = "floating_pole_enabled",
+    setting_type = "startup",
+    default_value = true,
+    order = "a-a"
+  },
+  {
     type = "bool-setting",
     name = "offshore_oil_enabled",
     setting_type = "startup",
     default_value = true,
-    order = "a-a"
+    order = "a-b"
   },
   {
     type = "int-setting",
@@ -89,13 +96,13 @@ data:extend({
     minimum_value = 0,
     default_value = 100,
     maximum_value = 1000,
-    order = "a-a"
+    order = "c-c"
   },
   {
     type = "bool-setting",
     name = "prevent_waterway_rail_connections",
     setting_type = "runtime-global",
     default_value = true,
-    order = "a-c"
+    order = "c-d"
   }
 })
